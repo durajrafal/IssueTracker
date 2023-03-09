@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IssueTracker.Application\IssueTracker.Application.csproj" />
+    <ProjectReference Include="..\IssueTracker.Infrastructure\IssueTracker.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

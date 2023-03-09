@@ -1,11 +1,13 @@
 using IssueTracker.Application;
 using IssueTracker.UI;
+using IssueTracker.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddWebUI();
 builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddWebUI();
 
 var app = builder.Build();
 
@@ -29,3 +31,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+public partial class Program { }
