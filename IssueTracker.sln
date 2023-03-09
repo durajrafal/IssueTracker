@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.Application.UnitTests", "IssueTracker.Application.UnitTests\IssueTracker.Application.UnitTests.csproj", "{26367BF9-5A20-4701-A6B2-896B04261CC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.UI", "IssueTracker.UI\IssueTracker.UI.csproj", "{A77D837B-6486-4262-A822-67B606EA541A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{26367BF9-5A20-4701-A6B2-896B04261CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26367BF9-5A20-4701-A6B2-896B04261CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26367BF9-5A20-4701-A6B2-896B04261CC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A77D837B-6486-4262-A822-67B606EA541A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A77D837B-6486-4262-A822-67B606EA541A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A77D837B-6486-4262-A822-67B606EA541A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A77D837B-6486-4262-A822-67B606EA541A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{5FD1C237-F6F1-48D5-AA0E-626E73576BCC} = {27472466-E4A3-4A9D-974A-0B7E8C2B5DC2}
 		{D1943813-81DC-42C5-AAFC-E8FDA70D5EAA} = {27472466-E4A3-4A9D-974A-0B7E8C2B5DC2}
 		{26367BF9-5A20-4701-A6B2-896B04261CC2} = {37EFB694-80C7-4AC8-9D92-ACE9AB419E96}
+		{A77D837B-6486-4262-A822-67B606EA541A} = {27472466-E4A3-4A9D-974A-0B7E8C2B5DC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5242A7EC-892B-42D7-961C-61ED500551F7}
