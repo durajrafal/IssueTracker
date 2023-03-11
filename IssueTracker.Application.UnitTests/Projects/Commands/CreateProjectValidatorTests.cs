@@ -1,9 +1,8 @@
 ﻿using FluentValidation.TestHelper;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.CreateProject;
-using IssueTracker.Application.UnitTests.Fixtures;
+using IssueTracker.Application.UnitTests.Common;
 using IssueTracker.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace IssueTracker.Application.UnitTests.Projects.Commands

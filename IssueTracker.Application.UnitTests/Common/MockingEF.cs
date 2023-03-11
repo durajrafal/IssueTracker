@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IssueTracker.Application.UnitTests.Fixtures
+namespace IssueTracker.Application.UnitTests.Common
 {
     internal static class MockingEF
     {
