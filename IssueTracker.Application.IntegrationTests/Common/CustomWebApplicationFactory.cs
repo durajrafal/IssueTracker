@@ -10,10 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using IssueTracker.Infrastructure.Identity;
 
 namespace IssueTracker.Application.IntegrationTests.Common
 {
-    public class Fixture : WebApplicationFactory<Program>
+    public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -21,15 +23,25 @@ namespace IssueTracker.Application.IntegrationTests.Common
 
             builder.ConfigureServices(services =>
             {
-                var dbContextDescriptor = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<AppDbContext>));
-                services.Remove(dbContextDescriptor);
+                services.AddSingleton<UserFixture>();
+
+                services.Remove<DbContextOptions<AppDbContext>>();
                 services.AddDbContext<AppDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("IssueTracker");
                 });
+                services.Remove<DbContextOptions<AuthDbContext>>();
+                services.AddDbContext<AuthDbContext>(options =>
+                {
+                    options.UseInMemoryDatabase("IssueTracker");
+                });
+                services.Remove<ICurrentUserService>()
+                    .AddScoped(serviceProvider => Mock.Of<ICurrentUserService>(s => s.UserId == UserFixture.GetCurrentUserId()));
             });
 
             builder.UseEnvironment("Development");
         }
+
+        
     }
 }

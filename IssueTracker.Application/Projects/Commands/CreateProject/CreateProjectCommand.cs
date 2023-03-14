@@ -1,8 +1,9 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Domain.Models;
+using IssueTracker.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,10 +18,12 @@ namespace IssueTracker.Application.Projects.Commands.CreateProject
     public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, int>
     {
         private readonly IApplicationDbContext _ctx;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CreateProjectCommandHandler(IApplicationDbContext ctx)
+        public CreateProjectCommandHandler(IApplicationDbContext ctx, ICurrentUserService currentUserService)
         {
             _ctx = ctx;
+            _currentUserService = currentUserService;
         }
 
         public async Task<int> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
@@ -29,6 +32,7 @@ namespace IssueTracker.Application.Projects.Commands.CreateProject
             {
                 Title = request.Title,
             };
+            entity.Members.Add(new ProjectMember { UserId = _currentUserService.UserId });
 
             _ctx.Projects.Add(entity);
             await _ctx.SaveChangesAsync(cancellationToken);

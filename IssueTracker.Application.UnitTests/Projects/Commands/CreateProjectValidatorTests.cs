@@ -2,7 +2,7 @@
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.CreateProject;
 using IssueTracker.Application.UnitTests.Common;
-using IssueTracker.Domain.Models;
+using IssueTracker.Domain.Entities;
 using Moq;
 
 namespace IssueTracker.Application.UnitTests.Projects.Commands

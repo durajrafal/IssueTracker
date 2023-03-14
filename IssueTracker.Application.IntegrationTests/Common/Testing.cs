@@ -11,7 +11,7 @@ namespace IssueTracker.Application.IntegrationTests.Common
 {
     public class Testing
     {
-        private readonly Fixture _fixture;
+        private readonly CustomWebApplicationFactory _fixture;
         private IServiceScopeFactory _scopeFactory;
 
         public Testing()
