@@ -23,8 +23,6 @@ namespace IssueTracker.Application.IntegrationTests.Common
 
             builder.ConfigureServices(services =>
             {
-                services.AddSingleton<UserFixture>();
-
                 services.Remove<DbContextOptions<AppDbContext>>();
                 services.AddDbContext<AppDbContext>(options =>
                 {

@@ -1,5 +1,6 @@
 ﻿using IssueTracker.Infrastructure.Persistance;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,11 @@ namespace IssueTracker.Application.IntegrationTests.Common
 {
     public class Testing
     {
-        private readonly CustomWebApplicationFactory _fixture;
         private IServiceScopeFactory _scopeFactory;
 
-        public Testing()
+        public Testing(WebApplicationFactory<Program> factory)
         {
-            _fixture = new();
-            _scopeFactory = _fixture.Services.GetRequiredService<IServiceScopeFactory>();
+            _scopeFactory = factory.Services.GetRequiredService<IServiceScopeFactory>();
         }
 
         public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)

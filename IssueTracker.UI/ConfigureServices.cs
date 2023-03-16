@@ -2,6 +2,7 @@
 using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Services;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace IssueTracker.UI
 {
@@ -13,12 +14,16 @@ namespace IssueTracker.UI
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-            services.AddAuthentication().AddCookie(); ;
+            services.AddAuthentication("Cookie").AddCookie("Cookie");
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+            });
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ProjectManagement", pb =>
                 {
-                    pb.RequireClaim("Project", "Manage");
+                    pb.RequireRole("Manager");
                 });
             });
 

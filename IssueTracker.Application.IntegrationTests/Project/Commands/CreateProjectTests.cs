@@ -2,21 +2,16 @@
 using IssueTracker.Application.IntegrationTests.Common;
 using IssueTracker.Application.Projects.Commands.CreateProject;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.IntegrationTests.Project.Commands
 {
-    public class CreateProjectTests : IClassFixture<Testing>
+    public class CreateProjectTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly Testing _testing;
 
-        public CreateProjectTests(Testing testing)
+        public CreateProjectTests(CustomWebApplicationFactory factory)
         {
-            _testing = testing;
+            _testing = new Testing(factory);
         }
 
         [Fact]
@@ -57,12 +52,12 @@ namespace IssueTracker.Application.IntegrationTests.Project.Commands
         public async Task Handle_Always_ShouldAddCurrentUserAsMember()
         {
             var command = new CreateProjectCommand { Title = nameof(Handle_Always_ShouldAddCurrentUserAsMember) };
-            var currentUser = await UserFixture.RunWithNoClaims();
+            var currentUserId = await UserFixture.RunWithNoClaims();
 
             var addedProjectId = await _testing.SendAsync(command);
 
             var addedProject = _testing.FuncDatabase(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Id == addedProjectId));
-            Assert.Equal(currentUser, addedProject.Members.Single().UserId);
+            Assert.Equal(currentUserId, addedProject.Members.Single().UserId);
         }
     }
 }
