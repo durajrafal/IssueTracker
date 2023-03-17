@@ -1,26 +1,30 @@
 ﻿using FluentValidation;
+using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.IntegrationTests.Common;
+using IssueTracker.Application.IntegrationTests.Helpers;
 using IssueTracker.Application.Projects.Commands.CreateProject;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.Application.IntegrationTests.Project.Commands
 {
     public class CreateProjectTests : IClassFixture<CustomWebApplicationFactory>
     {
-        private readonly Testing _testing;
+        private readonly TestingHelpers _testing;
+        private readonly CustomWebApplicationFactory _factory;
 
         public CreateProjectTests(CustomWebApplicationFactory factory)
         {
-            _testing = new Testing(factory);
+            _factory = factory;
+            _testing = new TestingHelpers(_factory);
         }
 
         [Fact]
         public async Task Handle_WhenTitleNotEmptyAndUnique_ShouldAddToDatabase()
         {
             var command = new CreateProjectCommand { Title =  "Unique Test project"};
-            var currentUser = await UserFixture.RunWithNoClaims();
 
-            var addedProjectId = await _testing.SendAsync(command);
+            var addedProjectId = await _testing.MediatorSendAsync(command);
 
             var addedProject = _testing.FuncDatabase(ctx => ctx.Projects.First(x => x.Id == addedProjectId));
             Assert.Equal(command.Title, addedProject.Title);
@@ -31,7 +35,7 @@ namespace IssueTracker.Application.IntegrationTests.Project.Commands
         {
             var command = new CreateProjectCommand();
 
-            await Assert.ThrowsAsync<ValidationException>(() => _testing.SendAsync(command));
+            await Assert.ThrowsAsync<ValidationException>(() => _testing.MediatorSendAsync(command));
         }
 
         [Fact]
@@ -45,19 +49,19 @@ namespace IssueTracker.Application.IntegrationTests.Project.Commands
 
             var command = new CreateProjectCommand { Title = "Not unique test project" };
 
-            await Assert.ThrowsAsync<ValidationException>(() => _testing.SendAsync(command));
+            await Assert.ThrowsAsync<ValidationException>(() => _testing.MediatorSendAsync(command));
         }
 
         [Fact]
         public async Task Handle_Always_ShouldAddCurrentUserAsMember()
         {
             var command = new CreateProjectCommand { Title = nameof(Handle_Always_ShouldAddCurrentUserAsMember) };
-            var currentUserId = await UserFixture.RunWithNoClaims();
 
-            var addedProjectId = await _testing.SendAsync(command);
+            var addedProjectId = await _testing.MediatorSendAsync(command);
 
+            var userId = _factory.Services.GetRequiredService<ICurrentUserService>().UserId;
             var addedProject = _testing.FuncDatabase(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Id == addedProjectId));
-            Assert.Equal(currentUserId, addedProject.Members.Single().UserId);
+            Assert.Equal(userId, addedProject.Members.Single().UserId);
         }
     }
 }

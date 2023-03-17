@@ -2,24 +2,19 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IssueTracker.Application.IntegrationTests.Common
+namespace IssueTracker.Application.IntegrationTests.Helpers
 {
-    public class Testing
+    public class TestingHelpers
     {
         private IServiceScopeFactory _scopeFactory;
 
-        public Testing(WebApplicationFactory<Program> factory)
+        public TestingHelpers(WebApplicationFactory<Program> factory)
         {
             _scopeFactory = factory.Services.GetRequiredService<IServiceScopeFactory>();
         }
 
-        public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
+        public async Task<TResponse> MediatorSendAsync<TResponse>(IRequest<TResponse> request)
         {
             var scope = _scopeFactory.CreateScope();
 
@@ -36,7 +31,7 @@ namespace IssueTracker.Application.IntegrationTests.Common
             }
         }
 
-        public TResult FuncDatabase<TResult>(Func<AppDbContext,TResult> func)
+        public TResult FuncDatabase<TResult>(Func<AppDbContext, TResult> func)
         {
             using (var ctx = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>())
             {

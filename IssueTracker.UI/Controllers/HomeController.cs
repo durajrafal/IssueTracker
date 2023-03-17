@@ -5,8 +5,8 @@ using System.Diagnostics;
 
 namespace IssueTracker.UI.Controllers
 {
-    [Authorize]
-    public class HomeController : Controller
+    
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -14,7 +14,7 @@ namespace IssueTracker.UI.Controllers
         {
             _logger = logger;
         }
-
+        
         public IActionResult Index()
         {
             return View();

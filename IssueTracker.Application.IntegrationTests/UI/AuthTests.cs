@@ -1,15 +1,7 @@
 ﻿using IssueTracker.Application.IntegrationTests.Common;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.IntegrationTests.UI
 {
@@ -31,7 +23,7 @@ namespace IssueTracker.Application.IntegrationTests.UI
                     AllowAutoRedirect = false
                 });
 
-            var response = await client.GetAsync("");
+            var response = await client.GetAsync("/");
 
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
             Assert.StartsWith("http://localhost/Account/Login",response.Headers.Location.OriginalString);
@@ -41,27 +33,13 @@ namespace IssueTracker.Application.IntegrationTests.UI
         [Fact]
         public async Task Get_WhenUserAuthenticated_LoadPage()
         {
-            var client = _factory
-                .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    services.AddAuthentication(options =>
-                    {
-                        options.DefaultAuthenticateScheme = TestAuthHandler.AuthenticationScheme;
-                        options.DefaultScheme = TestAuthHandler.AuthenticationScheme;
-                        options.DefaultChallengeScheme = TestAuthHandler.AuthenticationScheme;
-                    })
-                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.AuthenticationScheme, options => { });
-                });
-            })
-            .CreateClient(new WebApplicationFactoryClientOptions
+            var client = _factory.MakeAuthenticated().CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
-            var response = await client.GetAsync("");
+            var response = await client.GetAsync("/");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

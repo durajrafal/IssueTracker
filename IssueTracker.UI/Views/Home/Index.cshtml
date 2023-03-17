@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,3 +8,16 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+@if ((await AuthorizationService.AuthorizeAsync(User, "ProjectManagement")).Succeeded)
+{
+    <div class="row" id="form-create-project">
+        <form method="post" asp-controller="Projects" asp-action="Create">
+            <div asp-validation-summary="All"></div>
+            <div class="input-group">
+                <input name="title" type="text" class="form-control" id="newProjectTitle" placeholder="My New Project Title">
+                <input class="btn btn-primary" type="submit" value="Create" />
+            </div>
+        </form>
+    </div>
+}

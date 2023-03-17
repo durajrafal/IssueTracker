@@ -1,16 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IssueTracker.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using IssueTracker.Infrastructure.Identity;
 
 namespace IssueTracker.Application.IntegrationTests.Common
@@ -34,7 +27,13 @@ namespace IssueTracker.Application.IntegrationTests.Common
                     options.UseInMemoryDatabase("IssueTracker");
                 });
                 services.Remove<ICurrentUserService>()
-                    .AddScoped(serviceProvider => Mock.Of<ICurrentUserService>(s => s.UserId == UserFixture.GetCurrentUserId()));
+                    .AddSingleton<ICurrentUserService, TestUserService>();
+
+                services.AddAntiforgery(setup =>
+                {
+                    setup.Cookie.Name = "test_csrf_cookie";
+                    setup.FormFieldName = "test_csrf_field";
+                });
             });
 
             builder.UseEnvironment("Development");
