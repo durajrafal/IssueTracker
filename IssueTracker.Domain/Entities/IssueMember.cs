@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Domain.Entities
 {
-    public class ProjectMember
+    public class IssueMember
     {
-        public int ProjectId { get; set; }
-        public Project Project { get; set; }
+        public int IssueId { get; set; }
+        public Issue Issue { get; set; }
         public string UserId { get; set; }
     }
 }
