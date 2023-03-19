@@ -6,7 +6,7 @@ using IssueTracker.Application.Projects.Commands.CreateProject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IssueTracker.Application.IntegrationTests.Project.Commands
+namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
     public class CreateProjectTests : IClassFixture<CustomWebApplicationFactory>
     {
@@ -41,10 +41,9 @@ namespace IssueTracker.Application.IntegrationTests.Project.Commands
         [Fact]
         public async Task Handle_WhenTitleIsNotUnique_ShouldThrowValidationException()
         {
-            _testing.ActionDatabase(async ctx =>
+            await _testing.ActionDatabaseAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(new Domain.Entities.Project { Title = "Not unique test project" });
-                await ctx.SaveChangesAsync();
             });
 
             var command = new CreateProjectCommand { Title = "Not unique test project" };

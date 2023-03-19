@@ -23,11 +23,12 @@ namespace IssueTracker.Application.IntegrationTests.Helpers
             return await mediator.Send(request);
         }
 
-        public void ActionDatabase(Action<AppDbContext> action)
+        public async Task ActionDatabaseAsync(Action<AppDbContext> action)
         {
             using (var ctx = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>())
             {
                 action(ctx);
+                await ctx.SaveChangesAsync();
             }
         }
 
