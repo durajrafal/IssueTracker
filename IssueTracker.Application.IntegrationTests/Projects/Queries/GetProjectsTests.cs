@@ -1,12 +1,4 @@
-﻿using IssueTracker.Application.IntegrationTests.Common;
-using IssueTracker.Application.IntegrationTests.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using IssueTracker.Domain.Entities;
+﻿using IssueTracker.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Queries;

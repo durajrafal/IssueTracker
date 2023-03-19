@@ -1,10 +1,8 @@
-﻿using IssueTracker.Application.IntegrationTests.Common;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Headers;
 using System.Net;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
-using IssueTracker.Application.IntegrationTests.Helpers;
 using IssueTracker.Application.Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
