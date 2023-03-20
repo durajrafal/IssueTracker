@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Common.Behaviours
 {
-    public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IBaseRequest
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 

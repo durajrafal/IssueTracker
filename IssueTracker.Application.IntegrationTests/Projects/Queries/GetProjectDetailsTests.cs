@@ -17,7 +17,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         [Fact]
         public async Task Handle_WhenProjectIdIsValid_GetDetailsIncludingMembersAndIssuesWithMembers()
         {
-            var project = CreateTestProject();
+            var project = CreateTestProject(nameof(Handle_WhenProjectIdIsValid_GetDetailsIncludingMembersAndIssuesWithMembers));
             await _testing.ActionDatabaseAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);
@@ -36,7 +36,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         [Fact]
         public async Task Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException()
         {
-            var project = CreateTestProject();
+            var project = CreateTestProject(nameof(Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException));
             await _testing.ActionDatabaseAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);
@@ -48,7 +48,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
             Assert.True(_testing.FuncDatabase(x => x.Projects.Count() > 0));
         }
 
-        private Project CreateTestProject()
+        public static Project CreateTestProject(string title)
         {
             var projectMember1 = new ProjectMember { UserId = Guid.NewGuid().ToString() };
             var projectMember2 = new ProjectMember { UserId = Guid.NewGuid().ToString() };
@@ -70,7 +70,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 
             return new Project
             {
-                Title = nameof(Handle_WhenProjectIdIsValid_GetDetailsIncludingMembersAndIssuesWithMembers),
+                Title = title,
                 Members = new List<ProjectMember> { projectMember1, projectMember2 },
                 Issues = new List<Issue> { issue1, issue2 }
             };

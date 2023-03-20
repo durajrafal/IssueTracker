@@ -14,12 +14,15 @@ namespace IssueTracker.Application.IntegrationTests.Helpers
             _scopeFactory = factory.Services.GetRequiredService<IServiceScopeFactory>();
         }
 
+        public async Task MediatorSendAsync(IRequest request)
+        {
+            var mediator = GetSenderFromServices();
+            await mediator.Send(request);
+        }
+
         public async Task<TResponse> MediatorSendAsync<TResponse>(IRequest<TResponse> request)
         {
-            var scope = _scopeFactory.CreateScope();
-
-            var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
-
+            var mediator = GetSenderFromServices();
             return await mediator.Send(request);
         }
 
@@ -38,6 +41,13 @@ namespace IssueTracker.Application.IntegrationTests.Helpers
             {
                 return func(ctx);
             }
+        }
+
+        private ISender GetSenderFromServices()
+        {
+            var scope = _scopeFactory.CreateScope();
+
+            return scope.ServiceProvider.GetRequiredService<ISender>();
         }
     }
 
