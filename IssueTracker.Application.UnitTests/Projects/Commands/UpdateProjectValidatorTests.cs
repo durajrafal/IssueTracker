@@ -1,19 +1,25 @@
 ﻿using FluentValidation.TestHelper;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.CreateProject;
+using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Application.UnitTests.Common;
 using IssueTracker.Domain.Entities;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace IssueTracker.Application.UnitTests.Projects.Commands
 {
-    public class CreateProjectValidatorTests
+    public class UpdateProjectValidatorTests
     {
         private Mock<IApplicationDbContext> _mockCtx = new();
-        private readonly CreateProjectCommandValidator _validator;
+        private readonly UpdateProjectCommandValidator _validator;
         const string PROJECT_NAME = "Test Project";
 
-        public CreateProjectValidatorTests()
+        public UpdateProjectValidatorTests()
         {
             _validator = new(_mockCtx.Object);
         }
@@ -21,7 +27,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_TitleIsEmpty_ShouldHaveValidationError()
         {
-            var command = new CreateProjectCommand();
+            var command = new UpdateProjectCommand { Title = String.Empty };
             var mockSet = MockingEF.CreateFakeDbSet(new List<Project>());
             _mockCtx.Setup(x => x.Projects).Returns(mockSet.Object);
 
@@ -33,7 +39,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_TitleIsTooLong_ShouldHaveValidationError()
         {
-            var command = new CreateProjectCommand
+            var command = new UpdateProjectCommand
             {
                 Title = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
             };
@@ -48,16 +54,18 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_TitleIsNotUnique_ShouldHaveValidationError()
         {
-            var command = new CreateProjectCommand
+            var command = new UpdateProjectCommand
             {
+                ProjectId = 2,
                 Title = PROJECT_NAME
             };
             var mockSet = MockingEF.CreateFakeDbSet(new List<Project>
             {
                 new Project
                 {
-                    Title = PROJECT_NAME 
-                } 
+                    Id = 1,
+                    Title = PROJECT_NAME,
+                }
             });
             _mockCtx.Setup(x => x.Projects).Returns(mockSet.Object);
 
@@ -69,7 +77,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_TitleIsOk_ShouldNotHaveValidationError()
         {
-            var command = new CreateProjectCommand
+            var command = new UpdateProjectCommand
             {
                 Title = PROJECT_NAME
             };
@@ -86,6 +94,5 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
 
             result.ShouldNotHaveValidationErrorFor(x => x.Title);
         }
-
     }
 }
