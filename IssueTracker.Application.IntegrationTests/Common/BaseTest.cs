@@ -16,5 +16,11 @@ namespace IssueTracker.Application.IntegrationTests.Common
             _factory = factory;
             _testing = new TestingHelpers(_factory);
         }
+
+        public BaseTest()
+        {
+            _factory = new CustomWebApplicationFactory();
+            _testing = new TestingHelpers(_factory);
+        }
     }
 }

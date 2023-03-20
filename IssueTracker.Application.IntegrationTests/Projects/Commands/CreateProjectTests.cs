@@ -6,15 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
-    public class CreateProjectTests : IClassFixture<CustomWebApplicationFactory>
+    public class CreateProjectTests : BaseTest
     {
-        private readonly TestingHelpers _testing;
-        private readonly CustomWebApplicationFactory _factory;
-
         public CreateProjectTests(CustomWebApplicationFactory factory)
+            :base(factory)
         {
-            _factory = factory;
-            _testing = new TestingHelpers(_factory);
         }
 
         [Fact]

@@ -3,15 +3,11 @@ using IssueTracker.Domain.Entities;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {
-    public class GetProjectDetailsTests : IClassFixture<CustomWebApplicationFactory>
+    public class GetProjectDetailsTests : BaseTest
     {
-        private readonly CustomWebApplicationFactory _factory;
-        private readonly TestingHelpers _testing;
-
         public GetProjectDetailsTests(CustomWebApplicationFactory factory)
+            :base(factory)
         {
-            _factory = factory;
-            _testing = new TestingHelpers(_factory);
         }
 
         [Fact]

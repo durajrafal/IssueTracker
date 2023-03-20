@@ -5,16 +5,11 @@ using IssueTracker.Application.Projects.Queries.GetProjects;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {
-    public class GetProjectsTests : IClassFixture<CustomWebApplicationFactory>
+    public class GetProjectsTests : BaseTest
     {
-        private readonly CustomWebApplicationFactory _factory;
-        private readonly TestingHelpers _testing;
-
-
         public GetProjectsTests()
+            :base()
         {
-            _factory = new CustomWebApplicationFactory();
-            _testing = new TestingHelpers(_factory);
         }
 
         [Theory]
