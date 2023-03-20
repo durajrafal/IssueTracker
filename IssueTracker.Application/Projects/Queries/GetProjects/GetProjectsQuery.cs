@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IssueTracker.Application.Projects.Queries
+namespace IssueTracker.Application.Projects.Queries.GetProjects
 {
     public class GetProjectsQuery : IRequest<IQueryable<Project>>
     {
@@ -20,7 +20,7 @@ namespace IssueTracker.Application.Projects.Queries
         private readonly IApplicationDbContext _ctx;
         private readonly ICurrentUserService _currentUserService;
 
-        public GetProjectsQueryHandler(IApplicationDbContext ctx ,ICurrentUserService currentUserService)
+        public GetProjectsQueryHandler(IApplicationDbContext ctx, ICurrentUserService currentUserService)
         {
             _ctx = ctx;
             _currentUserService = currentUserService;

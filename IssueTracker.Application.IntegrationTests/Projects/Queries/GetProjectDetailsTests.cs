@@ -1,4 +1,4 @@
-﻿using IssueTracker.Application.Projects.Queries;
+﻿using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Entities;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries

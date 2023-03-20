@@ -1,7 +1,7 @@
 ﻿using IssueTracker.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Application.Projects.Queries;
+using IssueTracker.Application.Projects.Queries.GetProjects;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {

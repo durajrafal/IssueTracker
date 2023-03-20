@@ -1,4 +1,5 @@
-﻿using IssueTracker.Application.Common.Interfaces;
+﻿using IssueTracker.Application.Common.Exceptions;
+using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IssueTracker.Application.Projects.Queries
+namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
 {
     public class GetProjectDetailsQuery : IRequest<Project>
     {
