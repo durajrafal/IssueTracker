@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjects
 {
-    public class GetProjectsQuery : IRequest<IQueryable<Project>>
+    public class GetProjectsQuery : IRequest<IQueryable<ProjectSummaryDto>>
     {
 
     }
 
-    public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IQueryable<Project>>
+    public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IQueryable<ProjectSummaryDto>>
     {
         private readonly IApplicationDbContext _ctx;
         private readonly ICurrentUserService _currentUserService;
@@ -26,11 +26,21 @@ namespace IssueTracker.Application.Projects.Queries.GetProjects
             _currentUserService = currentUserService;
         }
 
-        public Task<IQueryable<Project>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
+        public Task<IQueryable<ProjectSummaryDto>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
         {
             var output = _ctx.Projects
-                .AsNoTracking()
-                .Where(x => x.Members.Select(y => y.UserId).Contains(_currentUserService.UserId));
+                .Where(x =>
+                    x.Members.Select(y => y.UserId).Contains(_currentUserService.UserId)
+                )
+                .Select(x =>
+                    new ProjectSummaryDto
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        NumberOfMembers = x.Members.Count,
+                    }
+                );
+                
 
             return Task.FromResult(output);
         }

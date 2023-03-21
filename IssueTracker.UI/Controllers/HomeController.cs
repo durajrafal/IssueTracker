@@ -1,4 +1,5 @@
-﻿using IssueTracker.UI.Models;
+﻿using IssueTracker.Application.Projects.Queries.GetProjects;
+using IssueTracker.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -14,10 +15,13 @@ namespace IssueTracker.UI.Controllers
         {
             _logger = logger;
         }
-        
-        public IActionResult Index()
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var query = new GetProjectsQuery();
+            var result = await Mediator.Send(query);
+            return View(result);
         }
 
         public IActionResult Privacy()

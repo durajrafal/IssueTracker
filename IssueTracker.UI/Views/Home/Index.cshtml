@@ -1,5 +1,9 @@
-﻿@using Microsoft.AspNetCore.Authorization
+﻿@using IssueTracker.Application.Projects.Queries.GetProjects;
+@using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
+
+@model IQueryable<IssueTracker.Application.Projects.Queries.GetProjects.ProjectSummaryDto>
+
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -21,3 +25,37 @@
         </form>
     </div>
 }
+
+<div class="row">
+    <table class="table table-hover">
+        <thead>	
+            <tr>
+                <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Id)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Title)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.NumberOfMembers)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var modelArr = Model.ToArray();
+                for (int i = 0; i < modelArr.Length; i++)
+                {
+                    string tableRowClass;
+                    if (i%2 == 0)
+                    {
+                        tableRowClass = "table-light";
+                    }
+                    else
+                    {
+                        tableRowClass = "table-dark";
+                    }
+                    <tr class="@tableRowClass">
+                        <td class="text-end">@modelArr[i].Id</td>
+                        <th style="width:99%" scope="row">@modelArr[i].Title</th>
+                        <td class="text-center"><i class="bi bi-person-fill"></i> @modelArr[i].NumberOfMembers</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
