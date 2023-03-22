@@ -39,7 +39,7 @@ namespace IssueTracker.Infrastructure.Identity
         {
             try
             {
-                await SeedWithTestUsers();
+                await SeedWithDemoUsers();
             }
             catch (Exception)
             {
@@ -48,7 +48,7 @@ namespace IssueTracker.Infrastructure.Identity
             }
         }
 
-        private async Task SeedWithTestUsers()
+        private async Task SeedWithDemoUsers()
         {
             await TrySeedUserAsync("dev@test.com", "Developer");
             await TrySeedUserAsync("manager@test.com", "Manager");

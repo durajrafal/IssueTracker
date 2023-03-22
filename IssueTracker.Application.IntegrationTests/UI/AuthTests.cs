@@ -61,5 +61,22 @@ namespace IssueTracker.Application.IntegrationTests.UI
             Assert.Contains("manager@test.com", users.Select(x => x.UserName));
             Assert.Contains("admin@test.com", users.Select(x => x.UserName));
         }
+
+        [Theory]
+        [InlineData("LoginAsDeveloper")]
+        [InlineData("LoginAsManager")]
+        [InlineData("LoginAsAdmin")]
+        public async void Login_AsDemoUser_RedirectToHomeIndex(string action)
+        {
+            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false,
+            });
+
+            var response = await client.GetAsync($"/Account/{action}");
+
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            Assert.NotEqual("/Account/Login", response.Headers.Location.OriginalString);
+        }
     }
 }
