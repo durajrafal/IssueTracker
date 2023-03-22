@@ -38,6 +38,7 @@ namespace IssueTracker.Infrastructure
                 .AddDefaultTokenProviders();
 
             services.AddScoped<AuthDbContextInitialiser>();
+            services.AddScoped<AppDbContextInitialiser>();
 
 
             return services;

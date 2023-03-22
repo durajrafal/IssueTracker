@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using IssueTracker.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IssueTracker.Infrastructure.Identity
+namespace IssueTracker.Infrastructure
 {
     public class AuthDbContextInitialiser
     {
