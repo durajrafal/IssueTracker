@@ -1,15 +1,17 @@
-﻿using System;
+﻿using IssueTracker.IntegrationTests.Library.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
-namespace IssueTracker.Application.IntegrationTests.Common
+namespace IssueTracker.IntegrationTests.Library.Common
 {
     public class BaseTest : IClassFixture<CustomWebApplicationFactory>
     {
-        internal readonly CustomWebApplicationFactory _factory;
-        internal readonly TestingHelpers _testing;
+        public readonly CustomWebApplicationFactory _factory;
+        public readonly TestingHelpers _testing;
 
         public BaseTest(CustomWebApplicationFactory factory)
         {

@@ -31,7 +31,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_WhenProjectIdIsValidAndTitleUnique_UpdateProject()
         {
-            var project = GetProjectDetailsTests.CreateTestProject(nameof(Handle_WhenProjectIdIsValidAndTitleUnique_UpdateProject));
+            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValidAndTitleUnique_UpdateProject));
             await _testing.ActionDatabaseAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace IssueTracker.Application.IntegrationTests.Common
+namespace IssueTracker.IntegrationTests.Library.Common
 {
     public static class ServicesExtensions
     {

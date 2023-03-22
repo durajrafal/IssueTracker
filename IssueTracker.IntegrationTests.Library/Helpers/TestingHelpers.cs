@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IssueTracker.Application.IntegrationTests.Helpers
+namespace IssueTracker.IntegrationTests.Library.Helpers
 {
     public class TestingHelpers
     {

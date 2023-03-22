@@ -3,7 +3,7 @@ using IssueTracker.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IssueTracker.Application.IntegrationTests.Common
+namespace IssueTracker.IntegrationTests.Library.Common
 {
     public partial class TestUserService : ICurrentUserService
     {

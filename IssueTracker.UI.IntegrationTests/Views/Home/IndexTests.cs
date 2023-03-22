@@ -36,7 +36,7 @@ namespace IssueTracker.Application.IntegrationTests.UI.Home
             var userId = localFactory.Services.GetRequiredService<ICurrentUserService>().UserId;
             for (int i = 1; i <= numberOfProjects; i++)
             {
-                var project = GetProjectDetailsTests.CreateTestProject($"Project {i}");
+                var project = ProjectHelpers.CreateTestProject($"Project {i}");
                 project.Members.Add(new ProjectMember { UserId = userId });
                 await _testing.ActionDatabaseAsync(ctx => ctx.Projects.Add(project));
             }

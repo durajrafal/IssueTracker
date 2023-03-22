@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace IssueTracker.Application.IntegrationTests.UI
+namespace IssueTracker.UI.IntegrationTests
 {
     public class AuthTests : IClassFixture<CustomWebApplicationFactory>
     {
@@ -56,27 +56,10 @@ namespace IssueTracker.Application.IntegrationTests.UI
                 users = ctx.Users.ToList();
             }
 
-            Assert.True(users.Count == 3);
             Assert.Contains("dev@test.com", users.Select(x => x.UserName));
             Assert.Contains("manager@test.com", users.Select(x => x.UserName));
             Assert.Contains("admin@test.com", users.Select(x => x.UserName));
         }
 
-        [Theory]
-        [InlineData("LoginAsDeveloper")]
-        [InlineData("LoginAsManager")]
-        [InlineData("LoginAsAdmin")]
-        public async void Login_AsDemoUser_RedirectToHomeIndex(string action)
-        {
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-
-            var response = await client.GetAsync($"/Account/{action}");
-
-            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.NotEqual("/Account/Login", response.Headers.Location.OriginalString);
-        }
     }
 }

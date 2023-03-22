@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace IssueTracker.Application.IntegrationTests.Common
+namespace IssueTracker.IntegrationTests.Library.Common
 {
     public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {

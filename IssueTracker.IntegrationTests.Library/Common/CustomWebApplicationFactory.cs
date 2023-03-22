@@ -6,7 +6,7 @@ using IssueTracker.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using IssueTracker.Infrastructure.Identity;
 
-namespace IssueTracker.Application.IntegrationTests.Common
+namespace IssueTracker.IntegrationTests.Library.Common
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {

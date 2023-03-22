@@ -1,7 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System.Net.Http.Headers;
 
-namespace IssueTracker.Application.IntegrationTests.Helpers
+namespace IssueTracker.IntegrationTests.Library.Helpers
 {
     public static class AntiForgeryHelpers
     {
