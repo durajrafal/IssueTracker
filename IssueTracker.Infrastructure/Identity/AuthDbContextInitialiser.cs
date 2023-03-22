@@ -29,9 +29,9 @@ namespace IssueTracker.Infrastructure.Identity
                     await _ctx.Database.MigrateAsync();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -60,7 +60,7 @@ namespace IssueTracker.Infrastructure.Identity
             if (!_userManager.Users.Any(x => x.UserName == userName))
             {
                 var user = new ApplicationUser(userName);
-                _userManager.CreateAsync(user, "Pass123").GetAwaiter().GetResult();
+                await _userManager.CreateAsync(user, "Pass123");
 
                 var claim = new Claim(ClaimTypes.Role, claimRoleValue);
                 await _userManager.AddClaimAsync(user, claim);

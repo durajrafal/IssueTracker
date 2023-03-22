@@ -14,9 +14,22 @@ namespace IssueTracker.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel login, [FromServices] SignInManager<ApplicationUser> signInManager)
+        public async Task<IActionResult> Login(LoginViewModel login, [FromServices] SignInManager<ApplicationUser> signInManager)
         {
-            return View();
+            var result = await signInManager.PasswordSignInAsync(
+               userName: login.Email,
+               password: login.Password,
+               isPersistent: login.IsRememberChecked,
+               lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [HttpGet]

@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IssueTracker.Application.IntegrationTests.UI.Home
+namespace IssueTracker.UI.IntegrationTests.Views.Home
 {
     public class IndexTests : BaseTest
     {

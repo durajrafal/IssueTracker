@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using IssueTracker.Application.Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IssueTracker.Application.IntegrationTests.UI.Projects
+namespace IssueTracker.UI.IntegrationTests.Views.Projects
 {
     public class CreateTests : IClassFixture<CustomWebApplicationFactory>
     {
@@ -28,7 +28,7 @@ namespace IssueTracker.Application.IntegrationTests.UI.Projects
                 AllowAutoRedirect = false,
             });
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
-            var testing = new TestingHelpers(_factory);
+            var testing = new TestingHelpers(localFactory);
             var title = nameof(Post_WhenUserInManagerRole_CreateProject);
 
             //Act

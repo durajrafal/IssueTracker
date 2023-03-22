@@ -1,6 +1,7 @@
 ﻿using IssueTracker.Infrastructure.Persistance;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.IntegrationTests.Library.Helpers
@@ -35,9 +36,26 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
             }
         }
 
+        public async Task ActionDatabaseAsync<TDbContext>(Action<TDbContext> action) where TDbContext : DbContext
+        {
+            using (var ctx = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<TDbContext>())
+            {
+                action(ctx);
+                await ctx.SaveChangesAsync();
+            }
+        }
+
         public TResult FuncDatabase<TResult>(Func<AppDbContext, TResult> func)
         {
             using (var ctx = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>())
+            {
+                return func(ctx);
+            }
+        }
+
+        public TResult FuncDatabase<TDbContext,TResult>(Func<TDbContext, TResult> func) where TDbContext : DbContext
+        {
+            using (var ctx = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<TDbContext>())
             {
                 return func(ctx);
             }

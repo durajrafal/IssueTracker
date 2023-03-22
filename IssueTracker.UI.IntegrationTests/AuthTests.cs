@@ -9,10 +9,12 @@ namespace IssueTracker.UI.IntegrationTests
     public class AuthTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly CustomWebApplicationFactory _factory;
+        private readonly TestingHelpers _testing;
 
         public AuthTests(CustomWebApplicationFactory factory)
         {
             _factory = factory;
+            _testing = new TestingHelpers(_factory);
         }
 
         [Fact]
@@ -49,12 +51,10 @@ namespace IssueTracker.UI.IntegrationTests
         [Fact]
         public void SeedDatabase_Always_HaveAllTestUsers()
         { 
-            var scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
-            List<ApplicationUser> users;
-            using (var ctx = scopeFactory.CreateScope().ServiceProvider.GetRequiredService<AuthDbContext>())
+            var users = _testing.FuncDatabase<AuthDbContext, List<ApplicationUser>>(ctx =>
             {
-                users = ctx.Users.ToList();
-            }
+                return ctx.Users.ToList();
+            });
 
             Assert.Contains("dev@test.com", users.Select(x => x.UserName));
             Assert.Contains("manager@test.com", users.Select(x => x.UserName));
