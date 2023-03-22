@@ -15,7 +15,7 @@
 
 @if ((await AuthorizationService.AuthorizeAsync(User, "ProjectManagement")).Succeeded)
 {
-    <div class="row" id="form-create-project">
+    <div class="container" id="form-create-project">
         <form method="post" asp-controller="Projects" asp-action="Create">
             <div asp-validation-summary="All"></div>
             <div class="input-group">
@@ -26,7 +26,7 @@
     </div>
 }
 
-<div class="row">
+<div class="container">
     <table class="table table-hover">
         <thead>	
             <tr>
