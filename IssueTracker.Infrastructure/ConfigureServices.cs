@@ -29,9 +29,16 @@ namespace IssueTracker.Infrastructure
             });
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<AppDbContext>());
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            })
                 .AddEntityFrameworkStores<AuthDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<AuthDbContextInitialiser>();
+
 
             return services;
         }

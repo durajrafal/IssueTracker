@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using IssueTracker.Infrastructure.Identity;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -14,7 +16,7 @@ namespace IssueTracker.Application.IntegrationTests.UI
         }
 
         [Fact]
-        public async Task Get_WhenUserNotAuthenticated_Redirect()
+        public async Task GetHomePage_WhenUserNotAuthenticated_Redirect()
         {
             var client = _factory.CreateClient(
                 new WebApplicationFactoryClientOptions
@@ -30,7 +32,7 @@ namespace IssueTracker.Application.IntegrationTests.UI
         }
 
         [Fact]
-        public async Task Get_WhenUserAuthenticated_LoadPage()
+        public async Task GetHomePage_WhenUserAuthenticated_LoadPage()
         {
             var client = _factory.MakeAuthenticated().CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -42,6 +44,22 @@ namespace IssueTracker.Application.IntegrationTests.UI
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
+        }
+
+        [Fact]
+        public void SeedDatabase_Always_HaveAllTestUsers()
+        { 
+            var scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
+            List<ApplicationUser> users;
+            using (var ctx = scopeFactory.CreateScope().ServiceProvider.GetRequiredService<AuthDbContext>())
+            {
+                users = ctx.Users.ToList();
+            }
+
+            Assert.True(users.Count == 3);
+            Assert.Contains("dev@test.com", users.Select(x => x.UserName));
+            Assert.Contains("manager@test.com", users.Select(x => x.UserName));
+            Assert.Contains("admin@test.com", users.Select(x => x.UserName));
         }
     }
 }

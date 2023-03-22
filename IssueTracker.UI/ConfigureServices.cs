@@ -23,7 +23,15 @@ namespace IssueTracker.UI
             {
                 options.AddPolicy("ProjectManagement", pb =>
                 {
-                    pb.RequireRole("Manager");
+                    pb.RequireRole("Manager", "Admin");
+                });
+                options.AddPolicy("UserAdministration", pb =>
+                {
+                    pb.RequireRole("Admin");
+                });
+                options.AddPolicy("Development", pb =>
+                {
+                    pb.RequireRole("Developer", "Manager", "Admin");
                 });
             });
 

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.Application.Un
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.UI", "IssueTracker.UI\IssueTracker.UI.csproj", "{A77D837B-6486-4262-A822-67B606EA541A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.Application.IntegrationTests", "IssueTracker.Application.IntegrationTests\IssueTracker.Application.IntegrationTests.csproj", "{70BD37AE-A1A2-485C-9DF9-AB1E5BF2F11C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.Application.IntegrationTests", "IssueTracker.Application.IntegrationTests\IssueTracker.Application.IntegrationTests.csproj", "{70BD37AE-A1A2-485C-9DF9-AB1E5BF2F11C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
