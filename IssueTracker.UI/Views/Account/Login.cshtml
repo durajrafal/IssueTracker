@@ -2,22 +2,25 @@
 @model LoginViewModel
 
 @{
+    ViewData["Title"] = "Login";
 }
 
 <div class="card mt-md-5 mt-2">
-
     <div class="row">
         <div class="col-md-6">
             <div class="card-body">
-                <h4 class="card-title text-center">Login with credentials</h4>
-                <form class="justify-content-center" method="post">
+                <h4 class="card-title text-center">Log in with credentials</h4>
+                <form class="justify-content-center needs-validation" novalidate method="post">
                     <div class="form-group">
                         <label for="inputEmail" class="form-label mt-4">Email address</label>
-                        <input asp-for="Email" type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                        <input asp-for="Email" type="email" class="form-control" id="inputEmail"
+                               aria-describedby="emailHelp" placeholder="Enter email" required>
+                        <span asp-validation-for="Email" class="invalid-feedback"></span>
                     </div>
                     <div class="form-group">
                         <label for="inputPassword" class="form-label mt-4">Password</label>
                         <input asp-for="Password" type="password" class="form-control" id="inputPassword" placeholder="Password">
+                        <span asp-validation-for="Password" class="invalid-feedback"></span>
                     </div>
                     <div class="form-check mt-2 ms-2">
                         <input asp-for="IsRememberChecked" class="form-check-input" type="checkbox" value="" id="checkRememberMe">
@@ -29,6 +32,15 @@
                         <button type="submit" class="btn btn-success w-100">Submit</button>
                     </div>
                 </form>
+                <div class="row d-md-none mt-3 justify-content-center">
+                    @if (ViewBag.LoginResult == "Failed")
+                    {
+                        <div class="col-10 alert alert-dismissible alert-danger text-center">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <strong>Logging in failed!</strong> Check your credentials and try again.
+                        </div>
+                    }
+                </div>
                 <hr />
                 <div class="row text-center mt-2">
                     <a asp-controller="Account" asp-action="Register">Don't have an account? Register now!</a>
@@ -41,7 +53,7 @@
         </div>
         <div class="col-md-6">
             <div class="card-body">
-                <h4 class="card-title text-center">Login with demo users</h4>
+                <h4 class="card-title text-center">Log in as demo users</h4>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row mt-3 mx-2 mx-md-0">
@@ -88,3 +100,14 @@
         </div>
     </div>
 </div>
+@if (ViewBag.LoginResult == "Failed")
+{
+    <div class="row mt-4 justify-content-center">
+        <div class="col-9 col-lg-6 d-none d-md-block">
+            <div class="alert alert-dismissible alert-danger text-center">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <strong>Logging in failed!</strong> Check your credentials and try again.
+            </div>
+        </div>
+    </div>
+}

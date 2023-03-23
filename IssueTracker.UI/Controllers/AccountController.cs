@@ -1,4 +1,5 @@
-﻿using IssueTracker.Infrastructure.Identity;
+﻿using Azure.Identity;
+using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,20 +17,26 @@ namespace IssueTracker.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel login, [FromServices] SignInManager<ApplicationUser> signInManager)
         {
-            var result = await signInManager.PasswordSignInAsync(
-               userName: login.Email,
-               password: login.Password,
-               isPersistent: login.IsRememberChecked,
-               lockoutOnFailure: false);
+            if (ModelState.IsValid)
+            {
+                var result = await signInManager.PasswordSignInAsync(
+                       userName: login.Email,
+                       password: login.Password,
+                       isPersistent: login.IsRememberChecked,
+                       lockoutOnFailure: false);
 
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.LoginResult = "Failed";
+                    return View(login);
+                } 
             }
-            else
-            {
-                return View();
-            }
+
+            return View();
         }
 
         [HttpGet]
