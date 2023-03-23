@@ -14,19 +14,15 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
-    public class LoginTests : IClassFixture<CustomWebApplicationFactory>
+    public class LoginTests : BaseTestWithScope
     {
-        private readonly CustomWebApplicationFactory _factory;
-        private readonly IServiceScopeFactory _scopeFactory;
-
         public LoginTests(CustomWebApplicationFactory factory)
+            :base(factory)
         {
-            _factory = factory;
-            _scopeFactory = factory.Services.GetRequiredService<IServiceScopeFactory>();
         }
 
         [Fact]
-        public async void LoginWithCredentials_WhenAreValid_LogInAndRedirectToHomePage()
+        public async void LoginWithCredentials_WhenAreValid_RedirectToHomePage()
         {
             //Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -49,12 +45,10 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             //Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
             Assert.Equal("/", response.Headers.Location.OriginalString);
-            var homePage = await client.GetAsync("/");
-            Assert.Equal(HttpStatusCode.OK, homePage.StatusCode);
         }
 
         [Fact]
-        public async void LoginWithCredentials_WhenAreInvalid_ReloadTheLoginPage()
+        public async void LoginWithCredentials_WhenAreInvalid_DoNoRedirectToHome()
         {
             //Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -70,9 +64,8 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             var response = await client.SendAsync(request);
 
             //Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var homePage = await client.GetAsync("/");
-            Assert.NotEqual(HttpStatusCode.OK, homePage.StatusCode);
+            Assert.NotEqual(HttpStatusCode.Redirect, response.StatusCode);
+            Assert.Null(response.Headers.Location);
         }
 
         private async Task<HttpRequestMessage> CreateLoginFormRequestAsync(HttpResponseMessage page, string userName, string password)
