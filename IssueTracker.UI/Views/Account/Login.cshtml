@@ -33,20 +33,20 @@
                     </div>
                 </form>
                 <div class="row d-md-none mt-3 justify-content-center">
-                    @if (ViewBag.LoginResult == "Failed")
+                    @if (Model?.ResultMessage != null)
                     {
                         <div class="col-10 alert alert-dismissible alert-danger text-center">
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            <strong>Logging in failed!</strong> Check your credentials and try again.
+                            @Model.ResultMessage
                         </div>
                     }
                 </div>
                 <hr />
-                <div class="row text-center mt-2">
-                    <a asp-controller="Account" asp-action="Register">Don't have an account? Register now!</a>
+                <div class="d-flex justify-content-center mt-2 text-success">
+                    Don't have an account?&nbsp<a asp-controller="Account" asp-action="Register">Register now!</a>
                 </div>
-                <div class="row text-center mt-2">
-                    <a asp-controller="Account" asp-action="ResetPassword">Forgot Password? No worries!</a>
+                <div class="d-flex justify-content-center mt-2 text-success">
+                    Forgot Password?&nbsp<a asp-controller="Account" asp-action="ResetPassword"> No worries!</a>
                 </div>
             </div>
 
@@ -100,13 +100,14 @@
         </div>
     </div>
 </div>
-@if (ViewBag.LoginResult == "Failed")
+@if (Model?.ResultMessage !=  null)
 {
     <div class="row mt-4 justify-content-center">
         <div class="col-9 col-lg-6 d-none d-md-block">
             <div class="alert alert-dismissible alert-danger text-center">
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                <strong>Logging in failed!</strong> Check your credentials and try again.
+                @*<strong>Logging in failed!</strong> Check your credentials and try again.*@
+                @Model.ResultMessage
             </div>
         </div>
     </div>

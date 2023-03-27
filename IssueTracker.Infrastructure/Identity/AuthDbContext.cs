@@ -15,5 +15,11 @@ namespace IssueTracker.Infrastructure.Identity
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ApplicationUser>().Ignore(x => x.FullName);
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

@@ -5,12 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authorization.Policy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IssueTracker.Infrastructure.Services;
 
 namespace IssueTracker.Infrastructure
 {
@@ -45,6 +40,7 @@ namespace IssueTracker.Infrastructure
 
             services.AddScoped<AuthDbContextInitialiser>();
             services.AddScoped<AppDbContextInitialiser>();
+            services.AddScoped<IEmailService, EmailService>();
 
 
             return services;

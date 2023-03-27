@@ -5,6 +5,7 @@ using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using IssueTracker.Infrastructure.Identity;
+using Moq;
 
 namespace IssueTracker.IntegrationTests.Library.Common
 {
@@ -30,6 +31,15 @@ namespace IssueTracker.IntegrationTests.Library.Common
                 });
                 services.Remove<ICurrentUserService>()
                     .AddSingleton<ICurrentUserService, TestUserService>();
+
+                services.Mock<IEmailService>(mock =>
+                {
+                    mock.Setup(x =>
+                        x.SendConfirmationEmailAsync(It.IsNotNull<string>(),
+                        It.IsNotNull<string>(),
+                        It.IsNotNull<string>()))
+                    .Returns(Task.FromResult(true));
+                });
 
                 services.AddAntiforgery(setup =>
                 {

@@ -1,4 +1,5 @@
 ﻿using IssueTracker.Infrastructure.Identity;
+using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -88,6 +89,45 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
                 .Where(x => x.Key == "Set-Cookie")
                 .SelectMany(x => x.Value.Select(v => v.Split("=").First()));
             Assert.DoesNotContain(".AspNetCore.Identity.Application", cookies);
+        }
+
+        [Fact]
+        public async void Register_WithRequiredFields_AddNewUserToDatabase()
+        {
+            //Arrange
+            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false,
+            });
+            var user = new RegisterViewModel
+            {
+                Email = "mock@test.com",
+                Password = "Pass123",
+                ConfirmPassword = "Pass123",
+                FirstName = "Registered",
+                LastName = "User"
+            };
+
+            //Act
+            var request = new HttpRequestMessage(HttpMethod.Post, "/Account/Register");
+            request.Content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string,string>("Email", user.Email),
+                new KeyValuePair<string,string>("Password", user.Password),
+                new KeyValuePair<string,string>("ConfirmPassword", user.ConfirmPassword),
+                new KeyValuePair<string,string>("FirstName", user.FirstName),
+                new KeyValuePair<string,string>("LastName", user.LastName),
+            });
+            var response = await client.SendAsync(request);
+
+            //Assert
+            var registeredUser = _testing.FuncDatabase<AuthDbContext, ApplicationUser>(ctx => 
+            ctx.Users.Where(x => x.Email == user.Email).First());
+            Assert.NotNull(registeredUser);
+            Assert.Equal(user.Email, registeredUser.UserName);
+            Assert.Equal(user.Email, registeredUser.Email);
+            Assert.Equal(user.FirstName, registeredUser.FirstName);
+            Assert.Equal(user.LastName, registeredUser.LastName);
         }
 
 

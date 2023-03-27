@@ -12,11 +12,13 @@ namespace IssueTracker.IntegrationTests.Library.Common
     public class BaseTestWithScope : IClassFixture<CustomWebApplicationFactory>
     {
         public readonly CustomWebApplicationFactory _factory;
+        public readonly TestingHelpers _testing;
         public readonly IServiceScopeFactory _scopeFactory;
 
         public BaseTestWithScope(CustomWebApplicationFactory factory)
         {
             _factory = factory;
+            _testing = new TestingHelpers(_factory);
             _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
         }
     }
