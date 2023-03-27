@@ -56,6 +56,13 @@ namespace IssueTracker.UI.IntegrationTests
                 return ctx.Users.ToList();
             });
 
+            foreach (var user in users)
+            {
+                Assert.NotNull(user.Email);
+                Assert.NotNull(user.FirstName);
+                Assert.NotNull(user.LastName);
+                Assert.True(user.EmailConfirmed);
+            }
             Assert.Contains("dev@test.com", users.Select(x => x.UserName));
             Assert.Contains("manager@test.com", users.Select(x => x.UserName));
             Assert.Contains("admin@test.com", users.Select(x => x.UserName));

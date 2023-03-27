@@ -13,11 +13,13 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Home
 {
-    public class IndexTests : BaseTest
+    public class IndexTests : IClassFixture<CustomWebApplicationFactory>
     {
-        public IndexTests()
-            :base()
+        private readonly CustomWebApplicationFactory _factory;
+
+        public IndexTests(CustomWebApplicationFactory factory)
         {
+            _factory = factory;
         }
 
         [Theory]
@@ -34,11 +36,12 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
             });
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
             var userId = localFactory.Services.GetRequiredService<ICurrentUserService>().UserId;
+            var testing = new TestingHelpers(localFactory);
             for (int i = 1; i <= numberOfProjects; i++)
             {
                 var project = ProjectHelpers.CreateTestProject($"Project {i}");
                 project.Members.Add(new ProjectMember { UserId = userId });
-                await _testing.ActionDatabaseAsync(ctx => ctx.Projects.Add(project));
+                await testing.ActionDatabaseAsync(ctx => ctx.Projects.Add(project));
             }
 
             //Act
@@ -46,7 +49,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
             var pageHtml = await page.Content.ReadAsStringAsync();
 
             //Assert
-            var projectsCount = _testing.FuncDatabase(ctx => 
+            var projectsCount = testing.FuncDatabase(ctx => 
                 ctx.Projects.Where(x => x.Members.Any(x => x.UserId == userId)).Count());
             var tableBody = pageHtml.Split("<tbody>").Last().Split("</tbody>").First();
             var rows = tableBody.Split("<tr").Skip(1);

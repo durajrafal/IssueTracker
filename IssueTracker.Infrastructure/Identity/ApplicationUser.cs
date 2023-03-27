@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 namespace IssueTracker.Infrastructure.Identity
 {
     public class ApplicationUser : IdentityUser
-    {
-        public ApplicationUser(string userName)
-            :base(userName)
+    {   
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
+        public ApplicationUser(string email, string firstName, string lastName)
+            :base(email)
         {
-            
+            Email = email;
+            FirstName = firstName;
+            LastName = lastName;
         }
     }
 }

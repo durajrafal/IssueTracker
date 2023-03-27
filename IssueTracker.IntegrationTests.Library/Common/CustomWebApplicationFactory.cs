@@ -12,19 +12,21 @@ namespace IssueTracker.IntegrationTests.Library.Common
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
             base.ConfigureWebHost(builder);
 
             builder.ConfigureServices(services =>
             {
+                var dbName = Guid.NewGuid().ToString();
                 services.Remove<DbContextOptions<AppDbContext>>();
                 services.AddDbContext<AppDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase("IssueTracker");
+                    options.UseInMemoryDatabase(dbName);
                 });
                 services.Remove<DbContextOptions<AuthDbContext>>();
                 services.AddDbContext<AuthDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase("IssueTracker");
+                    options.UseInMemoryDatabase(dbName);
                 });
                 services.Remove<ICurrentUserService>()
                     .AddSingleton<ICurrentUserService, TestUserService>();
@@ -36,7 +38,6 @@ namespace IssueTracker.IntegrationTests.Library.Common
                 });
             });
 
-            builder.UseEnvironment("Development");
         }
 
         

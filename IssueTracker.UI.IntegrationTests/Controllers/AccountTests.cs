@@ -43,7 +43,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             var password = "Pass123";
             using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
-                var user = new ApplicationUser(userName);
+                var user = new ApplicationUser(userName, "John", "Smith");
                 await userManager.CreateAsync(user, password);
             }
 
@@ -72,8 +72,8 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
                 AllowAutoRedirect = false,
             });
             var userName = "invalid@test.com";
-            var password = "Pass123"
-                ;
+            var password = "Pass123";
+
             //Act
             var request = new HttpRequestMessage(HttpMethod.Post, "/Account/Login");
             request.Content = new FormUrlEncodedContent(new[]

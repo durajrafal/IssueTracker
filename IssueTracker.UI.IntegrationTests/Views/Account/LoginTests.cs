@@ -33,7 +33,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             var password = "Pass123";
             using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
-                var user = new ApplicationUser(userName);
+                var user = new ApplicationUser(userName, "John", "Smith");
                 await userManager.CreateAsync(user, password);
             }
 
