@@ -16,6 +16,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
     public class LoginTests : BaseTestWithScope
     {
+        private const string LoginUri = "/Identity/Account/Login";
         public LoginTests(CustomWebApplicationFactory factory)
             :base(factory)
         {
@@ -38,7 +39,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             }
 
             //Act
-            var page = await client.GetAsync("/Account/Login");
+            var page = await client.GetAsync(LoginUri);
             var request = await CreateLoginFormRequestAsync(page, userName, password);
             var response = await client.SendAsync(request);
 
@@ -59,7 +60,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             var password = "Pass123";
 
             //Act
-            var page = await client.GetAsync("/Account/Login");
+            var page = await client.GetAsync(LoginUri);
             var request = await CreateLoginFormRequestAsync(page, userName, password);
             var response = await client.SendAsync(request);
 
@@ -75,7 +76,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             var cookieToken = AntiForgeryHelpers.ExtractCookieToken(page.Headers);
             var formToken = AntiForgeryHelpers.ExtractFormToken(pageHtml, "test_csrf_field");
 
-            var output = new HttpRequestMessage(HttpMethod.Post, "/Account/Login");
+            var output = new HttpRequestMessage(HttpMethod.Post, LoginUri);
             output.Content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string,string>("Email", userName),

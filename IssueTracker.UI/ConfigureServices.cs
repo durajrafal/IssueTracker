@@ -17,7 +17,7 @@ namespace IssueTracker.UI
             services.AddAuthentication("Cookie").AddCookie("Cookie");
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Account/Login";
+                options.LoginPath = "/Identity/Account/Login";
             });
             services.AddAuthorization(options =>
             {

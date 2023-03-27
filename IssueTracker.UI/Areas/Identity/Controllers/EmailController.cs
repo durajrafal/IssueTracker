@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IssueTracker.UI.Controllers
+namespace IssueTracker.UI.Areas.Identity.Controllers
 {
+    [Area("Identity")]
     public class EmailController : Controller
     {
 

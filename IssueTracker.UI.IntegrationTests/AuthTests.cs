@@ -29,7 +29,7 @@ namespace IssueTracker.UI.IntegrationTests
             var response = await client.GetAsync("/");
 
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.StartsWith("http://localhost/Account/Login",response.Headers.Location.OriginalString);
+            Assert.StartsWith("http://localhost/Identity/Account/Login",response.Headers.Location.OriginalString);
 
         }
 

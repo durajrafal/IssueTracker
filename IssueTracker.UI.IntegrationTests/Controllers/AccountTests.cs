@@ -9,6 +9,9 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
 {
     public class AccountTests : BaseTestWithScope
     {
+        private const string LoginUri = "/Identity/Account/Login";
+        private const string RegisterUri = "/Identity/Account/Register";
+
         public AccountTests(CustomWebApplicationFactory factory)
             : base(factory)
         {
@@ -25,10 +28,10 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
                 AllowAutoRedirect = false,
             });
 
-            var response = await client.GetAsync($"/Account/{action}");
+            var response = await client.GetAsync($"/Identity/Account/{action}");
 
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.NotEqual("/Account/Login", response.Headers.Location.OriginalString);
+            Assert.NotEqual(LoginUri, response.Headers.Location.OriginalString);
         }
 
 
@@ -49,7 +52,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             }
 
             //Act
-            var request = new HttpRequestMessage(HttpMethod.Post, "/Account/Login");
+            var request = new HttpRequestMessage(HttpMethod.Post, LoginUri);
             request.Content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string,string>("Email", userName),
@@ -76,7 +79,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             var password = "Pass123";
 
             //Act
-            var request = new HttpRequestMessage(HttpMethod.Post, "/Account/Login");
+            var request = new HttpRequestMessage(HttpMethod.Post, LoginUri);
             request.Content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string,string>("Email", userName),
@@ -109,7 +112,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             };
 
             //Act
-            var request = new HttpRequestMessage(HttpMethod.Post, "/Account/Register");
+            var request = new HttpRequestMessage(HttpMethod.Post, RegisterUri);
             request.Content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string,string>("Email", user.Email),

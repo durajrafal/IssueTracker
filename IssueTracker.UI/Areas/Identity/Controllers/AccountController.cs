@@ -4,8 +4,9 @@ using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IssueTracker.UI.Controllers
+namespace IssueTracker.UI.Areas.Identity.Controllers
 {
+    [Area("Identity")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -50,7 +51,7 @@ namespace IssueTracker.UI.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser(register.Email, register.FirstName, register.LastName);
-                var result = await _userManager.CreateAsync(user,register.Password);
+                var result = await _userManager.CreateAsync(user, register.Password);
                 if (result.Succeeded)
                 {
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -94,17 +95,17 @@ namespace IssueTracker.UI.Controllers
         {
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
             else if (result.IsNotAllowed)
             {
                 login.ResultMessage = new("<strong> Email not confirmed! </strong> Please confirm your email and try again.");
-                return View("Login",login);
+                return View("Login", login);
             }
             else
             {
                 login.ResultMessage = new("<strong> Logging in failed! </strong> Check your credentials and try again.");
-                return View("Login",login);
+                return View("Login", login);
             }
         }
     }
