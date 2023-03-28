@@ -11,6 +11,7 @@
             <div class="card-body">
                 <h4 class="card-title text-center">Log in with credentials</h4>
                 <form class="justify-content-center needs-validation" novalidate method="post">
+                    @Html.AntiForgeryToken()
                     <div class="form-group">
                         <label for="inputEmail" class="form-label mt-4">Email address</label>
                         <input asp-for="Email" type="email" class="form-control" id="inputEmail"

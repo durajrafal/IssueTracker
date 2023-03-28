@@ -43,8 +43,8 @@ namespace IssueTracker.IntegrationTests.Library.Common
 
                 services.AddAntiforgery(setup =>
                 {
-                    setup.Cookie.Name = "test_csrf_cookie";
-                    setup.FormFieldName = "test_csrf_field";
+                    setup.Cookie.Name = "AntiForgeryCookie";
+                    setup.FormFieldName = "AntiForgeryField";
                 });
             });
 

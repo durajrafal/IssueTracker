@@ -29,29 +29,16 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             });
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
             var testing = new TestingHelpers(localFactory);
-            var title = nameof(Post_WhenUserInManagerRole_CreateProject);
+            var model = new { Title = "Test Project" };
 
             //Act
-            var page = await client.GetAsync("/");
-            var pageHtml = await page.Content.ReadAsStringAsync();
-
-            var cookieToken = AntiForgeryHelpers.ExtractCookieToken(page.Headers);
-            var formToken = AntiForgeryHelpers.ExtractFormToken(pageHtml, "test_csrf_field");
-
-            var request = new HttpRequestMessage(HttpMethod.Post, "/Projects/Create");
-            request.Content = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string,string>("title", title),
-                new KeyValuePair<string,string>("test_csrf_field", formToken)
-            });
-            request.Headers.Add("Cookie", $"test_csrf_cookie={cookieToken}");
-            var response = await client.SendAsync(request);
+            var response = await client.SendFormAsync(HttpMethod.Post, "/", "/Projects/Create", model);
 
             //Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains("action=\"/Projects/Create\"", pageHtml);
+            Assert.Equal(HttpStatusCode.OK, response.HttpResponseMessage.StatusCode);
+            Assert.Contains("action=\"/Projects/Create\"", response.PageHtml);
             var userId = localFactory.Services.GetRequiredService<ICurrentUserService>().UserId;
-            var addedProject = testing.FuncDatabase(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Title == title));
+            var addedProject = testing.FuncDatabase(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Title == model.Title));
             Assert.Contains(userId,addedProject.Members.Select(x => x.UserId));
 
         }

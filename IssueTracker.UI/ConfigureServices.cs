@@ -2,6 +2,7 @@
 using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace IssueTracker.UI
@@ -10,7 +11,10 @@ namespace IssueTracker.UI
     {
         public static IServiceCollection AddWebUI(this IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
