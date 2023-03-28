@@ -21,5 +21,12 @@ namespace IssueTracker.IntegrationTests.Library.Common
             _testing = new TestingHelpers(_factory);
             _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
         }
+
+        public BaseTestWithScope()
+        {
+            _factory = new CustomWebApplicationFactory();
+            _testing = new TestingHelpers(_factory);
+            _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
+        }
     }
 }

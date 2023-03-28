@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.UI", "IssueTra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.Application.IntegrationTests", "IssueTracker.Application.IntegrationTests\IssueTracker.Application.IntegrationTests.csproj", "{70BD37AE-A1A2-485C-9DF9-AB1E5BF2F11C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.UI.IntegrationTests", "IssueTracker.UI.IntegrationTests\IssueTracker.UI.IntegrationTests.csproj", "{8A8A5C55-9C50-4E46-94A4-9BB0C133880A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.UI.IntegrationTests", "IssueTracker.UI.IntegrationTests\IssueTracker.UI.IntegrationTests.csproj", "{8A8A5C55-9C50-4E46-94A4-9BB0C133880A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.IntegrationTests.Library", "IssueTracker.IntegrationTests.Library\IssueTracker.IntegrationTests.Library.csproj", "{9D87D4BE-81BA-4172-817F-21E577AF457A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.IntegrationTests.Library", "IssueTracker.IntegrationTests.Library\IssueTracker.IntegrationTests.Library.csproj", "{9D87D4BE-81BA-4172-817F-21E577AF457A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

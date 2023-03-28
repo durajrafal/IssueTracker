@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Html;
+using System.ComponentModel.DataAnnotations;
 
 namespace IssueTracker.UI.Models.Account
 {
@@ -27,5 +28,6 @@ namespace IssueTracker.UI.Models.Account
         [StringLength(50, MinimumLength = 2)]
         public string LastName { get; set; }
 
+        public HtmlString? ResultMessage { get; set; }
     }
 }

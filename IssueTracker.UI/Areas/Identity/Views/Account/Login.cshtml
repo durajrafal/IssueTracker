@@ -13,14 +13,14 @@
                 <form class="justify-content-center needs-validation" novalidate method="post">
                     @Html.AntiForgeryToken()
                     <div class="form-group">
-                        <label for="inputEmail" class="form-label mt-4">Email address</label>
+                        <label for="inputEmail" class="form-label mt-4">Email Address</label>
                         <input asp-for="Email" type="email" class="form-control" id="inputEmail"
                                aria-describedby="emailHelp" placeholder="Enter email" required>
                         <span asp-validation-for="Email" class="invalid-feedback"></span>
                     </div>
                     <div class="form-group">
                         <label for="inputPassword" class="form-label mt-4">Password</label>
-                        <input asp-for="Password" type="password" class="form-control" id="inputPassword" placeholder="Password">
+                        <input asp-for="Password" type="password" class="form-control" id="inputPassword" placeholder="Enter password">
                         <span asp-validation-for="Password" class="invalid-feedback"></span>
                     </div>
                     <div class="form-check mt-2 ms-2">

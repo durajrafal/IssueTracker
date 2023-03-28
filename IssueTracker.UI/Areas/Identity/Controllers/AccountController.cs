@@ -1,8 +1,10 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Models.Account;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace IssueTracker.UI.Areas.Identity.Controllers
 {
@@ -59,12 +61,24 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
                     bool emailResponse = await emailService.SendConfirmationEmailAsync(user.Email, user.FullName, confirmationLink);
 
                     if (emailResponse)
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Index", "Home", new { area= ""});
                     else
                     {
                         await _userManager.DeleteAsync(user);
+                        register.ResultMessage = new HtmlString($"Failed to send an email to <strong>{register.Email}</strong>");
                         return View(register);
                     }
+                }
+                if (result.Errors.Count() > 0)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var error in result.Errors.Where(x => x.Code != "DuplicateUserName"))
+                    {
+                        sb.Append(error.Description);
+                        sb.Append("<br>");
+                    }
+                    register.ResultMessage = new HtmlString(sb.ToString());
+
                 }
             }
             return View(register);
@@ -99,12 +113,12 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
             }
             else if (result.IsNotAllowed)
             {
-                login.ResultMessage = new("<strong> Email not confirmed! </strong> Please confirm your email and try again.");
+                login.ResultMessage = new("<strong> Email not confirmed! </strong><br> Please confirm your email and try again.");
                 return View("Login", login);
             }
             else
             {
-                login.ResultMessage = new("<strong> Logging in failed! </strong> Check your credentials and try again.");
+                login.ResultMessage = new("<strong> Logging in failed! </strong><br> Check your credentials and try again.");
                 return View("Login", login);
             }
         }

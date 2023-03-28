@@ -1,0 +1,63 @@
+﻿@using IssueTracker.UI.Models.Account;
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="card mt-md-5 mt-2 w-100" style="max-width: 40rem;">
+    <div class="row">
+        <div class="card-body">
+                <h4 class="card-title text-center">Register your account</h4>
+                <form class="justify-content-center needs-validation mx-3" novalidate method="post">
+                    @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label for="inputFirstName" class="form-label mt-4">First Name</label>
+                        <input asp-for="FirstName" type="text" class="form-control" id="inputFirstName" placeholder="John">
+                        <span asp-validation-for="FirstName" class="invalid-feedback"></span>
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="inputPassword" class="form-label mt-4">Confirm Password</label>
+                        <input asp-for="LastName" type="text" class="form-control" id="inputConfirmPassword" placeholder="Wick">
+                        <span asp-validation-for="LastName" class="invalid-feedback"></span>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="form-label mt-4">Email Address</label>
+                        <input asp-for="Email" type="email" class="form-control" id="inputEmail"
+                               aria-describedby="emailHelp" placeholder="babayaga@gmail.com" required>
+                        <span asp-validation-for="Email" class="invalid-feedback"></span>
+                    </div>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label for="inputPassword" class="form-label mt-4">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" id="inputPassword" placeholder="Pass21">
+                        <span asp-validation-for="Password" class="invalid-feedback"></span>
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="inputConfirmPassword" class="form-label mt-4">Confirm Password</label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" id="inputConfirmPassword" placeholder="Pass21">
+                        <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
+                    </div>
+                </div>
+                    <div class="col-8 d-flex mt-4 mx-auto justify-content-center">
+                        <button type="submit" class="btn btn-success px-5">Submit</button>
+                    </div>
+                </form>
+                <div class="row mt-3 justify-content-center">
+                    @if (Model?.ResultMessage != null)
+                    {
+                        <div class="col-10 alert alert-dismissible alert-danger text-center">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            @Model.ResultMessage
+                        </div>
+                    }
+                </div>
+                <hr />
+                <div class="d-flex justify-content-center mt-2 text-success">
+                    Already have an account?&nbsp<a asp-area="Identity" asp-controller="Account" asp-action="Login">Login now!</a>
+                </div>
+            </div>
+    </div>
+</div>
