@@ -16,7 +16,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         }
 
         [Fact]
-        public async void LoginWithCredentials_WhenAreValid_HasIdentityCookieAndRedirectsToHomePage()
+        public async void LoginWithCredentials_WhenCredentialsAreValid_ShouldHaveIdentityCookieAndRedirectsToHomePage()
         {
             //Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -38,7 +38,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             };
 
             //Act
-            var response = client.SendFormAsync(HttpMethod.Post,LOGIN_URI,login).Result.HttpResponseMessage;
+            var response = await client.SendFormAsync(HttpMethod.Post,LOGIN_URI,login);
 
             //Assert
             var cookies = response.Headers
@@ -50,7 +50,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         }
 
         [Fact]
-        public async void LoginWithCredentials_WhenAreInvalid_DoesntHaveIdentityCookieNorRedirectToHome()
+        public async void LoginWithCredentials_WhenCredentialsAreInvalid_ShouldNotHaveIdentityCookieNorRedirectToHome()
         {
             //Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -67,7 +67,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             };
 
             //Act
-            var response = client.SendFormAsync(HttpMethod.Post, LOGIN_URI, login).Result.HttpResponseMessage;
+            var response = await client.SendFormAsync(HttpMethod.Post, LOGIN_URI, login);
 
             //Assert
             var cookies = response.Headers

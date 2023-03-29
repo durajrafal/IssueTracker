@@ -18,7 +18,7 @@ namespace IssueTracker.UI.IntegrationTests
         }
 
         [Fact]
-        public async Task GetHomePage_WhenUserNotAuthenticated_Redirect()
+        public async Task GetHomePage_WhenUserNotAuthenticated_ShouldRedirect()
         {
             var client = _factory.CreateClient(
                 new WebApplicationFactoryClientOptions
@@ -34,7 +34,7 @@ namespace IssueTracker.UI.IntegrationTests
         }
 
         [Fact]
-        public async Task GetHomePage_WhenUserAuthenticated_LoadPage()
+        public async Task GetHomePage_WhenUserAuthenticated_ShouldLoadPage()
         {
             var client = _factory.MakeAuthenticated().CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -49,7 +49,7 @@ namespace IssueTracker.UI.IntegrationTests
         }
 
         [Fact]
-        public void SeedDatabase_Always_HaveAllTestUsers()
+        public void SeedDatabase_Always_ShouldHaveAllTestUsers()
         { 
             var users = _testing.FuncDatabase<AuthDbContext, List<ApplicationUser>>(ctx =>
             {

@@ -26,7 +26,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
         [InlineData(0)]
         [InlineData(2)]
         [InlineData(5)]
-        public async Task Get_WhenUserLoggedIn_DisplayAssignedProjects(int numberOfProjects)
+        public async Task Get_WhenUserLoggedIn_ShouldDisplayAssignedProjects(int numberOfProjects)
         {
             //Arrange
             var localFactory = _factory.MakeAuthenticated();

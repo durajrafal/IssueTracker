@@ -6,6 +6,7 @@ using IssueTracker.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using IssueTracker.Infrastructure.Identity;
 using Moq;
+using Microsoft.AspNetCore.TestHost;
 
 namespace IssueTracker.IntegrationTests.Library.Common
 {
@@ -32,6 +33,15 @@ namespace IssueTracker.IntegrationTests.Library.Common
                 services.Remove<ICurrentUserService>()
                     .AddSingleton<ICurrentUserService, TestUserService>();
 
+                services.AddAntiforgery(setup =>
+                {
+                    setup.Cookie.Name = "AntiForgeryCookie";
+                    setup.FormFieldName = "AntiForgeryField";
+                });
+            });
+
+            builder.ConfigureTestServices(services =>
+            {
                 services.Mock<IEmailService>(mock =>
                 {
                     mock.Setup(x =>
@@ -39,12 +49,23 @@ namespace IssueTracker.IntegrationTests.Library.Common
                         It.IsNotNull<string>(),
                         It.IsNotNull<string>()))
                     .Returns(Task.FromResult(true));
-                });
+                    mock.Setup(x =>
+                        x.SendConfirmationEmailAsync("fail@test.com",
+                        It.IsNotNull<string>(),
+                        It.IsNotNull<string>()))
+                    .Returns(Task.FromResult(false));
 
-                services.AddAntiforgery(setup =>
-                {
-                    setup.Cookie.Name = "AntiForgeryCookie";
-                    setup.FormFieldName = "AntiForgeryField";
+
+                    mock.Setup(x =>
+                    x.SendResetPasswordEmailAsync(It.IsNotNull<string>(),
+                    It.IsNotNull<string>(),
+                    It.IsNotNull<string>()))
+                    .Returns(Task.FromResult(true));
+                    mock.Setup(x =>
+                    x.SendResetPasswordEmailAsync("fail@test.com",
+                    It.IsNotNull<string>(),
+                    It.IsNotNull<string>()))
+                    .Returns(Task.FromResult(false));
                 });
             });
 

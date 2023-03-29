@@ -20,7 +20,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
         [InlineData("LoginAsDeveloper")]
         [InlineData("LoginAsManager")]
         [InlineData("LoginAsAdmin")]
-        public async void Login_AsDemoUser_DontReloadTheLoginPage(string action)
+        public async void Login_WhenLoggedInAsDemoUser_ShouldHaveIdentityCookie(string action)
         {
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -29,8 +29,10 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
 
             var response = await client.GetAsync($"/Identity/Account/{action}");
 
-            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.NotEqual(LOGIN_URI, response.Headers.Location.OriginalString);
+            var cookies = response.Headers
+                .Where(x => x.Key == "Set-Cookie")
+                .SelectMany(x => x.Value.Select(v => v.Split("=").First()));
+            Assert.Contains(".AspNetCore.Identity.Application", cookies);
         }
 
 

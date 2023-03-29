@@ -1,11 +1,7 @@
 ﻿using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
@@ -27,7 +23,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         }
 
         [Fact]
-        public async void Register_WithRequiredFields_AddNewUserToDatabase()
+        public async void Register_WhenRequiredFieldsArePresent_ShouldAddNewUserToDatabase()
         {
             //Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -46,10 +42,11 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             Assert.Equal(_user.Email, registeredUser.Email);
             Assert.Equal(_user.FirstName, registeredUser.FirstName);
             Assert.Equal(_user.LastName, registeredUser.LastName);
+            //TODO - find a way to verify if mocked IEmailService was called
         }
 
         [Fact]
-        public async void Register_WithoutField_NewUserNotAddedToDatabase()
+        public async void Register_WhenRequiredFieldIsMissing_ShouldNotAddNewUserToDatabase()
         {
             //Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -68,7 +65,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         }
 
         [Fact]
-        public async void Register_NotUniqueEmail_NewUserNotAddedToDatabase()
+        public async void Register_WhenEmailIsNotUnique_ShouldNotAddNewUserToDatabase()
         {
             //Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -88,6 +85,26 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             Assert.NotEqual(_user.FirstName, registeredUser.FirstName);
         }
 
+
+        [Fact]
+        public async void Register_WhenFailsToSendAnEmail_ShouldNotAddNewUserToDatabase()
+        {
+            //Arrange
+            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false,
+            });
+            _user.Email = "fail@test.com";
+
+            //Act
+            var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
+
+            //Assert
+            var registeredUser = _testing.FuncDatabase<AuthDbContext, ApplicationUser>(ctx =>
+                ctx.Users.Where(x => x.Email == _user.Email).FirstOrDefault());
+            Assert.Null(registeredUser);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
 
     }
 }

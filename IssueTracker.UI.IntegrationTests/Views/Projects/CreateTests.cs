@@ -18,10 +18,46 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
         }
 
         [Fact]
-        public async Task Post_WhenUserInManagerRole_CreateProject()
+        public async Task Get_WhenUserInManagerRole_ShouldShowFormToCreateNewProject()
         {
             //Arrange
             var claims = new List<Claim> { new Claim(ClaimTypes.Role, "Manager")};
+            var localFactory = _factory.MakeAuthenticatedWithClaims(claims);
+            var client = localFactory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false,
+            });
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+
+            //Act
+            var page = await client.GetAsync("/");
+            var pageHtml = await page.Content.ReadAsStringAsync();
+
+            //Assert
+            Assert.Equal(HttpStatusCode.OK, page.StatusCode);
+            Assert.Contains("action=\"/Projects/Create\"", pageHtml);
+        }
+
+        [Fact]
+        public async Task Get_WhenUserIsNotInRole_ShouldNotShowFormToCreateNewProject()
+        {
+            var client = _factory.MakeAuthenticated().CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false,
+            });
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+
+            var page = await client.GetAsync("/");
+            var pageHtml = await page.Content.ReadAsStringAsync();
+
+            Assert.DoesNotContain("action=\"/Projects/Create\"", pageHtml);
+        }
+
+        [Fact]
+        public async Task Post_WhenUserInManagerRole_ShouldAddProjectToDatabase()
+        {
+            //Arrange
+            var claims = new List<Claim> { new Claim(ClaimTypes.Role, "Manager") };
             var localFactory = _factory.MakeAuthenticatedWithClaims(claims);
             var client = localFactory.CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -35,27 +71,9 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             var response = await client.SendFormAsync(HttpMethod.Post, "/", "/Projects/Create", model);
 
             //Assert
-            Assert.Equal(HttpStatusCode.OK, response.HttpResponseMessage.StatusCode);
-            Assert.Contains("action=\"/Projects/Create\"", response.PageHtml);
             var userId = localFactory.Services.GetRequiredService<ICurrentUserService>().UserId;
             var addedProject = testing.FuncDatabase(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Title == model.Title));
-            Assert.Contains(userId,addedProject.Members.Select(x => x.UserId));
-
-        }
-
-        [Fact]
-        public async Task Post_WhenUserIsNotInRole_RedirectToLogin()
-        {
-            var client = _factory.MakeAuthenticated().CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
-
-            var page = await client.GetAsync("/");
-            var pageHtml = await page.Content.ReadAsStringAsync();
-
-            Assert.DoesNotContain("action=\"/Projects/Create\"", pageHtml);
+            Assert.Contains(userId, addedProject.Members.Select(x => x.UserId));
         }
     }
 }

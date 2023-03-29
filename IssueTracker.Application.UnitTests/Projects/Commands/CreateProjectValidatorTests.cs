@@ -19,7 +19,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         }
 
         [Fact]
-        public void Validate_TitleIsEmpty_ShouldHaveValidationError()
+        public void Validate_WhenTitleIsEmpty_ShouldHaveValidationError()
         {
             var command = new CreateProjectCommand();
             var mockSet = MockingEF.CreateFakeDbSet(new List<Project>());
@@ -31,7 +31,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         }
 
         [Fact]
-        public void Validate_TitleIsTooLong_ShouldHaveValidationError()
+        public void Validate_WhenTitleIsTooLong_ShouldHaveValidationError()
         {
             var command = new CreateProjectCommand
             {
@@ -46,7 +46,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         }
 
         [Fact]
-        public void Validate_TitleIsNotUnique_ShouldHaveValidationError()
+        public void Validate_WhenTitleIsNotUnique_ShouldHaveValidationError()
         {
             var command = new CreateProjectCommand
             {
@@ -67,7 +67,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         }
 
         [Fact]
-        public void Validate_TitleIsOk_ShouldNotHaveValidationError()
+        public void Validate_WhenTitleIsOk_ShouldNotHaveValidationError()
         {
             var command = new CreateProjectCommand
             {

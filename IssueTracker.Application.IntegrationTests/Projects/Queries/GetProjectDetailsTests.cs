@@ -11,9 +11,9 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         }
 
         [Fact]
-        public async Task Handle_WhenProjectIdIsValid_GetDetailsIncludingMembersAndIssuesWithMembers()
+        public async Task Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers()
         {
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValid_GetDetailsIncludingMembersAndIssuesWithMembers));
+            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers));
             await _testing.ActionDatabaseAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);

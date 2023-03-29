@@ -17,15 +17,27 @@ namespace IssueTracker.UI.IntegrationTests.Services
         }
 
         [Fact]
-        public void GetConfirmationEmailBody_Always_IsHtmlAndContainsToken()
+        public void GetConfirmationEmailBody_Always_ShouldBeFormattedAsHtmlAndContainsToken()
         {
-            var token = Guid.NewGuid().ToString();
+            var link = Guid.NewGuid().ToString();
             var service = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IEmailPreparationService>();
 
-            var body = service.GetConfirmationEmailBody(token);
+            var body = service.GetConfirmationEmailBody(link);
 
             Assert.Contains("<!DOCTYPE html>", body);
-            Assert.Contains(token, body);
+            Assert.Contains(link, body);
+        }
+
+        [Fact]
+        public void GetResetPasswordEmailBody_Always_ShouldBeFormattedAsHtmlAndContainsToken()
+        {
+            var link = Guid.NewGuid().ToString();
+            var service = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IEmailPreparationService>();
+
+            var body = service.GetResetPasswordEmailBody(link);
+
+            Assert.Contains("<!DOCTYPE html>", body);
+            Assert.Contains(link, body);
         }
     }
 }

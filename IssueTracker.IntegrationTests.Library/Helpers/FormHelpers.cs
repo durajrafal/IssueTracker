@@ -5,21 +5,19 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
 {
     public static class FormHelpers
     {
-        public static async Task<FormResponse> SendFormAsync(this HttpClient client, HttpMethod method, string formUri, object model)
+        public static async Task<HttpResponseMessage> SendFormAsync(this HttpClient client, HttpMethod method, string formUri, object model)
         {
             return await client.SendFormAsync(method, formUri, formUri, model);
         }
 
-        public static async Task<FormResponse> SendFormAsync(this HttpClient client, HttpMethod method, string getUri, string postUri, object model)
+        public static async Task<HttpResponseMessage> SendFormAsync(this HttpClient client, HttpMethod method, string getUri, string postUri, object model)
         {
-            var output = new FormResponse();
-
             var page = await client.GetAsync(getUri);
 
-            output.PageHtml = await page.Content.ReadAsStringAsync();
+            var pageHtml = await page.Content.ReadAsStringAsync();
 
             var cookieToken = ExtractCookieToken(page.Headers);
-            var formToken = ExtractFormToken(output.PageHtml, "AntiForgeryField");
+            var formToken = ExtractFormToken(pageHtml, "AntiForgeryField");
 
             var request = new HttpRequestMessage(method, postUri);
             var content = CreateDictionaryFromObject(model);
@@ -27,8 +25,7 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
             request.Content = new FormUrlEncodedContent(content);
             request.Headers.Add("Cookie", $"AntiForgeryCookie={cookieToken}");
 
-            output.HttpResponseMessage = await client.SendAsync(request);
-            return output;
+            return await client.SendAsync(request);
         }
 
         private static Dictionary<string, string> CreateDictionaryFromObject(object obj)
@@ -71,11 +68,5 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
 
             return cookieToken;
         }
-    }
-
-    public class FormResponse
-    {
-        public string PageHtml { get; set; }
-        public HttpResponseMessage HttpResponseMessage { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         [InlineData(0)]
         [InlineData(2)]
         [InlineData(3)]
-        public async Task Handle_Always_GetProjectsOnlyWithUserAsMember(int numberOfUserProject)
+        public async Task Handle_Always_ShouldGetProjectsOnlyWithUserAsMember(int numberOfUserProject)
         {
             var loggedUserId = _factory.Services.GetRequiredService<ICurrentUserService>().UserId;
             var testProjects = CreateTestProjects(numberOfUserProject, loggedUserId);
