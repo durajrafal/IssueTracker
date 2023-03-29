@@ -17,6 +17,7 @@ namespace IssueTracker.UI
             });
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IEmailPreparationService, EmailPreparationService>();
 
             services.AddAuthentication("Cookie").AddCookie("Cookie");
             services.ConfigureApplicationCookie(options =>

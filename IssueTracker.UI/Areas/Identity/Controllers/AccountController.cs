@@ -61,7 +61,11 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
                     bool emailResponse = await emailService.SendConfirmationEmailAsync(user.Email, user.FullName, confirmationLink);
 
                     if (emailResponse)
-                        return RedirectToAction("Index", "Home", new { area= ""});
+                    {
+                        var html = "Email has been sent. Please check your inbox (or <em>Spam</em> folder) to confirm your account.";
+                        TempData["EmailConfirmSuccess"] = html;
+                        return View("Login");
+                    }
                     else
                     {
                         await _userManager.DeleteAsync(user);
