@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IssueTracker.UI.Models.Account
 {
-    public class RegisterViewModel
+    public class RegisterViewModel : CustomErrorMessageModel
     {
         [Required(ErrorMessage = "Email is Required")]
         [DataType(DataType.EmailAddress)]
@@ -27,7 +27,5 @@ namespace IssueTracker.UI.Models.Account
         [Required(ErrorMessage = "Last Name is Required")]
         [StringLength(50, MinimumLength = 2)]
         public string LastName { get; set; }
-
-        public HtmlString? ResultMessage { get; set; }
     }
 }

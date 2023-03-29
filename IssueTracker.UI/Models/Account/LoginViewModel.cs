@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IssueTracker.UI.Models.Account
 {
-    public class LoginViewModel
+    public class LoginViewModel : CustomErrorMessageModel
     {
         [Required(ErrorMessage = "Email is Required")]
         [DataType(DataType.EmailAddress)]
@@ -17,6 +17,6 @@ namespace IssueTracker.UI.Models.Account
 
         public bool IsRememberChecked { get; set; }
 
-        public HtmlString? ResultMessage { get; set; }
+        
     }
 }
