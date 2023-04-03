@@ -9,5 +9,6 @@ namespace IssueTracker.Application.Common.Interfaces
     public interface IEmailPreparationService
     {
         public string GetConfirmationEmailBody(string confirmationLink);
+        public string GetResetPasswordEmailBody(string resetLink);
     }
 }

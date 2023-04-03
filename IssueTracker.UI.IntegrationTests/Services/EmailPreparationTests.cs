@@ -17,7 +17,7 @@ namespace IssueTracker.UI.IntegrationTests.Services
         }
 
         [Fact]
-        public void GetConfirmationEmailBody_Always_ShouldBeFormattedAsHtmlAndContainsToken()
+        public void GetConfirmationEmailBody_Always_ShouldBeFormattedAsHtmlAndContainsLink()
         {
             var link = Guid.NewGuid().ToString();
             var service = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IEmailPreparationService>();
@@ -29,7 +29,7 @@ namespace IssueTracker.UI.IntegrationTests.Services
         }
 
         [Fact]
-        public void GetResetPasswordEmailBody_Always_ShouldBeFormattedAsHtmlAndContainsToken()
+        public void GetResetPasswordEmailBody_Always_ShouldBeFormattedAsHtmlAndContainsLink()
         {
             var link = Guid.NewGuid().ToString();
             var service = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IEmailPreparationService>();

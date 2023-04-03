@@ -9,5 +9,6 @@ namespace IssueTracker.Application.Common.Interfaces
     public interface IEmailService
     {
         Task<bool> SendConfirmationEmailAsync(string email, string name, string confirmationLink);
+        Task<bool> SendResetPasswordEmailAsync(string email, string name, string resetLink);
     }
 }

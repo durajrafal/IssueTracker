@@ -29,6 +29,12 @@ namespace IssueTracker.Infrastructure.Services
             return await SendEmail(email, name, body);
         }
 
+        public async Task<bool> SendResetPasswordEmailAsync(string email, string name, string resetLink)
+        {
+            var body = _emailPreparation.GetResetPasswordEmailBody(resetLink);
+            return await SendEmail(email, name, body);
+        }
+
         private async Task<bool> SendEmail(string email, string name, string body)
         {
             var apiKey = _configuration["SendGrid:ApiKey"];

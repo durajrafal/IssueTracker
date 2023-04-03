@@ -10,11 +10,11 @@
     <div class="row">
         <div class="card-body">
             <div class="row mt-3 justify-content-center">
-                @if (TempData["EmailConfirmSuccess"] != null)
+                @if (TempData["EmailActionSuccess"] != null)
                 {
                     <div class="col-10 alert alert-dismissible alert-success text-center">
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        @(new HtmlString(TempData["EmailConfirmSuccess"].ToString()))
+                        @(new HtmlString(TempData["EmailActionSuccess"].ToString()))
                     </div>
                 }
             </div>
@@ -46,11 +46,11 @@
                     </div>
                 </form>
                 <div class="row d-md-none mt-3 justify-content-center">
-                    @if (Model?.ResultMessage != null)
+                    @if (Model?.ErrorMessage != null)
                     {
                         <div class="col-10 alert alert-dismissible alert-danger text-center">
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            @Model.ResultMessage
+                            @Model.ErrorMessage
                         </div>
                     }
                 </div>
@@ -59,7 +59,7 @@
                     Don't have an account?&nbsp<a asp-area="Identity" asp-controller="Account" asp-action="Register">Register now!</a>
                 </div>
                 <div class="d-flex justify-content-center mt-2 text-success">
-                    Forgot Password?&nbsp<a asp-area="Identity" asp-controller="Account" asp-action="ResetPassword"> No worries!</a>
+                    Forgot Password?&nbsp<a asp-area="Identity" asp-controller="Account" asp-action="ForgotPassword"> No worries!</a>
                 </div>
             </div>
 
@@ -113,13 +113,13 @@
         </div>
     </div>
 </div>
-@if (Model?.ResultMessage !=  null)
+@if (Model?.ErrorMessage !=  null)
 {
     <div class="row mt-4 justify-content-center">
         <div class="d-none d-md-block">
             <div class="alert alert-dismissible alert-danger text-center">
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                @Model.ResultMessage
+                @Model.ErrorMessage
             </div>
         </div>
     </div>

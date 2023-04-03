@@ -27,4 +27,8 @@
     <ProjectReference Include="..\IssueTracker.IntegrationTests.Library\IssueTracker.IntegrationTests.Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Email\" />
+  </ItemGroup>
+
 </Project>

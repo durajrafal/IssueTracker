@@ -17,7 +17,7 @@ namespace IssueTracker.UI.Models.Account
         [Required(ErrorMessage = "Password confirmation is Required")]
         [DataType(DataType.Password)]
         [MinLength(6, ErrorMessage = "Minimum Password length is 6 characters")]
-        [Compare("Password", ErrorMessage = "Passwords not matched")]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "First Name is Required")]
