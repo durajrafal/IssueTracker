@@ -9,7 +9,7 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
     [Area("Identity")]
     public class EmailController : Controller
     {
-
+        #region Confirm
         [HttpGet]
         public async Task<IActionResult> Confirm(string token, string email, [FromServices] UserManager<ApplicationUser> userManager)
         {
@@ -23,7 +23,7 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 var html = "<h4>Congratulations!</h4>Your email is confirmed. Now you can log in with your account.";
-                TempData["EmailConfirmSuccess"] = html;
+                TempData["EmailActionSuccess"] = html;
                 return RedirectToAction("Login", "Account");
             }
             else
@@ -34,7 +34,10 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
 
         private IActionResult RedirectToRegisterWithConfirmationError(string email)
         {
-            TempData["EmailConfirmError"] = $"Impossible to confirm your email '{email}'.<strong> Register again.</strong>";
+            TempData["EmailActionError"] = $"Impossible to confirm your email '{email}'.<strong> Register again.</strong>";
+            return RedirectToAction("Register", "Account");
+        }
+        #endregion
             return RedirectToAction("Register", "Account");
         }
     }
