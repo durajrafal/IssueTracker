@@ -1,6 +1,9 @@
 ﻿using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Models.Account;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
@@ -72,8 +75,11 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             {
                 AllowAutoRedirect = false,
             });
-            await _testing.ActionDatabaseAsync<AuthDbContext>( ctx => 
-                ctx.Users.Add(new ApplicationUser(_user.Email, _user.FirstName, _user.LastName)));
+            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            {
+                var user = new ApplicationUser(_user.Email, _user.FirstName, _user.LastName);
+                await userManager.CreateAsync(user, _user.Password);
+            }
             _user.FirstName = "Newname";
 
             //Act
@@ -81,7 +87,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
 
             //Assert
             var registeredUser = _testing.FuncDatabase<AuthDbContext, ApplicationUser>(ctx =>
-            ctx.Users.Where(x => x.Email == _user.Email).First());
+                ctx.Users.Where(x => x.Email == _user.Email).First());
             Assert.NotEqual(_user.FirstName, registeredUser.FirstName);
         }
 

@@ -4,8 +4,6 @@ using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace IssueTracker.UI.Areas.Identity.Controllers
@@ -43,7 +41,7 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
 
             return View(login);
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> LoginAsDeveloper([FromServices] SignInManager<ApplicationUser> signInManager)
         {
@@ -175,5 +173,13 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
         }
         #endregion
 
+        #region Logout
+        [HttpGet]
+        public async Task<IActionResult> Logout([FromServices] SignInManager<ApplicationUser> signInManager)
+        {
+            await signInManager.SignOutAsync();
+            return View();
+        }
+        #endregion
     }
 }
