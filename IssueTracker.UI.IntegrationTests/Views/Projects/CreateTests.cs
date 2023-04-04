@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Projects
 {
-    public class CreateTests : BaseTest
+    public class CreateTests : UiBaseTest
     {
         public CreateTests(CustomWebApplicationFactory factory)
             :base(factory)
@@ -70,7 +70,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
 
             //Assert
             var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
-            var addedProject = Testing.FuncDatabase(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Title == model.Title));
+            var addedProject = Database.Func(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Title == model.Title));
             Assert.Contains(userId, addedProject.Members.Select(x => x.UserId));
         }
     }

@@ -16,47 +16,20 @@ namespace IssueTracker.IntegrationTests.Library.Common
 {
     public class BaseTest : IClassFixture<CustomWebApplicationFactory>
     {
-        public WebApplicationFactory<Program> Factory { get; private set; }
-        public TestingHelpers Testing { get; private set; }
+        public WebApplicationFactory<Program> Factory { get; protected set; }
+        public DatabaseHelpers Database { get; protected set; }
         public IServiceScopeFactory ScopeFactory { get => Factory.Services.GetRequiredService<IServiceScopeFactory>();}
 
         public BaseTest(CustomWebApplicationFactory factory)
         {
             Factory = factory;
-            Testing = new TestingHelpers(Factory);
+            Database = new DatabaseHelpers(ScopeFactory);
         }
 
         public BaseTest()
         {
             Factory = new CustomWebApplicationFactory();
-            Testing = new TestingHelpers(Factory);
-        }
-
-        public void AuthenticateFactory()
-        {
-            Factory = Factory.MakeAuthenticated();
-            Testing = new TestingHelpers(Factory);
-        }
-
-        public void AuthenticateFactory(List<Claim> claims)
-        {
-            Factory = Factory.MakeAuthenticatedWithClaims(claims);
-            Testing = new TestingHelpers(Factory);
-        }
-
-        public HttpClient SetupClient()
-        {
-            return Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-        }
-
-        public TempDataDictionary SetupTempData()
-        {
-            var httpContext = new DefaultHttpContext();
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            return tempData;
+            Database = new DatabaseHelpers(ScopeFactory);
         }
 
         public T GetScopedService<T>() where T : notnull

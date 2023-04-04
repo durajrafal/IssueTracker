@@ -4,9 +4,9 @@ using Moq;
 
 namespace IssueTracker.IntegrationTests.Library.Common
 {
-    public static class ServicesExtensions
+    internal static class ServicesExtensions
     {
-        public static IServiceCollection Remove<TService>(this IServiceCollection services)
+        internal static IServiceCollection Remove<TService>(this IServiceCollection services)
         {
             var serviceDescriptor = services.SingleOrDefault(x => x.ServiceType == typeof(TService));
 
@@ -15,7 +15,7 @@ namespace IssueTracker.IntegrationTests.Library.Common
             return services;
         }
 
-        public static void Mock<TService>(this IServiceCollection services, Action<Mock<TService>> customize) where TService : class
+        internal static void Mock<TService>(this IServiceCollection services, Action<Mock<TService>> customize) where TService : class
         {
             var serviceType = typeof(TService);
             if (services.FirstOrDefault(x => x.ServiceType == serviceType) is { } existingServiceDescriptor)

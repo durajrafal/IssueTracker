@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Home
 {
-    public class IndexTests : BaseTest
+    public class IndexTests : UiBaseTest
     {
         public IndexTests(CustomWebApplicationFactory factory)
             :base(factory)
@@ -38,7 +38,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
             {
                 var project = ProjectHelpers.CreateTestProject($"Project {i}");
                 project.Members.Add(new ProjectMember { UserId = userId });
-                await Testing.ActionDatabaseAsync(ctx => ctx.Projects.Add(project));
+                await Database.ActionAsync(ctx => ctx.Projects.Add(project));
             }
 
             //Act
@@ -46,7 +46,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
             var pageHtml = await page.Content.ReadAsStringAsync();
 
             //Assert
-            var projectsCount = Testing.FuncDatabase(ctx => 
+            var projectsCount = Database.Func(ctx => 
                 ctx.Projects.Where(x => x.Members.Any(x => x.UserId == userId)).Count());
             var tableBody = pageHtml.Split("<tbody>").Last().Split("</tbody>").First();
             var rows = tableBody.Split("<tr").Skip(1);

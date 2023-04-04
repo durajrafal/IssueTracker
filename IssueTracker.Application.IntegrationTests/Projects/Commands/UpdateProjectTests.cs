@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
-    public class UpdateProjectTests : BaseTest
+    public class UpdateProjectTests : ApplicationBaseTest
     {
         public UpdateProjectTests(CustomWebApplicationFactory factory)
             : base(factory)
@@ -25,14 +25,14 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         {
             var command = new UpdateProjectCommand { ProjectId = 0 , Title = nameof(Handle_WhenProjectIdIsInvalid_ThrowsNotFoundException) };
 
-            await Assert.ThrowsAsync<NotFoundException>(() => Testing.MediatorSendAsync(command));
+            await Assert.ThrowsAsync<NotFoundException>(() => Mediator.Send(command));
         }
 
         [Fact]
         public async Task Handle_WhenProjectIdIsValidAndTitleUnique_ShouldUpdateProject()
         {
             var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValidAndTitleUnique_ShouldUpdateProject));
-            await Testing.ActionDatabaseAsync(async ctx =>
+            await Database.ActionAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);
             });
@@ -46,9 +46,9 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
                 Title = project.Title,
                 Members = members 
             };
-            await Testing.MediatorSendAsync(command);
+            await Mediator.Send(command);
 
-            var udpatedProject = Testing.FuncDatabase(ctx => 
+            var udpatedProject = Database.Func(ctx => 
                 ctx.Projects.Include(x => x.Members).First(x => x.Id == project.Id)
             );
             Assert.Equal(projectMembersStartCount + 1, udpatedProject.Members.Count);
@@ -59,7 +59,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         {
             var project = new Project { Title = nameof(Handle_WhenTitleIsNotUnique_ThrowsValidationException) };
             string takenTitle = "Already taken title";
-            await Testing.ActionDatabaseAsync(async ctx =>
+            await Database.ActionAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);
                 await ctx.Projects.AddAsync(new Project { Title = takenTitle });
@@ -67,7 +67,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 
             var command = new UpdateProjectCommand { ProjectId = project.Id, Title = takenTitle };
 
-            await Assert.ThrowsAsync<ValidationException>(() => Testing.MediatorSendAsync(command));
+            await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }
     }
 }

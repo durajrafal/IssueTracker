@@ -4,12 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace IssueTracker.UI.IntegrationTests
+namespace IssueTracker.UI.IntegrationTests.Views
 {
-    public class AuthTests : BaseTest
+    public class AuthTests : UiBaseTest
     {
         public AuthTests(CustomWebApplicationFactory factory)
-            :base(factory)
+            : base(factory)
         {
         }
 
@@ -25,7 +25,7 @@ namespace IssueTracker.UI.IntegrationTests
             var response = await client.GetAsync("/");
 
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.StartsWith("http://localhost/Identity/Account/Login",response.Headers.Location.OriginalString);
+            Assert.StartsWith("http://localhost/Identity/Account/Login", response.Headers.Location.OriginalString);
 
         }
 
@@ -47,8 +47,8 @@ namespace IssueTracker.UI.IntegrationTests
 
         [Fact]
         public void SeedDatabase_Always_ShouldHaveAllTestUsers()
-        { 
-            var users = Testing.FuncDatabase<AuthDbContext, List<ApplicationUser>>(ctx =>
+        {
+            var users = Database.Func<AuthDbContext, List<ApplicationUser>>(ctx =>
             {
                 return ctx.Users.ToList();
             });

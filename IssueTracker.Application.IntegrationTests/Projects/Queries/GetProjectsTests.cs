@@ -5,7 +5,7 @@ using IssueTracker.Application.Projects.Queries.GetProjects;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {
-    public class GetProjectsTests : BaseTest
+    public class GetProjectsTests : ApplicationBaseTest
     {
         public GetProjectsTests()
             :base()
@@ -20,12 +20,12 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         {
             var loggedUserId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
             var testProjects = CreateTestProjects(numberOfUserProject, loggedUserId);
-            await Testing.ActionDatabaseAsync(async ctx =>
+            await Database.ActionAsync(async ctx =>
                 await ctx.AddRangeAsync(testProjects)
             );
             
             var query = new GetProjectsQuery();
-            var projects = await Testing.MediatorSendAsync(query);
+            var projects = await Mediator.Send(query);
 
             Assert.Equal(numberOfUserProject, projects.Count());
         }

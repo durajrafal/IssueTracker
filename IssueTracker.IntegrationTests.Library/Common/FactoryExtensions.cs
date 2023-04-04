@@ -8,7 +8,7 @@ namespace IssueTracker.IntegrationTests.Library.Common
 {
     public static class FactoryExtensions
     {
-        public static WebApplicationFactory<Program> MakeAuthenticated(this CustomWebApplicationFactory factory)
+        public static WebApplicationFactory<Program> MakeAuthenticated(this WebApplicationFactory<Program> factory)
         {
             return factory.WithWebHostBuilder(builder =>
             {
@@ -27,7 +27,7 @@ namespace IssueTracker.IntegrationTests.Library.Common
         }
 
 
-        public static WebApplicationFactory<Program> MakeAuthenticatedWithClaims(this CustomWebApplicationFactory factory, List<Claim> claims)
+        public static WebApplicationFactory<Program> MakeAuthenticatedWithClaims(this WebApplicationFactory<Program> factory, List<Claim> claims)
         {
             return factory.WithWebHostBuilder(builder =>
             {

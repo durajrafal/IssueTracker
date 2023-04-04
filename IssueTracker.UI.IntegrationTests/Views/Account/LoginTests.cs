@@ -7,7 +7,7 @@ using System.Net;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
-    public class LoginTests : BaseTest
+    public class LoginTests : UiBaseTest
     {
         private const string LOGIN_URI = "/Identity/Account/Login";
         public LoginTests(CustomWebApplicationFactory factory)

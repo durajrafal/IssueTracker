@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
-    public class ForgotPasswordTests : BaseTest
+    public class ForgotPasswordTests : UiBaseTest
     {
         private const string FORGOT_URI = "/Identity/Account/ForgotPassword";
         private ForgotPasswordViewModel _vm;

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.TestHost;
 
 namespace IssueTracker.UI.IntegrationTests.Controllers
 {
-    public class EmailTests : BaseTest
+    public class EmailTests : UiBaseTest
     {
         private EmailController _controller;
         private const string PASSWORD = "Pass123";

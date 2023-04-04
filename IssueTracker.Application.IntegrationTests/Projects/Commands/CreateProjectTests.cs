@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
-    public class CreateProjectTests : BaseTest
+    public class CreateProjectTests : ApplicationBaseTest
     {
         public CreateProjectTests(CustomWebApplicationFactory factory)
             :base(factory)
@@ -18,9 +18,9 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         {
             var command = new CreateProjectCommand { Title =  "Unique Test project"};
 
-            var addedProjectId = await Testing.MediatorSendAsync(command);
+            var addedProjectId = await Mediator.Send(command);
 
-            var addedProject = Testing.FuncDatabase(ctx => ctx.Projects.First(x => x.Id == addedProjectId));
+            var addedProject = Database.Func(ctx => ctx.Projects.First(x => x.Id == addedProjectId));
             Assert.Equal(command.Title, addedProject.Title);
         }
 
@@ -29,20 +29,20 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         {
             var command = new CreateProjectCommand();
 
-            await Assert.ThrowsAsync<ValidationException>(() => Testing.MediatorSendAsync(command));
+            await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }
 
         [Fact]
         public async Task Handle_WhenTitleIsNotUnique_ShouldThrowValidationException()
         {
-            await Testing.ActionDatabaseAsync(async ctx =>
+            await Database.ActionAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(new Domain.Entities.Project { Title = "Not unique test project" });
             });
 
             var command = new CreateProjectCommand { Title = "Not unique test project" };
 
-            await Assert.ThrowsAsync<ValidationException>(() => Testing.MediatorSendAsync(command));
+            await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }
 
         [Fact]
@@ -50,10 +50,10 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         {
             var command = new CreateProjectCommand { Title = nameof(Handle_Always_ShouldAddCurrentUserAsMember) };
 
-            var addedProjectId = await Testing.MediatorSendAsync(command);
+            var addedProjectId = await Mediator.Send(command);
 
             var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
-            var addedProject = Testing.FuncDatabase(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Id == addedProjectId));
+            var addedProject = Database.Func(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Id == addedProjectId));
             Assert.Equal(userId, addedProject.Members.Single().UserId);
         }
     }

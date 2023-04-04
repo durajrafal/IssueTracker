@@ -5,14 +5,11 @@ using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using System;
 
 namespace IssueTracker.UI.IntegrationTests.Controllers
 {
-    public class AccountTests : BaseTest
+    public class AccountTests : UiBaseTest
     {
 
         public AccountTests(CustomWebApplicationFactory factory)

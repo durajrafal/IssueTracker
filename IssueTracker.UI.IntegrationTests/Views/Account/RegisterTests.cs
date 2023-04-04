@@ -8,7 +8,7 @@ using System.Net;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
-    public class RegisterTests : BaseTest
+    public class RegisterTests : UiBaseTest
     {
         private const string REGISTER_URI = "/Identity/Account/Register";
         private RegisterViewModel _user;
@@ -38,7 +38,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
 
             //Assert
-            var registeredUser = Testing.FuncDatabase<AuthDbContext, ApplicationUser>(ctx =>
+            var registeredUser = Database.Func<AuthDbContext, ApplicationUser>(ctx =>
             ctx.Users.Where(x => x.Email == _user.Email).First());
             Assert.NotNull(registeredUser);
             Assert.Equal(_user.Email, registeredUser.UserName);
@@ -62,7 +62,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
 
             //Assert
-            var registeredUser = Testing.FuncDatabase<AuthDbContext, ApplicationUser>(ctx =>
+            var registeredUser = Database.Func<AuthDbContext, ApplicationUser>(ctx =>
             ctx.Users.Where(x => x.Email == _user.Email).FirstOrDefault());
             Assert.Null(registeredUser);
         }
@@ -86,7 +86,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
 
             //Assert
-            var registeredUser = Testing.FuncDatabase<AuthDbContext, ApplicationUser>(ctx =>
+            var registeredUser = Database.Func<AuthDbContext, ApplicationUser>(ctx =>
                 ctx.Users.Where(x => x.Email == _user.Email).First());
             Assert.NotEqual(_user.FirstName, registeredUser.FirstName);
         }
@@ -106,7 +106,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
 
             //Assert
-            var registeredUser = Testing.FuncDatabase<AuthDbContext, ApplicationUser>(ctx =>
+            var registeredUser = Database.Func<AuthDbContext, ApplicationUser>(ctx =>
                 ctx.Users.Where(x => x.Email == _user.Email).FirstOrDefault());
             Assert.Null(registeredUser);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
