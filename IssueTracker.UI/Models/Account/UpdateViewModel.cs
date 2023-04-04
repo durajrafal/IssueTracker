@@ -1,12 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace IssueTracker.UI.Models.Account
 {
-    public class RegisterViewModel : CustomErrorMessageModel
+    public class UpdateViewModel
     {
-        [Required(ErrorMessage = "Email is Required")]
-        [DataType(DataType.EmailAddress)]
+        [HiddenInput(DisplayValue = false)]
         public string Email { get; set; }
+
+
+        [Required(ErrorMessage = "First Name is Required")]
+        [StringLength(50, MinimumLength = 2)]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Last Name is Required")]
+        [StringLength(50, MinimumLength = 2)]
+        public string LastName { get; set; }
+
+
+        public bool PasswordChangeRequested { get; set; }
 
         [Required(ErrorMessage = "Password is Required")]
         [DataType(DataType.Password)]
@@ -19,12 +31,5 @@ namespace IssueTracker.UI.Models.Account
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "First Name is Required")]
-        [StringLength(50, MinimumLength = 2)]
-        public string FirstName { get; set; }
-
-        [Required(ErrorMessage = "Last Name is Required")]
-        [StringLength(50, MinimumLength = 2)]
-        public string LastName { get; set; }
     }
 }

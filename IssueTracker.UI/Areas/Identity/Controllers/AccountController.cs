@@ -1,9 +1,11 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Models.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text;
 
 namespace IssueTracker.UI.Areas.Identity.Controllers
@@ -179,6 +181,57 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
         {
             await signInManager.SignOutAsync();
             return View();
+        }
+        #endregion
+
+        #region Edit
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Update([FromServices] ICurrentUserService currentUserService)
+        {
+            var userId = currentUserService.UserId;
+            var user = await _userManager.FindByIdAsync(userId);
+            var vm = new UpdateViewModel
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+            };
+            return View(vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateViewModel vm, [FromServices] IPasswordHasher<ApplicationUser> passwordHasher)
+        {
+            bool onlyPasswordInvalid = ModelState
+                .Where(x => x.Value.ValidationState == ModelValidationState.Invalid)
+                .All(x => x.Key.Contains("Password"));
+            bool modelValid = ModelState.IsValid || (onlyPasswordInvalid && !vm.PasswordChangeRequested);
+            if (modelValid)
+            {
+                var user = await _userManager.FindByEmailAsync(vm.Email);
+                bool updateRequired = false;
+                if (user.FirstName != vm.FirstName)
+                {
+                    user.FirstName = vm.FirstName;
+                    updateRequired = true;
+                }
+                if (user.LastName != vm.LastName)
+                {
+                    user.LastName = vm.LastName;
+                    updateRequired = true;
+                }
+                if (vm.PasswordChangeRequested)
+                    user.PasswordHash = passwordHasher.HashPassword(user, vm.Password);
+
+                if (updateRequired || vm.PasswordChangeRequested)
+                    await _userManager.UpdateAsync(user);
+            }
+            else
+                return View(vm);
+
+            return RedirectToAction("Index", "Home", new { area = ""});
         }
         #endregion
     }

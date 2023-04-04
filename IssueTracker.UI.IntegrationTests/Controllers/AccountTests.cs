@@ -55,7 +55,32 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             Assert.Equal(string.Empty, cookie.Split("=").Last());
         }
 
+        [Fact]
+        public async Task GetUpdate_WhenUserLoggedIn_ReturnFilledViewModel()
+        {
+            //Arrange
+            AuthenticateFactory();
+            var user = new ApplicationUser("updateuser@test.com", "Update", "User");
+            var currentUserService = Factory.Services.GetRequiredService<ICurrentUserService>();
+            var userId = currentUserService.UserId;
+            user.Id = userId;
+            var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var controller = new AccountController(userManager)
+            {
+                TempData = SetupTempData(),
+            };
+            await userManager.CreateAsync(user, "Pass123");
 
+            //Act
+            var response = await controller.Update(currentUserService) as ViewResult;
+            userManager.Dispose();
+            var model = response.Model as UpdateViewModel;
+            
+            //Arrange
+            Assert.Equal(user.Email, model.Email);
+            Assert.Equal(user.FirstName, model.FirstName);
+            Assert.Equal(user.LastName, actual: model.LastName);
+        }
 
 
 
