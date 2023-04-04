@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Services
 {
-    public class EmailPreparationTests : BaseTestWithScope
+    public class EmailPreparationTests : BaseTest
     {
         public EmailPreparationTests(CustomWebApplicationFactory factory)
             :base(factory)
@@ -20,7 +20,7 @@ namespace IssueTracker.UI.IntegrationTests.Services
         public void GetConfirmationEmailBody_Always_ShouldBeFormattedAsHtmlAndContainsLink()
         {
             var link = Guid.NewGuid().ToString();
-            var service = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IEmailPreparationService>();
+            var service = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IEmailPreparationService>();
 
             var body = service.GetConfirmationEmailBody(link);
 
@@ -32,7 +32,7 @@ namespace IssueTracker.UI.IntegrationTests.Services
         public void GetResetPasswordEmailBody_Always_ShouldBeFormattedAsHtmlAndContainsLink()
         {
             var link = Guid.NewGuid().ToString();
-            var service = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IEmailPreparationService>();
+            var service = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IEmailPreparationService>();
 
             var body = service.GetResetPasswordEmailBody(link);
 

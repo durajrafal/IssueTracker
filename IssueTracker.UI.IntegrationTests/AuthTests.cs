@@ -6,21 +6,17 @@ using System.Net.Http.Headers;
 
 namespace IssueTracker.UI.IntegrationTests
 {
-    public class AuthTests : IClassFixture<CustomWebApplicationFactory>
+    public class AuthTests : BaseTest
     {
-        private readonly CustomWebApplicationFactory _factory;
-        private readonly TestingHelpers _testing;
-
         public AuthTests(CustomWebApplicationFactory factory)
+            :base(factory)
         {
-            _factory = factory;
-            _testing = new TestingHelpers(_factory);
         }
 
         [Fact]
         public async Task GetHomePage_WhenUserNotAuthenticated_ShouldRedirect()
         {
-            var client = _factory.CreateClient(
+            var client = Factory.CreateClient(
                 new WebApplicationFactoryClientOptions
                 {
                     AllowAutoRedirect = false
@@ -36,7 +32,8 @@ namespace IssueTracker.UI.IntegrationTests
         [Fact]
         public async Task GetHomePage_WhenUserAuthenticated_ShouldLoadPage()
         {
-            var client = _factory.MakeAuthenticated().CreateClient(new WebApplicationFactoryClientOptions
+            AuthenticateFactory();
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });
@@ -51,7 +48,7 @@ namespace IssueTracker.UI.IntegrationTests
         [Fact]
         public void SeedDatabase_Always_ShouldHaveAllTestUsers()
         { 
-            var users = _testing.FuncDatabase<AuthDbContext, List<ApplicationUser>>(ctx =>
+            var users = Testing.FuncDatabase<AuthDbContext, List<ApplicationUser>>(ctx =>
             {
                 return ctx.Users.ToList();
             });

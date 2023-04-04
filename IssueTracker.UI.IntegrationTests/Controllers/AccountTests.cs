@@ -1,7 +1,9 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Infrastructure.Identity;
-using Microsoft.AspNetCore.Http;
+using IssueTracker.UI.Areas.Identity.Controllers;
+using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +12,7 @@ using System;
 
 namespace IssueTracker.UI.IntegrationTests.Controllers
 {
-    public class AccountTests : BaseTestWithScope
+    public class AccountTests : BaseTest
     {
 
         public AccountTests(CustomWebApplicationFactory factory)
@@ -24,7 +26,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
         [InlineData("LoginAsAdmin")]
         public async void Login_WhenLoggedInAsDemoUser_ShouldReturnIdentityCookie(string action)
         {
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });
@@ -41,7 +43,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
         [Fact]
         public async void Logout_Always_ShouldEmptyIdentityCookie()
         {
-            var client = _factory
+            var client = Factory
                 .CreateClient(new WebApplicationFactoryClientOptions
                 {
                     AllowAutoRedirect = false,

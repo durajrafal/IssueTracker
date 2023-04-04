@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
-    public class ForgotPasswordTests : BaseTestWithScope
+    public class ForgotPasswordTests : BaseTest
     {
         private const string FORGOT_URI = "/Identity/Account/ForgotPassword";
         private ForgotPasswordViewModel _vm;
@@ -33,7 +33,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async Task ForgotPassword_WhenEmailIsSent_ShouldRedirectToLoginPage()
         {
             //Arrange
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });
@@ -50,11 +50,11 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async Task ForgotPassword_WhenEmailDoesntExist_ShouldRedirectToLoginPage()
         {
             //Arrange
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var user = new ApplicationUser(_vm.Email, "John", "Smith");
                 await userManager.CreateAsync(user, "Pass123");
@@ -72,12 +72,12 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async Task ForgotPassword_WhenEmailExistsButFailsToSend_ShouldReturnSameView()
         {
             //Arrange
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });
             _vm.Email = "fail@test.com";
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var user = new ApplicationUser(_vm.Email, "John", "Smith");
                 await userManager.CreateAsync(user, "Pass123");

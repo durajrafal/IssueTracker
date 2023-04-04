@@ -18,14 +18,14 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         [InlineData(3)]
         public async Task Handle_Always_ShouldGetProjectsOnlyWithUserAsMember(int numberOfUserProject)
         {
-            var loggedUserId = _factory.Services.GetRequiredService<ICurrentUserService>().UserId;
+            var loggedUserId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
             var testProjects = CreateTestProjects(numberOfUserProject, loggedUserId);
-            await _testing.ActionDatabaseAsync(async ctx =>
+            await Testing.ActionDatabaseAsync(async ctx =>
                 await ctx.AddRangeAsync(testProjects)
             );
             
             var query = new GetProjectsQuery();
-            var projects = await _testing.MediatorSendAsync(query);
+            var projects = await Testing.MediatorSendAsync(query);
 
             Assert.Equal(numberOfUserProject, projects.Count());
         }

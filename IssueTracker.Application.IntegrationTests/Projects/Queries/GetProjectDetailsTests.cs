@@ -14,13 +14,13 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         public async Task Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers()
         {
             var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers));
-            await _testing.ActionDatabaseAsync(async ctx =>
+            await Testing.ActionDatabaseAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);
             });
 
             var query = new GetProjectDetailsQuery { ProjectId = project.Id};
-            var result = await _testing.MediatorSendAsync(query);
+            var result = await Testing.MediatorSendAsync(query);
 
             Assert.Equal(project.Members.Count, result.Members.Count);
             Assert.Equal(project.Issues.Count, result.Issues.Count);
@@ -33,15 +33,15 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         public async Task Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException()
         {
             var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException));
-            await _testing.ActionDatabaseAsync(async ctx =>
+            await Testing.ActionDatabaseAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);
             });
 
             var query = new GetProjectDetailsQuery { ProjectId = 0 };
 
-            await Assert.ThrowsAsync<InvalidOperationException>( () => _testing.MediatorSendAsync(query));
-            Assert.True(_testing.FuncDatabase(x => x.Projects.Count() > 0));
+            await Assert.ThrowsAsync<InvalidOperationException>( () => Testing.MediatorSendAsync(query));
+            Assert.True(Testing.FuncDatabase(x => x.Projects.Count() > 0));
         }
 
 

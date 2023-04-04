@@ -7,7 +7,7 @@ using System.Net;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
-    public class LoginTests : BaseTestWithScope
+    public class LoginTests : BaseTest
     {
         private const string LOGIN_URI = "/Identity/Account/Login";
         public LoginTests(CustomWebApplicationFactory factory)
@@ -19,13 +19,13 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async void LoginWithCredentials_WhenCredentialsAreValid_ShouldHaveIdentityCookieAndRedirectsToHomePage()
         {
             //Arrange
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });
             var userName = "valid@test.com";
             var password = "Pass123";
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var user = new ApplicationUser(userName, "John", "Smith");
                 await userManager.CreateAsync(user, password);
@@ -53,7 +53,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async void LoginWithCredentials_WhenCredentialsAreInvalid_ShouldNotHaveIdentityCookieNorRedirectToHome()
         {
             //Arrange
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });

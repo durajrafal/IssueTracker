@@ -11,18 +11,16 @@ using Microsoft.AspNetCore.TestHost;
 
 namespace IssueTracker.UI.IntegrationTests.Controllers
 {
-    public class EmailTests : BaseTestWithScope
+    public class EmailTests : BaseTest
     {
         private EmailController _controller;
         private const string PASSWORD = "Pass123";
         public EmailTests(CustomWebApplicationFactory factory)
             : base(factory)
         {
-            var httpContext = new DefaultHttpContext();
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             _controller = new EmailController()
             {
-                TempData = tempData
+                TempData = SetupTempData()
             };
         }
 
@@ -32,7 +30,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             //Arrange
             var user = new ApplicationUser("confirm@test.com", "John", "Smith");
             string token;
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 await userManager.CreateAsync(user, PASSWORD);
                 token = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -40,7 +38,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
 
             //Act
             RedirectToActionResult result;
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var actionResult = await _controller.Confirm(token, user.Email, userManager);
                 result = actionResult as RedirectToActionResult;
@@ -58,14 +56,14 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             //Arrange
             var user = new ApplicationUser("confirmfail@test.com", "John", "Smith");
             string token = Guid.NewGuid().ToString();
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 await userManager.CreateAsync(user, PASSWORD);
             }
 
             //Act
             RedirectToActionResult result;
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var actionResult = await _controller.Confirm(token, user.Email, userManager);
                 result = actionResult as RedirectToActionResult;
@@ -83,7 +81,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             //Arrange
             var user = new ApplicationUser("reset@test.com", "John", "Smith");
             string token;
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 await userManager.CreateAsync(user, PASSWORD);
                 token = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -100,7 +98,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             };
 
             bool isPasswordChanged;
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var actionResult = await _controller.ResetPassword(vm, userManager);
                 result = actionResult as RedirectToActionResult;
@@ -121,7 +119,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             //Arrange
             var user = new ApplicationUser("resetfail@test.com", "John", "Smith");
             string token = Guid.NewGuid().ToString();
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 await userManager.CreateAsync(user, PASSWORD);
             }
@@ -137,7 +135,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             };
 
             bool isPasswordChanged, isOldPasswordValid;
-            using (var userManager = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
+            using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var actionResult = await _controller.ResetPassword(vm, userManager);
                 result = actionResult as ViewResult;
