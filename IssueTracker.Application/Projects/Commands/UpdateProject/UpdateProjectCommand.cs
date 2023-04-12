@@ -45,6 +45,8 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
             entity.Title = request.Title;
             var membersToAdd = request.Members.Except(entity.Members).ToList();
             membersToAdd.ForEach(x => entity.Members.Add(x));
+            var membersToRemove = entity.Members.Except(request.Members).ToList();
+            membersToRemove.ForEach(x => entity.Members.Remove(x));
 
             return await _ctx.SaveChangesAsync(cancellationToken);
         }
