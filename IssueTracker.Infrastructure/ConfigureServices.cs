@@ -41,6 +41,7 @@ namespace IssueTracker.Infrastructure
             services.AddScoped<AuthDbContextInitialiser>();
             services.AddScoped<AppDbContextInitialiser>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IUserService, UserService>();
 
 
             return services;

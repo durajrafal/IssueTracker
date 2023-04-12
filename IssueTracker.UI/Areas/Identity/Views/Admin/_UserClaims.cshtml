@@ -1,0 +1,16 @@
+﻿@using IssueTracker.UI.Models.Admin;
+@model UpdateUserRoleClaimViewModel
+
+
+<form asp-action="UpdateUserRoleClaim" asp-area="Identity" asp-controller="Admin">
+    <div class="form-group">
+        <label for="selectRole" class="form-label mt-4">Select Role:</label>
+        @Html.DropDownListFor(m => m.SelectedRole, Model.Roles, new { @class="form-select",@id="selectRole"})
+    </div>
+    <div class="form-group">
+        <input asp-for="UserId" type="hidden" class="form-control" id="hiddenId" value="@Model.UserId">
+    </div>
+    <div class="col-8 d-flex mt-4 mx-auto justify-content-center">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>

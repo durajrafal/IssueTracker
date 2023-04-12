@@ -184,19 +184,24 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
         }
         #endregion
 
-        #region Edit
+        #region Update
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Update([FromServices] ICurrentUserService currentUserService)
         {
             var userId = currentUserService.UserId;
             var user = await _userManager.FindByIdAsync(userId);
-            var vm = new UpdateViewModel
+            var vm = new UpdateViewModel();
+            try
             {
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-            };
+                vm.Email = user.Email;
+                vm.FirstName = user.FirstName;
+                vm.LastName = user.LastName;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             return View(vm);
         }
 
@@ -231,7 +236,7 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
             else
                 return View(vm);
 
-            return RedirectToAction("Index", "Home", new { area = ""});
+            return RedirectToAction("Index", "Home", new { area = "" });
         }
         #endregion
     }

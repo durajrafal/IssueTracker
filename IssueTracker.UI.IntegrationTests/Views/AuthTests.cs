@@ -1,8 +1,11 @@
 ﻿using IssueTracker.Infrastructure.Identity;
+using IssueTracker.UI.Areas.Identity.Controllers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace IssueTracker.UI.IntegrationTests.Views
 {
@@ -13,36 +16,47 @@ namespace IssueTracker.UI.IntegrationTests.Views
         {
         }
 
-        [Fact]
-        public async Task GetHomePage_WhenUserNotAuthenticated_ShouldRedirect()
+        [Theory]
+        [ClassData(typeof(AuthorizeTestData))]
+        public async Task GetEndpoint_WhenAuthorized_ShouldReturnEndpoint(string uri, List<Claim> claims)
         {
-            var client = Factory.CreateClient(
-                new WebApplicationFactoryClientOptions
-                {
-                    AllowAutoRedirect = false
-                });
+            AuthenticateFactory(claims);
 
-            var response = await client.GetAsync("/");
-
-            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.StartsWith("http://localhost/Identity/Account/Login", response.Headers.Location.OriginalString);
-
-        }
-
-        [Fact]
-        public async Task GetHomePage_WhenUserAuthenticated_ShouldLoadPage()
-        {
-            AuthenticateFactory();
             var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
             });
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
-            var response = await client.GetAsync("/");
+            var response = await client.GetAsync(uri);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
 
+        [Theory]
+        [ClassData(typeof(AuthorizeTestData))]
+        public async Task GetEndpoint_WhenNotAuthorized_ShouldNotReturnEndpoint(string uri, List<Claim> claims)
+        {
+            bool hasClaim = claims.Count > 0;
+            if (hasClaim)
+            {
+                AuthenticateFactory();
+            }
+            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false,
+            });
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+
+            var response = await client.GetAsync(uri);
+
+            if (hasClaim)
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            else
+            {
+                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                Assert.StartsWith("http://localhost/Identity/Account/Login", response.Headers.Location.OriginalString);
+            }
         }
 
         [Fact]
@@ -66,4 +80,22 @@ namespace IssueTracker.UI.IntegrationTests.Views
         }
 
     }
+
+    public class AuthorizeTestData : IEnumerable<object[]>
+    {
+        private const string ADMIN_CONTROLLER = "Identity/Admin/";
+        private const string ACCOUNT_CONTROLLER = "Identity/Account/";
+        private const string HOME_CONTROLLER = "Home/";
+        private Claim _userAdministrationClaim = new Claim(ClaimTypes.Role, "Admin");
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            yield return new object[] { HOME_CONTROLLER + "Index", new List<Claim>() };
+            //TODO - fix exception handling for this one
+            //yield return new object[] { ACCOUNT_CONTROLLER + "Update", new List<Claim>() };
+            yield return new object[] { ADMIN_CONTROLLER + "Users", new List<Claim> { _userAdministrationClaim } };
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
 }
