@@ -14,7 +14,7 @@ using Xunit;
 
 namespace IssueTracker.IntegrationTests.Library.Common
 {
-    public class BaseTest : IClassFixture<CustomWebApplicationFactory>
+    public abstract class BaseTest : IClassFixture<CustomWebApplicationFactory>
     {
         public WebApplicationFactory<Program> Factory { get; protected set; }
         public DatabaseHelpers Database { get; protected set; }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IssueTracker.UI.Areas.Identity.Controllers
 {
     [Area("Identity")]
-
+    [Authorize(Policy = "UserAdministration")]
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
@@ -15,15 +15,14 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
         {
             _userService = userService;
         }
-        [Authorize(Policy = "UserAdministration")]
+        
         [HttpGet]
         public async Task<IActionResult> Users()
         {
             var users = await _userService.GetAllUsersAsync();
             return View(users);
         } 
-        
-        [Authorize(Policy = "UserAdministration")]
+
         [HttpGet]
         public async Task<IActionResult> GetUserClaims(string id)
         {
@@ -32,7 +31,6 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
             return PartialView("../Admin/_UserClaims", vm);
         }
 
-        [Authorize(Policy = "UserAdministration")]
         [HttpPost]
         public async Task<IActionResult> UpdateUserRoleClaim(UpdateUserRoleClaimViewModel vm)
         {

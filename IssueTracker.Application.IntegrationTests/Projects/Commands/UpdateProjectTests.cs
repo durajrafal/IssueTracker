@@ -1,15 +1,8 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Common.Exceptions;
-using IssueTracker.Application.IntegrationTests.Projects.Queries;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
-using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {

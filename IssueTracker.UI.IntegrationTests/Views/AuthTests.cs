@@ -18,7 +18,7 @@ namespace IssueTracker.UI.IntegrationTests.Views
 
         [Theory]
         [ClassData(typeof(AuthorizeTestData))]
-        public async Task GetEndpoint_WhenAuthorized_ShouldReturnEndpoint(string uri, List<Claim> claims)
+        public async Task GetEndpoint_WhenAuthorized_ShouldReturnEndpoint(string uri, List<Claim> claims, bool expectError = false)
         {
             AuthenticateFactory(claims);
 
@@ -29,13 +29,20 @@ namespace IssueTracker.UI.IntegrationTests.Views
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
             var response = await client.GetAsync(uri);
-
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            if (expectError)
+            {
+                Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+            }
+            else
+            {
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
+                
         }
 
         [Theory]
         [ClassData(typeof(AuthorizeTestData))]
-        public async Task GetEndpoint_WhenNotAuthorized_ShouldNotReturnEndpoint(string uri, List<Claim> claims)
+        public async Task GetEndpoint_WhenNotAuthorized_ShouldNotReturnEndpoint(string uri, List<Claim> claims, bool expectError = false)
         {
             bool hasClaim = claims.Count > 0;
             if (hasClaim)
@@ -83,16 +90,23 @@ namespace IssueTracker.UI.IntegrationTests.Views
 
     public class AuthorizeTestData : IEnumerable<object[]>
     {
-        private const string ADMIN_CONTROLLER = "Identity/Admin/";
         private const string ACCOUNT_CONTROLLER = "Identity/Account/";
+        private const string ADMIN_CONTROLLER = "Identity/Admin/";
         private const string HOME_CONTROLLER = "Home/";
+        private const string PROJECT_CONTROLLER = "Projects/";
         private Claim _userAdministrationClaim = new Claim(ClaimTypes.Role, "Admin");
+        private Claim _projectManagerClaim = new Claim(ClaimTypes.Role, "Manager");
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { HOME_CONTROLLER + "Index", new List<Claim>() };
-            //TODO - fix exception handling for this one
-            //yield return new object[] { ACCOUNT_CONTROLLER + "Update", new List<Claim>() };
+            yield return new object[] { ACCOUNT_CONTROLLER + "Update", new List<Claim>(), true };
+
             yield return new object[] { ADMIN_CONTROLLER + "Users", new List<Claim> { _userAdministrationClaim } };
+            yield return new object[] { ADMIN_CONTROLLER + "GetUserClaims", new List<Claim> { _userAdministrationClaim }, true };
+            
+            yield return new object[] { HOME_CONTROLLER + "Index", new List<Claim>() };
+
+            yield return new object[] { PROJECT_CONTROLLER + "Index", new List<Claim> { _projectManagerClaim } };
+            yield return new object[] { PROJECT_CONTROLLER + "Details", new List<Claim> { _projectManagerClaim }, true };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
