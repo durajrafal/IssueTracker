@@ -37,7 +37,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
 
             //Act
             var response = await controller.Users() as ViewResult;
-            var model = response.Model as IEnumerable<UserDto>;
+            var model = response.Model as IEnumerable<UserAdminViewModel>;
 
             //Arrange
             Assert.NotNull( model);
