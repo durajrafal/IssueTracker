@@ -26,7 +26,7 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
                 Email = x.Email,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
-                RoleClaim = x.RoleClaim,
+                RoleClaim = _userService.GetUserRoleClaimAsync(x.UserId).GetAwaiter().GetResult().Value,
             });
             return View(vm);
         } 

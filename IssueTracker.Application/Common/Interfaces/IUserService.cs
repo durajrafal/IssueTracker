@@ -1,18 +1,14 @@
-﻿using IssueTracker.Application.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using IssueTracker.Domain.Models;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Common.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDto> GetUserByIdAsync(string id);
-        Task<IEnumerable<UserDto>> GetAllUsersAsync();
-        Task<IList<Claim>> GetUserClaimsAsync(string id);
+        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<User> GetUserByIdAsync(string id);
+        Task<IEnumerable<Claim>> GetUserClaimsAsync(string id);
+        Task<Claim> GetUserRoleClaimAsync(string id);
         Task ChangeUserRoleClaimAsync(string id, string newRoleClaimValue);
         
     }

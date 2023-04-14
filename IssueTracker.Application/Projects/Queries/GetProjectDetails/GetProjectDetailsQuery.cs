@@ -35,16 +35,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 .ThenInclude(y => y.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
 
-            foreach (var member in entity.Members)
-            {
-                var appUser = await _userService.GetUserByIdAsync(member.UserId);
-                member.User = new User
-                {
-                    Email = appUser.Email,
-                    FirstName = appUser.FirstName,
-                    LastName = appUser.LastName
-                };
-            }
+            entity.Members.ToList().ForEach(async x => x.User = await _userService.GetUserByIdAsync(x.UserId));
 
             return entity;
         }
