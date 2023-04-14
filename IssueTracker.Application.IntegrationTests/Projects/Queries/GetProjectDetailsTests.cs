@@ -1,5 +1,6 @@
 ﻿using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Infrastructure.Identity;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {
@@ -18,11 +19,18 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
             {
                 await ctx.Projects.AddAsync(project);
             });
+            foreach (var member in project.Members)
+            {
+                var appUser = new ApplicationUser(member.UserId.Substring(0, 8), "Name", "Surname");
+                appUser.Id = member.UserId;
+                await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
+            }
 
             var query = new GetProjectDetailsQuery { ProjectId = project.Id};
             var result = await Mediator.Send(query);
 
             Assert.Equal(project.Members.Count, result.Members.Count);
+            Assert.True(result.Members.All(x => x.User != null));
             Assert.Equal(project.Issues.Count, result.Issues.Count);
             Assert.True(result.Issues.All(x => x.Title != String.Empty));
             Assert.True(result.Issues.All(x => x.Members.Count > 0));

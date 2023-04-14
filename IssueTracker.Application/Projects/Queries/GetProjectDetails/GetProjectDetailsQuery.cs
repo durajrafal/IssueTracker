@@ -19,19 +19,34 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
     public class GetProjectDetailsQueryHandler : IRequestHandler<GetProjectDetailsQuery, Project>
     {
         private readonly IApplicationDbContext _ctx;
+        private readonly IUserService _userService;
 
-        public GetProjectDetailsQueryHandler(IApplicationDbContext ctx)
+        public GetProjectDetailsQueryHandler(IApplicationDbContext ctx, IUserService userService)
         {
             _ctx = ctx;
+            _userService = userService;
         }
 
-        public Task<Project> Handle(GetProjectDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<Project> Handle(GetProjectDetailsQuery request, CancellationToken cancellationToken)
         {
-            return _ctx.Projects
+            var entity = await _ctx.Projects
                 .Include(x => x.Members)
                 .Include(x => x.Issues)
                 .ThenInclude(y => y.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
+
+            foreach (var member in entity.Members)
+            {
+                var appUser = await _userService.GetUserByIdAsync(member.UserId);
+                member.User = new User
+                {
+                    Email = appUser.Email,
+                    FirstName = appUser.FirstName,
+                    LastName = appUser.LastName
+                };
+            }
+
+            return entity;
         }
     }
 }

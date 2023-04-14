@@ -27,6 +27,7 @@ namespace IssueTracker.Infrastructure.Persistance
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ProjectMember>().HasKey(x => new { x.ProjectId, x.UserId });
             modelBuilder.Entity<IssueMember>().HasKey(x => new { x.IssueId, x.UserId });
+            modelBuilder.Entity<ProjectMember>().Ignore(x => x.User);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
