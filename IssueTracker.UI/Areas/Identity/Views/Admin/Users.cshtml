@@ -9,48 +9,48 @@
 <div class="container">
     <div class="row">
         <div class="my-2" style="width:20rem;">
-            <input type="text" placeholder="Search.." id="searchInput" onkeyup="filterFunction()" class="form-control" />
+            <input type="text" placeholder="Search.." id="searchInput" class="form-control" />
         </div>
     </div>
     <div class="row">
         <div class="col-xl-8">
-            <div class="table-responsive" style="height:52vh;">
+            <div class="table-responsive" style="max-height:52vh;">
                 <table class="table table-hover">
                     <thead class="bg-primary" style="position:sticky; top: -1px;">
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">@Html.DisplayNameForInnerType((UserAdminViewModel u) => u.Email)</th>
-                        <th scope="col">@Html.DisplayNameForInnerType((UserAdminViewModel u) => u.FirstName)</th>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">@Html.DisplayNameForInnerType((UserAdminViewModel u) => u.Email)</th>
+                            <th scope="col">@Html.DisplayNameForInnerType((UserAdminViewModel u) => u.FirstName)</th>
                             <th scope="col">@Html.DisplayNameForInnerType((UserAdminViewModel u) => u.LastName)</th>
                             <th scope="col">@Html.DisplayNameForInnerType((UserAdminViewModel u) => u.RoleClaim)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        var modelArr = Model.ToArray();
-                        for (int i = 0; i < modelArr.Length; i++)
-                        {
-                            string id = modelArr[i].UserId;
-                            string tableRowClass;
-                            if (i % 2 == 0)
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var modelArr = Model.ToArray();
+                            for (int i = 0; i < modelArr.Length; i++)
                             {
-                                tableRowClass = "table-secondary";
+                                string id = modelArr[i].UserId;
+                                string tableRowClass;
+                                if (i % 2 == 0)
+                                {
+                                    tableRowClass = "table-secondary";
+                                }
+                                else
+                                {
+                                    tableRowClass = "table-dark";
+                                }
+                                <tr class="@tableRowClass" id="@id" name="table-row" data-id="@id">
+                                    <td>@i</td>
+                                    <td>@modelArr[i].Email</td>
+                                    <td>@modelArr[i].FirstName</td>
+                                    <td>@modelArr[i].LastName</td>
+                                    <td>@modelArr[i].RoleClaim</td>
+                                </tr>
                             }
-                            else
-                            {
-                                tableRowClass = "table-dark";
-                            }
-                            <tr class="@tableRowClass" id="@id" name="table-row" data-id="@id" >
-                                <td>@i</td>
-                                <td>@modelArr[i].Email</td>
-                                <td>@modelArr[i].FirstName</td>
-                                <td>@modelArr[i].LastName</td>
-                                <td>@modelArr[i].RoleClaim</td>
-                            </tr>
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="col-xl-4 mh-xl-100 mh-50">
@@ -65,7 +65,10 @@
     </div>
 </div>
 
-<script>
-    var getClaimsURL = "@Url.Content("/Identity/Admin/GetUserClaims/")";
-</script>
-<script src="~/js/admin/user.js" ></script>
+@section Scripts
+    {
+    <script>
+        var getClaimsURL = "@Url.Content("/Identity/Admin/GetUserClaims/")";
+    </script>
+    <script src="~/js/admin/user-admin.js" type="module"></script>
+}

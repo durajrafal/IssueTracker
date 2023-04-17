@@ -32,32 +32,5 @@ rows.forEach(
     }
 );
 
-function filterFunction() {
-    let input = document.getElementById("searchInput");
-    let filter = input.value.toUpperCase();
-    rows.forEach(
-        function (node) {
-            let match = false;
-            node.childNodes.forEach(
-                function (childNode) {
-                    let containsNotOnlyNumbers = function (str) {
-                        return !/^\d+$/.test(str);
-                    };
-
-                    if (childNode.nodeType == Node.ELEMENT_NODE) {
-                        let childText = childNode.textContent.toLocaleUpperCase();
-                        if (containsNotOnlyNumbers(childText) && childText.includes(filter)) {
-                            match = true;
-                        }
-                    }
-                }
-            );
-            if (match) {
-                node.style.display = "table-row";
-            }
-            else {
-                node.style.display = "none";
-            }
-        }
-    )
-}    
+import { addTableFilter } from "../modules/filter-table.js";
+addTableFilter(rows, "searchInput");

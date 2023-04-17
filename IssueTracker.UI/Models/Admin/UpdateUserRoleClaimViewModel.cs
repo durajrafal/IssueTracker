@@ -19,7 +19,7 @@ namespace IssueTracker.UI.Models.Admin
             
         }
 
-        public UpdateUserRoleClaimViewModel(IList<Claim> claims, string userId)
+        public UpdateUserRoleClaimViewModel(IEnumerable<Claim> claims, string userId)
         {
             SelectedRole = claims.FirstOrDefault(x => x.Type.EndsWith("role"))?.Value;
             Roles = new SelectList(new List<SelectListItem>
