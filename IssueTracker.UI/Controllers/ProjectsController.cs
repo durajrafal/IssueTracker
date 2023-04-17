@@ -1,8 +1,8 @@
 ﻿using IssueTracker.Application.Projects.Commands.CreateProject;
 using IssueTracker.Application.Projects.Commands.Delete;
-using IssueTracker.Application.Projects.Queries.GetProjectDetails;
+using IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment;
 using IssueTracker.Application.Projects.Queries.GetProjects;
-using MediatR;
+using IssueTracker.UI.Models.Projects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,11 +28,12 @@ namespace IssueTracker.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Manage(int id)
         {
-            var query = new GetProjectDetailsQuery { ProjectId = id };
+            var query = new GetProjectDetailsForManagmentQuery { ProjectId = id };
             var result = await Mediator.Send(query);
-            return View("Details",result);
+            var model = new ProjectManagmentViewModel { Title = result.Title, Members = result.Members, OtherUsers = result.OtherUsers };
+            return View(model);
         }
 
         [HttpPost]

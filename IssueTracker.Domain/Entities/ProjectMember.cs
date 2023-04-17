@@ -2,12 +2,10 @@
 
 namespace IssueTracker.Domain.Entities
 {
-    public class ProjectMember : IEquatable<ProjectMember>
+    public class ProjectMember : Member, IEquatable<ProjectMember>
     {
         public int ProjectId { get; set; }
         public Project Project { get; set; }
-        public string UserId { get; set; }
-        public User User { get; set; }
 
         public bool Equals(ProjectMember other)
         {
