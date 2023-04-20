@@ -1,5 +1,4 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,21 +22,22 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
 
         public async Task<ProjectManagmentDto> Handle(GetProjectDetailsForManagmentQuery request, CancellationToken cancellationToken)
         {
-            var entity = new ProjectManagmentDto();
+            var output = new ProjectManagmentDto();
 
-            var project = await _ctx.Projects
+            var entity = await _ctx.Projects
                 .Include(x => x.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
-            entity.Title = project.Title;
-            entity.Members = project.Members;
-            foreach (var member in entity.Members)
+            output.Id = entity.Id;
+            output.Title = entity.Title;
+            output.Members = entity.Members;
+            foreach (var member in output.Members)
             {
                 member.User = await _userService.GetUserByIdAsync(member.UserId);
             }
             var allUsers = await _userService.GetAllUsersAsync();
-            entity.OtherUsers = allUsers.ExceptBy(project.Members.Select(x => x.UserId), allUsers => allUsers.UserId);
+            output.OtherUsers = allUsers.ExceptBy(entity.Members.Select(x => x.UserId), allUsers => allUsers.UserId);
 
-            return entity;
+            return output;
         }
     }
 }
