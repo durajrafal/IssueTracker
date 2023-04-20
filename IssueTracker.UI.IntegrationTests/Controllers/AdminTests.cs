@@ -1,18 +1,11 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Application.Common.Models;
 using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Areas.Identity.Controllers;
-using IssueTracker.UI.Models.Account;
 using IssueTracker.UI.Models.Admin;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Controllers
 {

@@ -34,7 +34,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
 
             //Assert
             Assert.Equal(HttpStatusCode.OK, page.StatusCode);
-            Assert.Contains("action=\"/Projects/Create\"", pageHtml);
+            Assert.Contains("action=\"/Projects\"", pageHtml);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             var page = await client.GetAsync("/");
             var pageHtml = await page.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain("action=\"/Projects/Create\"", pageHtml);
+            Assert.DoesNotContain("action=\"/Projects\"", pageHtml);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             var model = new { Title = "Test Project" };
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, "/", "/Projects/Create", model);
+            var response = await client.SendFormAsync(HttpMethod.Post, "/", "/Projects", model);
 
             //Assert
             var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;

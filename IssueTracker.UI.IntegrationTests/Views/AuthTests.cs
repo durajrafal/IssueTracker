@@ -105,8 +105,8 @@ namespace IssueTracker.UI.IntegrationTests.Views
             
             yield return new object[] { HOME_CONTROLLER + "Index", new List<Claim>() };
 
-            yield return new object[] { PROJECT_CONTROLLER + "Index", new List<Claim> { _projectManagerClaim } };
-            yield return new object[] { PROJECT_CONTROLLER + "Manage", new List<Claim> { _projectManagerClaim }, true };
+            yield return new object[] { PROJECT_CONTROLLER + "", new List<Claim> { _projectManagerClaim } };
+            yield return new object[] { PROJECT_CONTROLLER + "1/Manage", new List<Claim> { _projectManagerClaim } };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
