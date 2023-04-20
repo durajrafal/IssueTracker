@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IssueTracker.UI.Controllers
 {
     [Authorize]
-    public abstract class BaseController : Controller
+    public abstract class CustomController : Controller
     {
         protected ISender Mediator => HttpContext.RequestServices.GetRequiredService<ISender>();
     }

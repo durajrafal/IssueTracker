@@ -4,6 +4,8 @@ using IssueTracker.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Security.Cryptography.Xml;
+using System.Text.Json.Serialization;
 
 namespace IssueTracker.UI
 {
@@ -14,7 +16,9 @@ namespace IssueTracker.UI
             services.AddControllersWithViews(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            });
+            })
+                .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IEmailPreparationService, EmailPreparationService>();

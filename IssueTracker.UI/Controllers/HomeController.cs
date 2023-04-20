@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace IssueTracker.UI.Controllers
 {
     
-    public class HomeController : BaseController
+    public class HomeController : CustomController
     {
         private readonly ILogger<HomeController> _logger;
 
