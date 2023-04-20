@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 
-@model IQueryable<IssueTracker.Application.Projects.Queries.GetProjects.ProjectSummaryDto>
+@model IQueryable<ProjectSummaryDto>
 
 @{
     ViewData["Title"] = "Projects";
@@ -12,7 +12,7 @@
 @if ((await AuthorizationService.AuthorizeAsync(User, "ProjectManagement")).Succeeded)
 {
     <div class="container" id="form-create-project">
-        <form method="post" asp-controller="Projects" asp-action="Create">
+        <form method="post" asp-controller="ProjectsAdmin" asp-action="Create">
             <div asp-validation-summary="All"></div>
             <div class="input-group">
                 <input name="title" type="text" class="form-control" id="newProjectTitle" placeholder="My New Project Title" required>
@@ -23,7 +23,7 @@
 }
 
 <div class="container">
-    <table class="table table-hover">
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Id)</th>
@@ -47,16 +47,14 @@
                     {
                         tableRowClass = "table-dark";
                     }
-                    <tr class="@tableRowClass align-items-center">
+                    <tr class="@tableRowClass">
                         <td class="text-end" style="vertical-align:middle">@modelArr[i].Id</td>
                         <td style="width:99%; vertical-align:middle;" scope="row">@modelArr[i].Title</td>
                         <td class="text-center" style="vertical-align:middle"><i class="bi bi-person-fill"></i> @modelArr[i].NumberOfMembers</td>
                         <td class="text-center" style="vertical-align:middle">
-                            <button type="button" class="btn btn-primary">
-                                <a asp-action="Details" asp-route-id="@modelArr[i].Id">
+                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@modelArr[i].Id">
                                 <i class="bi bi-pencil-square text-white"></i>
-                                </a>
-                            </button>
+                            </a>
                         </td>
                         <td class="text-center">
                             <button type="button" name="showDeleteModalButton" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjectModal"
@@ -69,28 +67,28 @@
             }
         </tbody>
     </table>
+
     <div class="modal fade" id="deleteProjectModal" tabindex="-1" aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteProjectModalLabel">Delete Project - </h1>
+                    <h1 class="modal-title fs-5" id="deleteProjectModalLabel"></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" asp-controller="Projects" asp-action="Delete">
-                    <div class="modal-body">
-                        <div asp-validation-summary="All"></div>
-                        <div class="input-group">
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
                             <label for="deleteProjectTitle" class="form-label">Enter title of the project you want to delete to confirm operation:</label>
                             <input type="text" name="title" class="form-control" id="deleteProjectTitle"
                                    aria-describedby="emailHelp" placeholder="Enter title" required>
-                            <input id="deleteFormProjectId" type="hidden" name="id" />
+                            <div class="invalid-feedback">Please enter matching project title.</div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    <button id="confirmDeleteButton" type="button" class="btn btn-danger">Delete</button>
+                </div>
             </div>
         </div>
     </div>
@@ -99,27 +97,6 @@
 
 @section Scripts
     {
-    <script>
-        let deleteButtons = document.getElementsByName("showDeleteModalButton");
-        deleteButtons.forEach(
-            function (button) {
-                button.addEventListener('click', () => {
-                    SetDeleteModalTitle(button.dataset.title);
-                    SetDeleteModalProjectId(button.dataset.id);
-                });
-            }
-        )
-
-        let SetDeleteModalTitle = function (title) {
-            let headerHTML = document.getElementById("deleteProjectModalLabel").innerHTML;
-            console.log(headerHTML);
-            headerHTML = headerHTML + '<span class="text-danger fw-bold fs-5">' + title + '</span>';
-            console.log(headerHTML);
-            document.getElementById("deleteProjectModalLabel").innerHTML = headerHTML;
-        }
-
-        let SetDeleteModalProjectId = function (id) {
-            document.getElementById("deleteFormProjectId").value = id;
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="~/js/projects-admin/index.js"></script>
 }

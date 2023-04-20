@@ -93,7 +93,7 @@ namespace IssueTracker.UI.IntegrationTests.Views
         private const string ACCOUNT_CONTROLLER = "Identity/Account/";
         private const string ADMIN_CONTROLLER = "Identity/Admin/";
         private const string HOME_CONTROLLER = "Home/";
-        private const string PROJECT_CONTROLLER = "Projects/";
+        private const string PROJECTS_ADMIN_CONTROLLER = "Project-Management/";
         private Claim _userAdministrationClaim = new Claim(ClaimTypes.Role, "Admin");
         private Claim _projectManagerClaim = new Claim(ClaimTypes.Role, "Manager");
         public IEnumerator<object[]> GetEnumerator()
@@ -105,8 +105,8 @@ namespace IssueTracker.UI.IntegrationTests.Views
             
             yield return new object[] { HOME_CONTROLLER + "Index", new List<Claim>() };
 
-            yield return new object[] { PROJECT_CONTROLLER + "", new List<Claim> { _projectManagerClaim } };
-            yield return new object[] { PROJECT_CONTROLLER + "1/Manage", new List<Claim> { _projectManagerClaim } };
+            yield return new object[] { PROJECTS_ADMIN_CONTROLLER + "", new List<Claim> { _projectManagerClaim } };
+            yield return new object[] { PROJECTS_ADMIN_CONTROLLER + "1", new List<Claim> { _projectManagerClaim } };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

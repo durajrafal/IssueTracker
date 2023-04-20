@@ -19,9 +19,8 @@ let app = Vue.createApp({
     },
     methods: {
         GetProjectDetails() {
-            let path = location.href.split('/');
-            const id = path[path.length - 2];
-            let url = this.baseUrl + '/api/projects/' + id + '/manage/'
+            const id = location.href.split('/').pop();
+            let url = this.baseUrl + '/api/project-management/' + id
             axios.get(url)
                 .then(res => {
                     this.project = res.data;
@@ -34,7 +33,7 @@ let app = Vue.createApp({
                 });
         },
         UpdateProject() {
-            let url = this.baseUrl + '/api/projects/' + this.project.id
+            let url = this.baseUrl + '/api/project-management/' + this.project.id
             axios.put(url,
                 {
                     ProjectId: this.project.id,
@@ -49,7 +48,7 @@ let app = Vue.createApp({
                     console.log(err);
                 })
                 .then(() => {
-                    window.location.href = "../";
+                    window.location.href = "../project-management";
                 })
         },
         AddUserToProject(user) {

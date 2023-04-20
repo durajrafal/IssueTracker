@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IssueTracker.UI.Controllers
 {
-    [Route("[controller]")]
+    [Route("project-management")]
     [Authorize(Policy = "ProjectManagement")]
-    public class ProjectsController : CustomController
+    public class ProjectsAdminController : CustomController
     {
         [HttpPost("")]
         public async Task<IActionResult> Create(string title)
@@ -28,13 +28,13 @@ namespace IssueTracker.UI.Controllers
             return View(result);
         }
 
-        [HttpGet("{id}/Manage")]
-        public async Task<IActionResult> Manage(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(int id)
         {
             return View();
         }
 
-        [HttpGet("~/api/[controller]/{id}/Manage")]
+        [HttpGet("~/api/project-management/{id}")]
         public async Task<IActionResult> GetProjectForManage(int id)
         {
             var query = new GetProjectDetailsForManagmentQuery { ProjectId = id };
@@ -42,19 +42,19 @@ namespace IssueTracker.UI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("~/api/[controller]/{id}")]
+        [HttpPut("~/api/project-management/{id}")]
         public async Task<IActionResult> Update(int id,[FromBody] UpdateProjectCommand command)
         {
-            var result = await Mediator.Send(command);
+            await Mediator.Send(command);
             return Ok();
         }
 
-        [HttpPost("{id}")]
+        [HttpDelete("~/api/project-management/{id}/{title}")]
         public async Task<IActionResult> Delete(int id, string title)
         {
             var command = new DeleteProjectCommand { ProjectId = id, Title = title };
-            var result = await Mediator.Send(command);
-            return RedirectToAction("Index");
+            await Mediator.Send(command);
+            return Ok();
         }
     }
 }

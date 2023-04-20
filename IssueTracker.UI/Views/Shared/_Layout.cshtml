@@ -29,7 +29,7 @@
                         @if ((await AuthorizationService.AuthorizeAsync(User, "ProjectManagement")).Succeeded)
                         {
                             <li class="nav-item">
-                                <a id="nav-project" class="nav-link" asp-area="" asp-controller="Projects" asp-action="Index">Project management</a>
+                                <a id="nav-project" class="nav-link" asp-area="" asp-controller="ProjectsAdmin" asp-action="Index">Project management</a>
                             </li>
                         }
                         @if ((await AuthorizationService.AuthorizeAsync(User, "UserAdministration")).Succeeded)
