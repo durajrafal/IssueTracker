@@ -3,6 +3,7 @@ using IssueTracker.Application.Projects.Commands.Delete;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment;
 using IssueTracker.Application.Projects.Queries.GetProjects;
+using IssueTracker.UI.Models.ProjectsAdmin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,20 +13,32 @@ namespace IssueTracker.UI.Controllers
     [Authorize(Policy = "ProjectManagement")]
     public class ProjectsAdminController : CustomController
     {
-        [HttpPost("")]
-        public async Task<IActionResult> Create(string title)
-        {
-            var command = new CreateProjectCommand { Title = title };
-            await Mediator.Send(command);
-            return RedirectToAction("Index");
-        }
-
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             var query = new GetProjectsQuery();
             var result = await Mediator.Send(query);
-            return View(result);
+            var model = new ProjectsAdminIndexViewModel { Projects = result };
+            return View(model);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(ProjectsAdminCreateViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var command = new CreateProjectCommand { Title = vm.Title };
+                await Mediator.Send(command);
+                return RedirectToAction("Index");
+            }
+
+            return View( vm);
         }
 
         [HttpGet("{id}")]
@@ -43,7 +56,7 @@ namespace IssueTracker.UI.Controllers
         }
 
         [HttpPut("~/api/project-management/{id}")]
-        public async Task<IActionResult> Update(int id,[FromBody] UpdateProjectCommand command)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateProjectCommand command)
         {
             await Mediator.Send(command);
             return Ok();

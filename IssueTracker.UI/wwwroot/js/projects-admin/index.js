@@ -27,7 +27,6 @@ const DeleteProject = function(title,id) {
     if (title === enteredTitle) {
         const baseUrl = window.location.origin;
         const url = baseUrl + '/api/project-management/' + id + '/' + title;
-        console.log(url)
         axios({
                 url: url,
                 method: 'delete',

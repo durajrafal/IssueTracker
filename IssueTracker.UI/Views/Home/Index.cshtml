@@ -16,7 +16,7 @@
 @if ((await AuthorizationService.AuthorizeAsync(User, "ProjectManagement")).Succeeded)
 {
     <div class="container" id="form-create-project">
-        <form method="post" asp-controller="Projects" asp-action="Create">
+        <form method="post" asp-controller="ProjectsAdmin" asp-action="Create">
             <div asp-validation-summary="All"></div>
             <div class="input-group">
                 <input name="title" type="text" class="form-control" id="newProjectTitle" placeholder="My New Project Title">

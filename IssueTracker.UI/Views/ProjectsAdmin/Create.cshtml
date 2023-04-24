@@ -1,0 +1,30 @@
+﻿@using IssueTracker.UI.Models.ProjectsAdmin;
+@model ProjectsAdminCreateViewModel
+
+<div class="row my-2 d-flex justify-content-center">
+    <div class="col-lg-8">
+        <form method="post" asp-controller="ProjectsAdmin" asp-action="Create" id="form-create-project">
+            <div>
+                <div class="form-group">
+                    <input asp-for="Title" type="text" class="form-control" id="newProjectTitle" placeholder="My New Project Title" required>
+                    <span asp-validation-for="Title" class="invalid-feedback"></span>
+                </div>
+                <div class="row row-cols-2 mt-2">
+                    <div class="col-md-6 mx-auto">
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary px-5" type="submit" id="createProjectButton">Create</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <a asp-action="Index" class="btn btn-secondary px-5">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts{
+    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+}

@@ -45,6 +45,32 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }
 
+        [Theory]
+        [InlineData(':')]
+        [InlineData('/')]
+        [InlineData('?')]
+        [InlineData('#')]
+        [InlineData('[')]
+        [InlineData(']')]
+        [InlineData('@')]
+        [InlineData('!')]
+        [InlineData('$')]
+        [InlineData('&')]
+        [InlineData('\'')]
+        [InlineData('(')]
+        [InlineData(')')]
+        [InlineData('*')]
+        [InlineData('+')]
+        [InlineData(',')]
+        [InlineData(';')]
+        [InlineData('=')]
+        public async Task Handle_WhenTitleContainsForbiddenCharacter_ShouldThrowValidationException(char forbiddenChar)
+        {
+            var command = new CreateProjectCommand { Title = "Forbidden title" + forbiddenChar };
+
+            await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
+        }
+
         [Fact]
         public async Task Handle_Always_ShouldAddCurrentUserAsMember()
         {

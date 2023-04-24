@@ -1,98 +1,91 @@
 ﻿@using IssueTracker.Application.Projects.Queries.GetProjects;
-@using Microsoft.AspNetCore.Authorization
-@inject IAuthorizationService AuthorizationService
+@using IssueTracker.UI.Models.ProjectsAdmin;
 
-@model IQueryable<ProjectSummaryDto>
+@model ProjectsAdminIndexViewModel
 
 @{
     ViewData["Title"] = "Projects";
 }
 
-
-@if ((await AuthorizationService.AuthorizeAsync(User, "ProjectManagement")).Succeeded)
-{
-    <div class="container" id="form-create-project">
-        <form method="post" asp-controller="ProjectsAdmin" asp-action="Create">
-            <div asp-validation-summary="All"></div>
-            <div class="input-group">
-                <input name="title" type="text" class="form-control" id="newProjectTitle" placeholder="My New Project Title" required>
-                <input class="btn btn-primary" type="submit" value="Create" />
-            </div>
-        </form>
+<div class="row my-2">
+    <div class="col-12 d-flex flex-row-reverse">
+        <a asp-action="Create">Create new project</a>
     </div>
-}
+</div>
 
-<div class="container">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Id)</th>
-                <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Title)</th>
-                <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.NumberOfMembers)</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                var modelArr = Model.ToArray();
-                for (int i = 0; i < modelArr?.Length; i++)
-                {
-                    string tableRowClass;
-                    if (i % 2 == 0)
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Id)</th>
+                    <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Title)</th>
+                    <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.NumberOfMembers)</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var modelArr = Model.Projects.ToArray();
+                    for (int i = 0; i < modelArr?.Length; i++)
                     {
-                        tableRowClass = "table-secondary";
+                        string tableRowClass;
+                        if (i % 2 == 0)
+                        {
+                            tableRowClass = "table-secondary";
+                        }
+                        else
+                        {
+                            tableRowClass = "table-dark";
+                        }
+                        <tr class="@tableRowClass">
+                            <td class="text-end" style="vertical-align:middle">@modelArr[i].Id</td>
+                            <td style="width:99%; vertical-align:middle;" scope="row">@modelArr[i].Title</td>
+                            <td class="text-center" style="vertical-align:middle"><i class="bi bi-person-fill"></i> @modelArr[i].NumberOfMembers</td>
+                            <td class="text-center" style="vertical-align:middle">
+                                <a class="btn btn-primary" asp-action="Details" asp-route-id="@modelArr[i].Id">
+                                    <i class="bi bi-pencil-square text-white"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" name="showDeleteModalButton" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjectModal"
+                                        data-id="@modelArr[i].Id" data-title="@modelArr[i].Title">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
                     }
-                    else
-                    {
-                        tableRowClass = "table-dark";
-                    }
-                    <tr class="@tableRowClass">
-                        <td class="text-end" style="vertical-align:middle">@modelArr[i].Id</td>
-                        <td style="width:99%; vertical-align:middle;" scope="row">@modelArr[i].Title</td>
-                        <td class="text-center" style="vertical-align:middle"><i class="bi bi-person-fill"></i> @modelArr[i].NumberOfMembers</td>
-                        <td class="text-center" style="vertical-align:middle">
-                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@modelArr[i].Id">
-                                <i class="bi bi-pencil-square text-white"></i>
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            <button type="button" name="showDeleteModalButton" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjectModal"
-                                    data-id="@modelArr[i].Id" data-title="@modelArr[i].Title">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
                 }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-    <div class="modal fade" id="deleteProjectModal" tabindex="-1" aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteProjectModalLabel"></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="deleteProjectTitle" class="form-label">Enter title of the project you want to delete to confirm operation:</label>
-                            <input type="text" name="title" class="form-control" id="deleteProjectTitle"
-                                   aria-describedby="emailHelp" placeholder="Enter title" required>
-                            <div class="invalid-feedback">Please enter matching project title.</div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                    <button id="confirmDeleteButton" type="button" class="btn btn-danger">Delete</button>
-                </div>
+<div class="modal fade" id="deleteProjectModal" tabindex="-1" aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteProjectModalLabel"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label for="deleteProjectTitle" class="form-label">Enter title of the project you want to delete to confirm operation:</label>
+                        <input type="text" name="title" class="form-control" id="deleteProjectTitle"
+                               aria-describedby="emailHelp" placeholder="Enter title" required>
+                        <div class="invalid-feedback">Please enter matching project title.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                <button id="confirmDeleteButton" type="button" class="btn btn-danger">Delete</button>
             </div>
         </div>
     </div>
-
 </div>
 
 @section Scripts

@@ -1,11 +1,5 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Common.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Commands.CreateProject
 {
@@ -17,10 +11,12 @@ namespace IssueTracker.Application.Projects.Commands.CreateProject
         {
             _ctx = ctx;
             const int MAX_TITLE_LENGTH = 100;
-
+            var forbiddenCharacters = new List<char> { ':', '/', '?', '#', '[', ']', '@', '!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '=' };
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title is required.")
                 .MaximumLength(MAX_TITLE_LENGTH).WithMessage($"Title must not exceed {MAX_TITLE_LENGTH}.")
+                .Must(title => title.All(ch => !forbiddenCharacters.Contains(ch)))
+                .WithMessage("Must not contain any of the following characters: ':', '/', '?', '#', '[', ']', '@', '!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '='")
                 .Must(BeUniqueTitle).WithMessage("Project with the same name already exists.");
         }
 
