@@ -13,7 +13,8 @@ namespace IssueTracker.Application.Projects.Commands.CreateProject
             const int MAX_TITLE_LENGTH = 100;
             var forbiddenCharacters = new List<char> { ':', '/', '?', '#', '[', ']', '@', '!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '=' };
             RuleFor(x => x.Title)
-                .NotEmpty().WithMessage("Title is required.")
+                .Cascade(CascadeMode.Stop)
+                .NotNull().NotEmpty().WithMessage("Title is required.")
                 .MaximumLength(MAX_TITLE_LENGTH).WithMessage($"Title must not exceed {MAX_TITLE_LENGTH}.")
                 .Must(title => title.All(ch => !forbiddenCharacters.Contains(ch)))
                 .WithMessage("Must not contain any of the following characters: ':', '/', '?', '#', '[', ']', '@', '!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '='")

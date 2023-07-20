@@ -10,6 +10,8 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
 {
     public class CreateTests : UiBaseTest
     {
+        private const string FORM_ACTION = "action=\"/project-management/Create\"";
+
         public CreateTests(CustomWebApplicationFactory factory)
             :base(factory)
         {
@@ -34,7 +36,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
 
             //Assert
             Assert.Equal(HttpStatusCode.OK, page.StatusCode);
-            Assert.Contains("action=\"/Projects\"", pageHtml);
+            Assert.Contains(FORM_ACTION, pageHtml);
         }
 
         [Fact]
@@ -49,7 +51,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             var page = await client.GetAsync("/");
             var pageHtml = await page.Content.ReadAsStringAsync();
 
-            Assert.DoesNotContain("action=\"/Projects\"", pageHtml);
+            Assert.DoesNotContain(FORM_ACTION, pageHtml);
         }
 
         [Fact]
@@ -66,7 +68,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             var model = new { Title = "Test Project" };
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, "/", "/Projects", model);
+            var response = await client.SendFormAsync(HttpMethod.Post, "/", "/project-management/create", model);
 
             //Assert
             var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
