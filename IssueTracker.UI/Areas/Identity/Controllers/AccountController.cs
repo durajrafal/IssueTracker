@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Security.Claims;
 using System.Text;
 
 namespace IssueTracker.UI.Areas.Identity.Controllers
@@ -98,6 +99,8 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
             {
                 var user = new ApplicationUser(register.Email, register.FirstName, register.LastName);
                 var result = await _userManager.CreateAsync(user, register.Password);
+                var claim = new Claim(ClaimTypes.Role, "Manager");
+                await _userManager.AddClaimAsync(user, claim);
                 if (result.Succeeded)
                 {
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);

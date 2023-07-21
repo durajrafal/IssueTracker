@@ -55,7 +55,7 @@ namespace IssueTracker.Infrastructure
         {
             if (!_userManager.Users.Any(x => x.UserName == userName))
             {
-                var user = new ApplicationUser(userName, claimRoleValue, "Tester") { 
+                var user = new ApplicationUser(userName, claimRoleValue, "Demo") { 
                     EmailConfirmed = true,
                 };
                 await _userManager.CreateAsync(user, "Pass123");
