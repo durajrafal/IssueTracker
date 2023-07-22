@@ -39,7 +39,7 @@
                                 {
                                     tableRowClass = "table-dark";
                                 }
-                                <tr class="@tableRowClass" id="@id" name="table-row" data-id="@id">
+                                <tr class="@tableRowClass" name="table-row" data-id="@id">
                                     <td>@i</td>
                                     <td>@modelArr[i].Email</td>
                                     <td>@modelArr[i].FirstName</td>
@@ -53,12 +53,12 @@
             </div>
         </div>
         <div class="col-xl-4 mh-xl-100 mh-50">
-            <div id="partialViewPlaceholder" class="pt-xl-0 pt-3">
+            <div data-placeholder class="pt-xl-0 pt-3">
                 <h6 class="text-center">
                     Please select user...
                 </h6>
             </div>
-            <div id="partialViewWithClaims">
+            <div data-partialView>
             </div>
         </div>
     </div>
@@ -66,8 +66,5 @@
 
 @section Scripts
     {
-    <script>
-        var getClaimsURL = "@Url.Content("/Identity/Admin/GetUserClaims/")";
-    </script>
-    <script src="~/js/admin/user-admin.js" type="module"></script>
+    <script src="~/js/dist/admin/users-admin.js" type="module"></script>
 }
