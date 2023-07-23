@@ -1,32 +1,30 @@
 import addTableFilter from "../common/filter-table.js";
 
 class GetPartialViewWithUserClaims {
-    private rows: NodeListOf<HTMLTableRowElement>;
-    private baseUrl: string;
+    private readonly rows: NodeListOf<HTMLTableRowElement>;
     private previouslySelectedId: string;
     private previouslySelectedTableClass: string;
 
-    constructor(url: string) {
+    constructor(private readonly baseUrl: string) {
         this.rows = document.querySelectorAll('tr');
-        this.baseUrl = url;
-        this.rows.forEach(node => node.addEventListener('click', () => this.GetUserClaims(node.dataset.id)));
+        this.rows.forEach(row => row.addEventListener('click', () => this.getUserClaims(row.dataset.id)));
         addTableFilter(this.rows, 'searchInput');
     }
 
-    private GetUserClaims(id: string) {
+    private getUserClaims(id: string) {
         const url = this.baseUrl + id;
         fetch(url)
             .then(res => res.text())
-            .then(data => this.RenderPartialView(data))
-            .then(() => this.ChangeSelectedRowInTable(id));
+            .then(data => this.renderPartialView(data))
+            .then(() => this.changeSelectedRowInTable(id));
     }
 
-    private RenderPartialView(html: string) {
+    private renderPartialView(html: string) {
         document.querySelector('[data-partialView]').innerHTML = html;
         (<HTMLElement>document.querySelector('[data-placeholder]')).style.display = "none";
     }
 
-    private ChangeSelectedRowInTable(id: string) {
+    private changeSelectedRowInTable(id: string) {
         if (this.previouslySelectedId != undefined) {
             const previous = document.querySelector(`[data-id="${this.previouslySelectedId}"]`);
             previous.classList.replace('table-success', this.previouslySelectedTableClass);
