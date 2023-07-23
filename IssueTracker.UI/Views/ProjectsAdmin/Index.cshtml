@@ -49,7 +49,7 @@
                                 </a>
                             </td>
                             <td class="text-center">
-                                <button type="button" name="showDeleteModalButton" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjectModal"
+                                <button type="button" data-show-delete-modal class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjectModal"
                                         data-id="@modelArr[i].Id" data-title="@modelArr[i].Title">
                                     <i class="bi bi-trash"></i>
                                 </button>
@@ -66,15 +66,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="deleteProjectModalLabel"></h1>
+                <h1 class="modal-title fs-5" data-delete-project></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
                     @Html.AntiForgeryToken()
                     <div class="form-group">
-                        <label for="deleteProjectTitle" class="form-label">Enter title of the project you want to delete to confirm operation:</label>
-                        <input type="text" name="title" class="form-control" id="deleteProjectTitle"
+                        <label class="form-label">Enter title of the project you want to delete to confirm operation:</label>
+                        <input type="text" name="title" class="form-control" data-delete-project-title
                                aria-describedby="emailHelp" placeholder="Enter title" required>
                         <div class="invalid-feedback">Please enter matching project title.</div>
                     </div>
@@ -82,7 +82,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                <button id="confirmDeleteButton" type="button" class="btn btn-danger">Delete</button>
+                <button data-confirm-delete type="button" class="btn btn-danger">Delete</button>
             </div>
         </div>
     </div>
@@ -90,6 +90,5 @@
 
 @section Scripts
     {
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
-    <script src="~/js/projects-admin/index.js"></script>
+    <script src="~/js/dist/project-admin/index.js"></script>
 }
