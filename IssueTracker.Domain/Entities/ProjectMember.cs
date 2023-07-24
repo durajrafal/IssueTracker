@@ -5,7 +5,6 @@ namespace IssueTracker.Domain.Entities
     public class ProjectMember : Member, IEquatable<ProjectMember>
     {
         public int ProjectId { get; set; }
-        public Project Project { get; set; }
 
         public bool Equals(ProjectMember other)
         {

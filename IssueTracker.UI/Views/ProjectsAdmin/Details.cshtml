@@ -4,12 +4,12 @@
     ViewData["Title"] = "Manage";
 }
 
-<div id="app" class="row" v-cloak>
+<div class="row">
     @Html.AntiForgeryToken()
-    <div class="text-center" v-if="loading">
+    <div class="text-center" data-loading>
         <h3>Loading...</h3>
     </div>
-    <div v-else class="row">
+    <div class="row d-none" data-loaded>
         
         <div class="col-12 text-center">
             <div class="mt-2 d-flex justify-content-center gap-3">
@@ -21,7 +21,7 @@
                 </a>
             </div>
             <div v-if="!editTitle" class="my-2 d-flex justify-content-center gap-3">
-                    <h3 class="m-0">{{project.title}}</h3>
+                    <h3 class="m-0" data-project-title>{{project.title}}</h3>
                     <button class="btn btn-secondary py-0" v-on:click="ToggleEditTitle"><i class="bi bi-pencil-square"></i></button>
             </div>
             <div v-else class="my-2 d-flex justify-content-center gap-3">
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="table-responsive" style="max-height:30rem;">
-                <table class="table" id="users-table">
+                <table class="table" id="users-table" data-members-table>
                     <thead class="bg-primary" style="position:sticky; top: -1px;">
                         <tr>
                             <th scope="col">@Html.DisplayNameForInnerType((UserAdminViewModel u) => u.Email)</th>
@@ -53,16 +53,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(member, index) in filteredMembers" :key="index" name="member-table-row">
-                            <td style="vertical-align:middle">{{member.user.email}}</td>
-                            <td style="vertical-align:middle">{{member.user.firstName}}</td>
-                            <td style="vertical-align:middle">{{member.user.lastName}}</td>
-                            <td class="text-center" style="vertical-align:middle">
-                                <button type="button" class="btn btn-danger" v-on:click="DeleteMember(member)">
-                                    <i class="bi bi-person-dash-fill"></i>
-                                </button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -78,7 +68,7 @@
                 </div>
             </div>
             <div class="table-responsive" style="max-height:30rem;">
-                <table class="table" id="user-table">
+                <table class="table" id="user-table" data-other-users-table>
                     <thead class="bg-primary" style="position:sticky; top: -1px;">
                         <tr>
                             <th scope="col">@Html.DisplayNameForInnerType((UserAdminViewModel u) => u.Email)</th>
@@ -88,16 +78,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(user, index) in filteredUsers" :key="index" name="user-table-row">
-                            <td style="vertical-align:middle">{{user.email}}</td>
-                            <td style="vertical-align:middle">{{user.firstName}}</td>
-                            <td style="vertical-align:middle">{{user.lastName}}</td>
-                            <td class="text-center" style="vertical-align:middle">
-                                <button type="button" class="btn btn-success" v-on:click="AddUserToProject(user)">
-                                    <i class="bi bi-person-plus-fill"></i>
-                                </button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
