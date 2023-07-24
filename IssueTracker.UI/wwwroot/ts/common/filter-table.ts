@@ -1,4 +1,4 @@
-function setupTableFilter(tableRows: NodeListOf<HTMLTableRowElement>, searchFieldId: string) {
+export function addTableFilter(tableRows: NodeListOf<HTMLTableRowElement>, searchFieldId: string) {
     const search = document.getElementById(searchFieldId) as HTMLInputElement;
     search.addEventListener('keyup', () => filterFunction(tableRows, search));
 }
@@ -31,5 +31,3 @@ function filterFunction(rows: NodeListOf<HTMLTableRowElement>, searchField: HTML
         }
     )
 }
-
-export default setupTableFilter;

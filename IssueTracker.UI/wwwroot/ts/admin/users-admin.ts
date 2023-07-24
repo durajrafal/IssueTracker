@@ -1,4 +1,4 @@
-import addTableFilter from "../common/filter-table.js";
+import { addTableFilter } from "../common/filter-table.js";
 
 class GetPartialViewWithUserClaims {
     private readonly rows: NodeListOf<HTMLTableRowElement>;
