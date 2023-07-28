@@ -5,7 +5,8 @@ class ProjectAdminDetails {
     private project: Project;
     private memberManagement: MembersManagementTablesHandler;
     constructor(private readonly baseUrl: string) {
-        this.getProjectDetails();
+        this.getProjectDetails()
+        document.addEventListener('DOMContentLoaded', () => this.setupEventListeners());
     }
 
     private getProjectDetails() {
@@ -15,7 +16,27 @@ class ProjectAdminDetails {
             .then(res => res.text())
             .then(data => { this.project = JSON.parse(data); })
             .then(() => { this.memberManagement = new MembersManagementTablesHandler('[data-members-table] > tbody', '[data-other-users-table] > tbody', this.project); })
-            .then(() => { this.displayData(); });
+            .then(() => { this.displayData(); })
+    }
+
+    private setupEventListeners() {
+        document.querySelector('[data-update-project]').addEventListener('click', () => this.updateProject())
+    }
+
+    private updateProject() {
+        console.log("update proj");
+        const url = this.baseUrl + '/api/project-management/' + this.project.id;
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                "RequestVerificationToken": (<HTMLInputElement>document.querySelector('input[name="__RequestVerificationToken"]')).value as string
+            },
+            body: JSON.stringify(this.project),
+        })
+            .then(res => console.log(res))
+            .catch(err => console.log(err));
+
     }
 
     private displayData() {
