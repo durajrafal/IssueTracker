@@ -13,7 +13,7 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
 {
     public class UpdateProjectCommand : IRequest<int>
     {
-        public int ProjectId { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public IEnumerable<ProjectMember> Members { get; set; }
     }
@@ -35,11 +35,11 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
             {
                 entity = _ctx.Projects
                 .Include(x => x.Members)
-                .First(x => x.Id == request.ProjectId);
+                .First(x => x.Id == request.Id);
             }
             catch (Exception ex)
             {
-                throw new NotFoundException(nameof(Project), request.ProjectId.ToString(), ex);
+                throw new NotFoundException(nameof(Project), request.Id.ToString(), ex);
             }
 
             entity.Title = request.Title;

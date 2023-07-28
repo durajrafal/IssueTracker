@@ -56,7 +56,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         {
             var command = new UpdateProjectCommand
             {
-                ProjectId = 2,
+                Id = 2,
                 Title = PROJECT_NAME
             };
             var mockSet = MockingEF.CreateFakeDbSet(new List<Project>

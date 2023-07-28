@@ -26,7 +26,7 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
         public bool BeUniqueTitle(UpdateProjectCommand model, string title)
         {
             return !_ctx.Projects
-                .Where(x => x.Id != model.ProjectId)
+                .Where(x => x.Id != model.Id)
                 .Any(x => x.Title == title);
         }
     }
