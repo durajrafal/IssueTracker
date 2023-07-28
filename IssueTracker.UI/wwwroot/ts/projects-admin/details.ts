@@ -5,7 +5,7 @@ class ProjectAdminDetails {
     private project: Project;
     private memberManagement: MembersManagementTablesHandler;
     constructor(private readonly baseUrl: string) {
-        this.getProjectDetails()
+        this.getProjectDetails();
         document.addEventListener('DOMContentLoaded', () => this.setupEventListeners());
     }
 
@@ -16,15 +16,16 @@ class ProjectAdminDetails {
             .then(res => res.text())
             .then(data => { this.project = JSON.parse(data); })
             .then(() => { this.memberManagement = new MembersManagementTablesHandler('[data-members-table] > tbody', '[data-other-users-table] > tbody', this.project); })
-            .then(() => { this.displayData(); })
+            .then(() => { this.displayData(); });
     }
 
     private setupEventListeners() {
-        document.querySelector('[data-update-project]').addEventListener('click', () => this.updateProject())
+        document.querySelector('[data-update-project]').addEventListener('click', () => this.updateProject());
+        document.querySelectorAll('[data-toogle-title-edit]').forEach(e => e.addEventListener('click', () => this.toogleTitleEdit()));
+        document.querySelector('[data-accept-new-title]').addEventListener('click', () => this.acceptTitleEdit());
     }
 
     private updateProject() {
-        console.log("update proj");
         const url = this.baseUrl + '/api/project-management/' + this.project.id;
         fetch(url, {
             method: 'PUT',
@@ -34,18 +35,14 @@ class ProjectAdminDetails {
             },
             body: JSON.stringify(this.project),
         })
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
-
+            .then((res) => {
+                if (res.ok)
+                window.history.back();
+            });
     }
 
     private displayData() {
-        const populateTitle = () => {
-            (<HTMLElement>document.querySelector('[data-project-title]')).textContent = this.project.title;
-        };
-
         const populateViewWithData = () => {
-            populateTitle();
             this.memberManagement.populateUsersTables();
         };
 
@@ -58,8 +55,34 @@ class ProjectAdminDetails {
         };
 
         populateViewWithData();
+        this.displayTitle();
         hideLoading();
         showData();
+    }
+
+    private displayTitle() {
+        (<HTMLElement>document.querySelector('[data-project-title]')).textContent = this.project.title;
+    }
+
+    private toogleTitleEdit() {
+        const toogleDisplayClass = (element: HTMLElement) => {
+            element.classList.toggle('d-flex');
+            element.classList.toggle('d-none');
+        };
+
+        const showTitle = document.querySelector('[data-show-title]') as HTMLElement;
+        toogleDisplayClass(showTitle);
+
+        const editTitle = document.querySelector('[data-edit-title]') as HTMLElement;
+        toogleDisplayClass(editTitle);
+        editTitle.querySelector('input').value = this.project.title;
+    }
+
+    private acceptTitleEdit() {
+        const newTitleValue = (<HTMLInputElement>document.querySelector('[data-edit-title] > input')).value;
+        this.project.title = newTitleValue;
+        this.displayTitle();
+        this.toogleTitleEdit();
     }
 }
 

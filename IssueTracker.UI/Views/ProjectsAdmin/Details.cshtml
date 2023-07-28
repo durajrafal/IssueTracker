@@ -20,14 +20,14 @@
                     Discard changes
                 </a>
             </div>
-            <div v-if="!editTitle" class="my-2 d-flex justify-content-center gap-3">
-                    <h3 class="m-0" data-project-title>{{project.title}}</h3>
-                    <button class="btn btn-secondary py-0" v-on:click="ToggleEditTitle"><i class="bi bi-pencil-square"></i></button>
+            <div data-show-title class="my-2 d-flex justify-content-center gap-3">
+                    <h3 class="m-0" data-project-title></h3>
+                <button class="btn btn-secondary py-0" data-toogle-title-edit><i class="bi bi-pencil-square"></i></button>
             </div>
-            <div v-else class="my-2 d-flex justify-content-center gap-3">
-                <input type="text" class="form-control" v-model="newTitle"/>
-                <button class="btn btn-success py-0" v-on:click="AcceptNewTitle"><i class="bi bi-check-circle"></i></button>
-                <button class="btn btn-danger py-0" v-on:click="ToggleEditTitle"><i class="bi bi-x-circle"></i></button>
+            <div data-edit-title class="my-2 d-none justify-content-center gap-3">
+                <input type="text" class="form-control"/>
+                <button class="btn btn-success py-0" data-accept-new-title><i class="bi bi-check-circle"></i></button>
+                <button class="btn btn-danger py-0" data-toogle-title-edit><i class="bi bi-x-circle"></i></button>
             </div>
 
 
