@@ -1,6 +1,6 @@
 export class TableFilter {
     private constructor(private readonly table: HTMLTableElement, private readonly filterInput: HTMLInputElement) {
-        filterInput.addEventListener('keyup', () => this.filterFuntion());
+        filterInput.addEventListener('input', () => this.filterFuntion());
     }
 
     static create(tableSelector: string, inputSelector: string) {
@@ -21,7 +21,6 @@ export class TableFilter {
             const row = rows.item(i);
             this.filterRow(row, this.filterInput.value);
         }
-        console.log(this.table.tBodies);
     }
 
     private filterRow(row: HTMLTableRowElement, filter: string) {
