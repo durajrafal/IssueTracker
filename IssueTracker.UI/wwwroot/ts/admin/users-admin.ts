@@ -1,14 +1,13 @@
-import { addTableFilter } from "../common/filter-table.js";
+import { TableFilter } from "../common/filter-table.js";
 
 class GetPartialViewWithUserClaims {
-    private readonly rows: NodeListOf<HTMLTableRowElement>;
     private previouslySelectedId: string;
     private previouslySelectedTableClass: string;
 
     constructor(private readonly baseUrl: string) {
-        this.rows = document.querySelectorAll('tr');
-        this.rows.forEach(row => row.addEventListener('click', () => this.getUserClaims(row.dataset.id)));
-        addTableFilter(this.rows, 'searchInput');
+        const rows = document.querySelectorAll('tr');
+        rows.forEach(row => row.addEventListener('click', () => this.getUserClaims(row.dataset.id)));
+        TableFilter.create('[data-users-table]', '[data-search-input]');
     }
 
     private getUserClaims(id: string) {

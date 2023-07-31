@@ -1,5 +1,6 @@
 import { Project } from "project-model.js";
 import { MembersManagementTablesHandler } from "../common/member-management.js";
+import { TableFilter } from "../common/filter-table.js";
 
 class ProjectAdminDetails {
     private project: Project;
@@ -7,6 +8,8 @@ class ProjectAdminDetails {
     constructor(private readonly baseUrl: string) {
         this.getProjectDetails();
         document.addEventListener('DOMContentLoaded', () => this.setupEventListeners());
+        TableFilter.create('[data-members-table]', '[data-members-filter-input]');
+        TableFilter.create('[data-other-users-table]', '[data-other-user-filter-input]');
     }
 
     private getProjectDetails() {
@@ -37,7 +40,7 @@ class ProjectAdminDetails {
         })
             .then((res) => {
                 if (res.ok)
-                window.history.back();
+                    window.history.back();
             });
     }
 
