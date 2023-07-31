@@ -27,8 +27,8 @@
 }
 
 <div class="container">
-    <table class="table table-hover">
-        <thead>	
+    <table class="table table-dark table-striped table-hover">
+        <thead class="table-primary">
             <tr>
                 <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Id)</th>
                 <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Title)</th>
@@ -40,16 +40,7 @@
                 var modelArr = Model.ToArray();
                 for (int i = 0; i < modelArr.Length; i++)
                 {
-                    string tableRowClass;
-                    if (i%2 == 0)
-                    {
-                        tableRowClass = "table-light";
-                    }
-                    else
-                    {
-                        tableRowClass = "table-dark";
-                    }
-                    <tr class="@tableRowClass">
+                    <tr>
                         <td class="text-end">@modelArr[i].Id</td>
                         <td style="width:99%" scope="row">@modelArr[i].Title</td>
                         <td class="text-center"><i class="bi bi-person-fill"></i> @modelArr[i].NumberOfMembers</td>

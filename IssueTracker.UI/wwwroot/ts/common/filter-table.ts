@@ -39,10 +39,10 @@ export class TableFilter {
         }
         );
         if (match) {
-            row.style.display = "table-row";
+            row.classList.remove('d-none');
         }
         else {
-            row.style.display = "none";
+            row.classList.add('d-none');
         }
     }
 }
