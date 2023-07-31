@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IssueTracker.UI.Controllers
 {
-    [Route("project-management")]
+    [Route("Project-Management")]
     [Authorize(Policy = "ProjectManagement")]
     public class ProjectsAdminController : CustomController
     {

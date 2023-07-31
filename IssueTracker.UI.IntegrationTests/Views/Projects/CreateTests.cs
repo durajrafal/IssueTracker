@@ -10,7 +10,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
 {
     public class CreateTests : UiBaseTest
     {
-        private const string FORM_ACTION = "action=\"/project-management/Create\"";
+        private const string FORM_ACTION = "action=\"/Project-Management/Create\"";
 
         public CreateTests(CustomWebApplicationFactory factory)
             :base(factory)
@@ -31,7 +31,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
             //Act
-            var page = await client.GetAsync("/");
+            var page = await client.GetAsync("/Project-Management/Create");
             var pageHtml = await page.Content.ReadAsStringAsync();
 
             //Assert
@@ -68,7 +68,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             var model = new { Title = "Test Project" };
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, "/", "/project-management/create", model);
+            var response = await client.SendFormAsync(HttpMethod.Post, "/Project-Management/Create", model);
 
             //Assert
             var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;

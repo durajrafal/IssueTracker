@@ -1,6 +1,5 @@
 ﻿@using IssueTracker.Application.Projects.Queries.GetProjects;
 @using Microsoft.AspNetCore.Authorization
-@inject IAuthorizationService AuthorizationService
 
 @model IQueryable<IssueTracker.Application.Projects.Queries.GetProjects.ProjectSummaryDto>
 
@@ -8,25 +7,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
-@if ((await AuthorizationService.AuthorizeAsync(User, "ProjectManagement")).Succeeded)
-{
-    <div class="container" id="form-create-project">
-        <form method="post" asp-controller="ProjectsAdmin" asp-action="Create">
-            <div asp-validation-summary="All"></div>
-            <div class="input-group">
-                <input name="title" type="text" class="form-control" id="newProjectTitle" placeholder="My New Project Title">
-                <input class="btn btn-primary" type="submit" value="Create" />
-            </div>
-        </form>
-    </div>
-}
-
-<div class="container">
+<div class="container mt-2">
     <table class="table table-dark table-striped table-hover">
         <thead class="table-primary">
             <tr>
