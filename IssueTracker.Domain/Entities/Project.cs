@@ -11,7 +11,7 @@ namespace IssueTracker.Domain.Entities
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public IList<ProjectMember> Members { get; init; } = new List<ProjectMember>();
+        public IList<Member> Members { get; init; } = new List<Member>();
         public IList<Issue> Issues { get; set; } = new List<Issue>();
     }
 }

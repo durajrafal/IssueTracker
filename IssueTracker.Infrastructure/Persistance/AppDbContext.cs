@@ -18,16 +18,16 @@ namespace IssueTracker.Infrastructure.Persistance
         }
 
         public DbSet<Project> Projects => Set<Project>();
-        public DbSet<ProjectMember> ProjectsMembers { get; set; }
         public DbSet<Issue> Issues { get; set; }
-        public DbSet<IssueMember> IssueMembers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ProjectMember>().HasKey(x => new { x.ProjectId, x.UserId });
-            modelBuilder.Entity<IssueMember>().HasKey(x => new { x.IssueId, x.UserId });
-            modelBuilder.Entity<ProjectMember>().Ignore(x => x.User);
+            modelBuilder.Entity<Project>().HasMany(p => p.Members).WithMany(m => m.Projects);
+            modelBuilder.Entity<Issue>().HasMany(i => i.Members).WithMany(m => m.Issues);
+            //modelBuilder.Entity<Member>().HasKey(x => new { x.Projects, x.UserId });
+            //modelBuilder.Entity<IssueMember>().HasKey(x => new { x.IssueId, x.UserId });
+            modelBuilder.Entity<Member>().Ignore(x => x.User);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

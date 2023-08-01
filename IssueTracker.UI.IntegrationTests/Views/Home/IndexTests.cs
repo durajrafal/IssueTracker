@@ -37,7 +37,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
             for (int i = 1; i <= numberOfProjects; i++)
             {
                 var project = ProjectHelpers.CreateTestProject($"Project {i}");
-                project.Members.Add(new ProjectMember { UserId = userId });
+                project.Members.Add(new Member { UserId = userId });
                 await Database.ActionAsync(ctx => ctx.Projects.Add(project));
             }
 

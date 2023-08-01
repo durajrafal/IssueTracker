@@ -32,7 +32,7 @@ namespace IssueTracker.Application.Projects.Commands.CreateProject
             {
                 Title = request.Title,
             };
-            entity.Members.Add(new ProjectMember { UserId = _currentUserService.UserId });
+            entity.Members.Add(new Member { UserId = _currentUserService.UserId });
 
             _ctx.Projects.Add(entity);
             await _ctx.SaveChangesAsync(cancellationToken);
