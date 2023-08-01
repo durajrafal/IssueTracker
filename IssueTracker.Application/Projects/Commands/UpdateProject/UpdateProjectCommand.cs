@@ -15,7 +15,7 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public IEnumerable<ProjectMember> Members { get; set; }
+        public IEnumerable<Member> Members { get; set; }
     }
 
     public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, int>

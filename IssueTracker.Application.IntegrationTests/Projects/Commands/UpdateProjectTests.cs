@@ -30,8 +30,8 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
                 await ctx.Projects.AddAsync(project);
             });
             var projectMembersStartCount = project.Members.Count;
-            project.Members.Add(new ProjectMember { UserId = Guid.NewGuid().ToString() });
-            IList<ProjectMember> members = project.Members;
+            project.Members.Add(new Member { UserId = Guid.NewGuid().ToString() });
+            IList<Member> members = project.Members;
 
             var command = new UpdateProjectCommand 
             { 
@@ -58,7 +58,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             var projectMembersStartCount = project.Members.Count;
             var projectUser = project.Members.First();
             project.Members.Remove(projectUser);
-            IList<ProjectMember> members = project.Members;
+            IList<Member> members = project.Members;
 
             var command = new UpdateProjectCommand 
             { 

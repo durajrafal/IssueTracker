@@ -34,19 +34,19 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         {
             var output = new List<Project>();
 
-            var otherMember = new ProjectMember { UserId = Guid.NewGuid().ToString() };
+            var otherMember = new Member { UserId = Guid.NewGuid().ToString() };
 
             for (int i = 1; i <= numberOfUserProjects; i++)
             {
                 var projectTitle = $"Project {i}";
                 output.Add(new Project { 
                     Title = projectTitle, 
-                    Members = new List<ProjectMember> { 
-                        new ProjectMember { UserId = userId } 
+                    Members = new List<Member> { 
+                        new Member { UserId = userId } 
                     } 
                 });
             }
-            output.Add(new Project { Title = "Other project", Members = new List<ProjectMember> { otherMember } });
+            output.Add(new Project { Title = "Other project", Members = new List<Member> { otherMember } });
 
             return output;
         }
