@@ -11,6 +11,7 @@ namespace IssueTracker.Application.Common.Interfaces
     public interface IApplicationDbContext
     {
         DbSet<Project> Projects { get; }
+        DbSet<Member> Members { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

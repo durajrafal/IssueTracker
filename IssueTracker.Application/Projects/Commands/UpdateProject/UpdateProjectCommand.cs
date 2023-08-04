@@ -1,4 +1,5 @@
 ﻿using IssueTracker.Application.Common.Exceptions;
+using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Domain.Entities;
 using MediatR;
@@ -44,7 +45,7 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
 
             entity.Title = request.Title;
             var membersToAdd = request.Members.Except(entity.Members).ToList();
-            membersToAdd.ForEach(x => entity.Members.Add(x));
+            membersToAdd.ForEach(x => entity.AddNewOrExistingMember(_ctx.Members, x.UserId));
             var membersToRemove = entity.Members.Except(request.Members).ToList();
             membersToRemove.ForEach(x => entity.Members.Remove(x));
 

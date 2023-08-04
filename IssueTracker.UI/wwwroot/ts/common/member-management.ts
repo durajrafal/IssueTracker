@@ -5,6 +5,7 @@ export interface MembersManagement {
 }
 
 export interface Member {
+    userId: string;
     user: User;
 }
 
@@ -88,6 +89,7 @@ export class MembersManagementTablesHandler {
 
     private addMember(user: User, row: HTMLTableRowElement) {
         const newMember = {
+            userId: user.userId,
             user: user
         };
         this.userLists.members.push(newMember);
