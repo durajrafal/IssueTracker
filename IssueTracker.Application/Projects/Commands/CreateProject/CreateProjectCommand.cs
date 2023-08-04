@@ -1,12 +1,7 @@
-﻿using IssueTracker.Application.Common.Interfaces;
+﻿using IssueTracker.Application.Common.Helpers;
+using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Commands.CreateProject
 {
@@ -32,7 +27,7 @@ namespace IssueTracker.Application.Projects.Commands.CreateProject
             {
                 Title = request.Title,
             };
-            entity.Members.Add(new Member { UserId = _currentUserService.UserId });
+            entity.AddNewOrExistingMember(_ctx.Members, _currentUserService.UserId);
 
             _ctx.Projects.Add(entity);
             await _ctx.SaveChangesAsync(cancellationToken);

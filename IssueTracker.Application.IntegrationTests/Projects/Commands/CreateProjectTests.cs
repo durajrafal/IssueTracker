@@ -82,5 +82,19 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             var addedProject = Database.Func(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Id == addedProjectId));
             Assert.Equal(userId, addedProject.Members.Single().UserId);
         }
+
+        [Fact]
+        public async Task Handle_Always_ShouldAddAlreadyCreatedMember()
+        {
+            var command = new CreateProjectCommand { Title = nameof(Handle_Always_ShouldAddAlreadyCreatedMember) };
+            var command2 = new CreateProjectCommand { Title = nameof(Handle_Always_ShouldAddAlreadyCreatedMember)+'2' };
+
+            await Mediator.Send(command);
+            await Mediator.Send(command2);
+
+            var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
+
+            Assert.Equal(1, Database.Func(x => x.Members.Where(m => m.UserId == userId).Count()));
+        }
     }
 }
