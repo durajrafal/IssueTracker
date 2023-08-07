@@ -21,7 +21,7 @@ namespace IssueTracker.Application.Common.Behaviours
         {
             var context = new ValidationContext<TRequest>(request);
             var failures = _validators
-                .Select(x => x.Validate(request))
+                .Select(x => x.Validate(context))
                 .SelectMany(x => x.Errors)
                 .Where(x => x != null)
                 .ToList();

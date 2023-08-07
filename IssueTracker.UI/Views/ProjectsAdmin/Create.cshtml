@@ -3,10 +3,10 @@
 
 <div class="row my-2 d-flex justify-content-center">
     <div class="col-lg-8">
-        <form method="post" asp-controller="ProjectsAdmin" asp-action="Create" id="form-create-project">
+        <form method="post" asp-controller="ProjectsAdmin" asp-action="Create">
             <div>
                 <div class="form-group">
-                    <input asp-for="Title" type="text" class="form-control" id="newProjectTitle" placeholder="My New Project Title" required>
+                    <input asp-for="Title" type="text" app-invalid-if-errors="Title" class="form-control" placeholder="My New Project Title">
                     <span asp-validation-for="Title" class="invalid-feedback"></span>
                 </div>
                 <div class="row row-cols-2 mt-2">
