@@ -5,6 +5,7 @@ using IssueTracker.Application.Projects.Commands.Delete;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment;
 using IssueTracker.Application.Projects.Queries.GetProjects;
+using IssueTracker.UI.Filters;
 using IssueTracker.UI.Models.ProjectsAdmin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,20 +35,7 @@ namespace IssueTracker.UI.Controllers
         public async Task<IActionResult> Create(ProjectsAdminCreateViewModel vm, [FromServices] IApplicationDbContext ctx)
         {
             var command = new CreateProjectCommand { Title = vm.Title };
-            try
-            {
-                var result = await Mediator.Send(command);
-
-            }
-            catch (ValidationException e)
-            {
-                e.Errors.ToList().ForEach(x => ModelState.AddModelError(x.PropertyName, x.ErrorMessage));
-            }
-            if (!ModelState.IsValid)
-            {
-                return View(vm);
-            }
-
+            await Mediator.Send(command);
             return RedirectToAction("Index");
         }
 
@@ -68,7 +56,14 @@ namespace IssueTracker.UI.Controllers
         [HttpPut("~/api/project-management/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateProjectCommand command)
         {
-            await Mediator.Send(command);
+            try
+            {
+                await Mediator.Send(command);
+            }
+            catch (ValidationException ve)
+            {
+                return BadRequest(ve.Errors.First().ErrorMessage);
+            }
             return Ok();
         }
 
