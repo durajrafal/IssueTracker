@@ -1,5 +1,6 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Infrastructure.Identity;
+using IssueTracker.UI.Filters;
 using IssueTracker.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace IssueTracker.UI
             services.AddControllersWithViews(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                options.Filters.Add<ValidationExceptionFilter>();
             })
                 .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
