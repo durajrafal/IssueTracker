@@ -1,4 +1,6 @@
-﻿using IssueTracker.Application.Projects.Commands.CreateProject;
+﻿using FluentValidation;
+using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Application.Projects.Commands.CreateProject;
 using IssueTracker.Application.Projects.Commands.Delete;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment;
@@ -29,16 +31,24 @@ namespace IssueTracker.UI.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(ProjectsAdminCreateViewModel vm)
+        public async Task<IActionResult> Create(ProjectsAdminCreateViewModel vm, [FromServices] IApplicationDbContext ctx)
         {
-            if (ModelState.IsValid)
+            var command = new CreateProjectCommand { Title = vm.Title };
+            try
             {
-                var command = new CreateProjectCommand { Title = vm.Title };
-                await Mediator.Send(command);
-                return RedirectToAction("Index");
+                var result = await Mediator.Send(command);
+
+            }
+            catch (ValidationException e)
+            {
+                e.Errors.ToList().ForEach(x => ModelState.AddModelError(x.PropertyName, x.ErrorMessage));
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
             }
 
-            return View( vm);
+            return RedirectToAction("Index");
         }
 
         [HttpGet("{id}")]
