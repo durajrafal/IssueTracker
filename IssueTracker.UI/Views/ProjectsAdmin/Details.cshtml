@@ -10,9 +10,9 @@
         <h3>Loading...</h3>
     </div>
     <div class="row d-none" data-loaded>
-        
+
         <div class="col-12 text-center">
-            <div class="mt-2 d-flex justify-content-center gap-3">
+            <div class="my-2 d-flex justify-content-center gap-3">
                 <button type="button" class="btn btn-primary" data-update-project>
                     Update Project
                 </button>
@@ -20,14 +20,18 @@
                     Discard changes
                 </a>
             </div>
-            <div data-show-title class="my-2 d-flex justify-content-center gap-3">
-                    <h3 class="m-0" data-project-title></h3>
-                <button class="btn btn-secondary py-0" data-toogle-title-edit><i class="bi bi-pencil-square"></i></button>
+            <div class="d-flex justify-content-center" data-error-message>
             </div>
-            <div data-edit-title class="my-2 d-none justify-content-center gap-3">
-                <input type="text" class="form-control"/>
-                <button class="btn btn-success py-0" data-accept-new-title><i class="bi bi-check-circle"></i></button>
-                <button class="btn btn-danger py-0" data-toogle-title-edit><i class="bi bi-x-circle"></i></button>
+            <div class="my-2 d-flex justify-content-center">
+                <div class="d-flex gap-3" data-show-title>
+                    <h3 class="m-0" data-project-title></h3>
+                    <button class="btn btn-secondary py-0" data-toogle-title-edit><i class="bi bi-pencil-square"></i></button>
+                </div>
+                <div class="d-none gap-3 w-100" data-edit-title>
+                    <input type="text" class="form-control" />
+                    <button class="btn btn-success py-0" data-accept-new-title><i class="bi bi-check-circle"></i></button>
+                    <button class="btn btn-danger py-0" data-toogle-title-edit><i class="bi bi-x-circle"></i></button>
+                </div>
             </div>
 
 
