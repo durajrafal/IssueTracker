@@ -1,6 +1,7 @@
 import { Project } from "project-model.js";
 import { MembersManagementTablesHandler } from "../common/member-management.js";
 import { TableFilter } from "../common/filter-table.js";
+import { renderAlert } from "../common/components.js";
 
 class ProjectAdminDetails {
     private project: Project;
@@ -38,10 +39,13 @@ class ProjectAdminDetails {
             },
             body: JSON.stringify(this.project),
         })
-            .then((res) => {
+            .then(res => {
                 if (res.ok)
                     window.history.back();
-            });
+                else
+                    res.text().then(t => this.displayError(t));
+            })
+            .catch();
     }
 
     private displayData() {
@@ -65,6 +69,10 @@ class ProjectAdminDetails {
 
     private displayTitle() {
         (<HTMLElement>document.querySelector('[data-project-title]')).textContent = this.project.title;
+    }
+
+    private displayError(message: string) {
+        renderAlert('[data-error-message]', message);
     }
 
     private toogleTitleEdit() {
