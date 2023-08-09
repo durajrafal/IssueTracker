@@ -1,13 +1,8 @@
-﻿using IssueTracker.Application.Common.Exceptions;
+﻿using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
 {
@@ -35,7 +30,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 .ThenInclude(y => y.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
 
-            entity.Members.ToList().ForEach(async x => x.User = await _userService.GetUserByIdAsync(x.UserId));
+            entity.Members.PopulateMembersWithUsers(_userService);
 
             return entity;
         }

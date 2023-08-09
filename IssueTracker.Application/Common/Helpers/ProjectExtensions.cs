@@ -18,5 +18,13 @@ namespace IssueTracker.Application.Common.Helpers
                 entity.Members.Add(member);
             }
         }
+
+        public static async void PopulateMembersWithUsers(this IEnumerable<Member> members, IUserService userService)
+        {
+            foreach (var member in members)
+            {
+                member.User = await userService.GetUserByIdAsync(member.UserId);
+            }
+        }
     }
 }
