@@ -1,4 +1,5 @@
-﻿using IssueTracker.Application.Common.Interfaces;
+﻿using IssueTracker.Application.Common.Helpers;
+using IssueTracker.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,10 +31,8 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
             output.Id = entity.Id;
             output.Title = entity.Title;
             output.Members = entity.Members;
-            foreach (var member in output.Members)
-            {
-                member.User = await _userService.GetUserByIdAsync(member.UserId);
-            }
+            output.Members.PopulateMembersWithUsers(_userService);
+
             var allUsers = await _userService.GetAllUsersAsync();
             output.OtherUsers = allUsers.ExceptBy(entity.Members.Select(x => x.UserId), allUsers => allUsers.UserId);
 
