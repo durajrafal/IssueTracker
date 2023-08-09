@@ -5,7 +5,7 @@ using MediatR;
 
 namespace IssueTracker.Application.Projects.Commands.CreateProject
 {
-    public class CreateProjectCommand : IRequest<int>
+    public class CreateProjectCommand : IRequest<int>, IHasTitle
     {
         public string Title { get; set; }
     }

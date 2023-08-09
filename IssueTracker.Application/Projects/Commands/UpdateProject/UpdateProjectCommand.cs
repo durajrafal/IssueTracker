@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Commands.UpdateProject
 {
-    public class UpdateProjectCommand : IRequest<int>
+    public class UpdateProjectCommand : IRequest<int>, IHasTitle
     {
         public int Id { get; set; }
         public string Title { get; set; }

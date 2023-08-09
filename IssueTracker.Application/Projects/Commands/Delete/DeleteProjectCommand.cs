@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Commands.Delete
 {
-    public class DeleteProjectCommand : IRequest<int>
+    public class DeleteProjectCommand : IRequest<int>, IHasTitle
     {
         public int ProjectId { get; set; }
         public string Title { get; set; }
