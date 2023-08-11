@@ -1,30 +1,18 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Application.Common.Validators;
 
 namespace IssueTracker.Application.Projects.Commands.CreateProject
 {
-    public class CreateProjectCommandValidator : AbstractValidator<CreateProjectCommand>
+    public class CreateProjectCommandValidator : TitleValidator<CreateProjectCommand>
     {
-        private readonly IApplicationDbContext _ctx;
-
-        public CreateProjectCommandValidator(IApplicationDbContext ctx)
-        {
-            _ctx = ctx;
-            const int MAX_TITLE_LENGTH = 100;
-            var forbiddenCharacters = new List<char> { ':', '/', '?', '#', '[', ']', '@', '!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '=' };
-            RuleFor(x => x.Title)
-                .Cascade(CascadeMode.Stop)
-                .NotNull().NotEmpty().WithMessage("Title is required.")
-                .MaximumLength(MAX_TITLE_LENGTH).WithMessage($"Title must not exceed {MAX_TITLE_LENGTH}.")
-                .Must(title => title.All(ch => !forbiddenCharacters.Contains(ch)))
-                .WithMessage("Must not contain any of the following characters: ':', '/', '?', '#', '[', ']', '@', '!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '='")
-                .Must(BeUniqueTitle).WithMessage("Project with the same name already exists.");
+        public CreateProjectCommandValidator(IApplicationDbContext ctx) :base(ctx)
+        {    
         }
 
-        public bool BeUniqueTitle(string title)
+        public override bool BeUniqueTitle(CreateProjectCommand model, string title)
         {
             return !_ctx.Projects.Any(x => x.Title == title);
         }
-
     }
 }
