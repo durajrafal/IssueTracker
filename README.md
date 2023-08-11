@@ -1,8 +1,13 @@
 # Issue Tracker - Ticket System
+![Tests](https://github.com/durajrafal/IssueTracker/actions/workflows/ci_cd.yml/badge.svg)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit-darkgreen)](https://issuetrackerdemoduraj.azurewebsites.net/)
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/rafal-duraj/)](https://www.linkedin.com/in/rafal-duraj/)
 
 ## Basic premise
 Ticket system with individual user cookie authentication. Possibility to create projects restricted only for assigned users. Dashboard with project summary.
-Creating issues (tickets) with descriptions, comments, attachments. Issues have their own members who can change priority and status of it.
+Creating issues (tickets) with descriptions, comments, attachments. Issues have their own members who can change priority and status of it. 
+
+**Live demo is accessible [here](https://issuetrackerdemoduraj.azurewebsites.net/).**
 
 ### Technologies
 * ASP.NET Core MVC
@@ -11,6 +16,7 @@ Creating issues (tickets) with descriptions, comments, attachments. Issues have 
 * CQRS + MediatR
 * Bootstrap 5
 * Unit and integration testing (Xunit) - TDD
+* FluentValidation
 
 ### Features
 * ✅ Registration + email confirmation + password recovery
@@ -23,10 +29,7 @@ Creating issues (tickets) with descriptions, comments, attachments. Issues have 
 * 🔜 Working with Issues (commenting, changing status etc.)
 * 🔜 Projects dashboard
 
-> I hold off with development of this project for some time. I wasn't happy with the quality of my code for the frontend part.
-> I decided that it would be benefitial for me and my growth as a developer to first improve my knowledge and skill in web technologies like HTML/CSS/JS.
-
-## How to run
+## How to run locally
 Please clone this repository and open in Visual Studio 2022.
 ### Configuration
 #### DB config
