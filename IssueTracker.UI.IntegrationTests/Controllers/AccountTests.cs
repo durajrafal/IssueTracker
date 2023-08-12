@@ -23,13 +23,10 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
         [InlineData("LoginAsAdmin")]
         public async void Login_WhenLoggedInAsDemoUser_ShouldReturnIdentityCookie(string action)
         {
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
+            //Act
+            var response = await Client.GetAsync($"/Identity/Account/{action}");
 
-            var response = await client.GetAsync($"/Identity/Account/{action}");
-
+            //Assert
             var cookie = response.Headers
                 .Where(x => x.Key == "Set-Cookie")
                 .SelectMany(x => x.Value.Select(v => v.Split(";").First())).First();
@@ -40,14 +37,10 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
         [Fact]
         public async void Logout_Always_ShouldEmptyIdentityCookie()
         {
-            var client = Factory
-                .CreateClient(new WebApplicationFactoryClientOptions
-                {
-                    AllowAutoRedirect = false,
-                });
+            //Act
+            var response = await Client.GetAsync("/Identity/Account/Logout");
 
-            var response = await client.GetAsync("/Identity/Account/Logout");
-
+            //Assert
             var cookie = response.Headers
                 .Where(x => x.Key == "Set-Cookie")
                 .SelectMany(x => x.Value.Select(v => v.Split(";").First())).First();
@@ -76,7 +69,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
             userManager.Dispose();
             var model = response.Model as UpdateViewModel;
             
-            //Arrange
+            //Assert
             Assert.Equal(user.Email, model.Email);
             Assert.Equal(user.FirstName, model.FirstName);
             Assert.Equal(user.LastName, actual: model.LastName);

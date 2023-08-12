@@ -21,14 +21,9 @@ namespace IssueTracker.UI.IntegrationTests.Views
         public async Task GetEndpoint_WhenAuthorized_ShouldReturnEndpoint(string uri, List<Claim> claims, bool expectError = false)
         {
             AuthenticateFactory(claims);
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
-
-            var response = await client.GetAsync(uri);
+            var response = await Client.GetAsync(uri);
             if (expectError)
             {
                 Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
@@ -49,13 +44,9 @@ namespace IssueTracker.UI.IntegrationTests.Views
             {
                 AuthenticateFactory();
             }
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
-            var response = await client.GetAsync(uri);
+            var response = await Client.GetAsync(uri);
 
             if (hasClaim)
                 Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);

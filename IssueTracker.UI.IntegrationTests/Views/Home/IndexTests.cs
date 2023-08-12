@@ -27,11 +27,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
         public async Task Get_WhenUserLoggedIn_ShouldDisplayAssignedProjects(int numberOfProjects)
         {
             //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
             var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
             for (int i = 1; i <= numberOfProjects; i++)
             {
@@ -41,7 +37,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
             }
 
             //Act
-            var page = await client.GetAsync("/");
+            var page = await Client.GetAsync("/");
             var pageHtml = await page.Content.ReadAsStringAsync();
 
             //Assert

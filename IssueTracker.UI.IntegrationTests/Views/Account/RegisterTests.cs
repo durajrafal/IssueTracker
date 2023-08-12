@@ -27,14 +27,8 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         [Fact]
         public async void Register_WhenRequiredFieldsArePresent_ShouldAddNewUserToDatabase()
         {
-            //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
+            var response = await Client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
 
             //Assert
             var registeredUser = Database.Func<AuthDbContext, ApplicationUser>(ctx =>
@@ -51,14 +45,10 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async void Register_WhenRequiredFieldIsMissing_ShouldNotAddNewUserToDatabase()
         {
             //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
             _user.FirstName = "";
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
+            var response = await Client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
 
             //Assert
             var registeredUser = Database.Func<AuthDbContext, ApplicationUser>(ctx =>
@@ -70,10 +60,6 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async void Register_WhenEmailIsNotUnique_ShouldNotAddNewUserToDatabase()
         {
             //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
             using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var user = new ApplicationUser(_user.Email, _user.FirstName, _user.LastName);
@@ -82,7 +68,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             _user.FirstName = "Newname";
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
+            var response = await Client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
 
             //Assert
             var registeredUser = Database.Func<AuthDbContext, ApplicationUser>(ctx =>
@@ -95,14 +81,10 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async void Register_WhenFailsToSendAnEmail_ShouldNotAddNewUserToDatabase()
         {
             //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
             _user.Email = "fail@test.com";
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
+            var response = await Client.SendFormAsync(HttpMethod.Post, REGISTER_URI, _user);
 
             //Assert
             var registeredUser = Database.Func<AuthDbContext, ApplicationUser>(ctx =>

@@ -19,10 +19,6 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async void LoginWithCredentials_WhenCredentialsAreValid_ShouldHaveIdentityCookieAndRedirectsToHomePage()
         {
             //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
             var userName = "valid@test.com";
             var password = "Pass123";
             using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
@@ -38,7 +34,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             };
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post,LOGIN_URI,login);
+            var response = await Client.SendFormAsync(HttpMethod.Post,LOGIN_URI,login);
 
             //Assert
             var cookies = response.Headers
@@ -53,10 +49,6 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async void LoginWithCredentials_WhenCredentialsAreInvalid_ShouldNotHaveIdentityCookieNorRedirectToHome()
         {
             //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
             var userName = "invalid@test.com";
             var password = "Pass123";
             var login = new LoginViewModel
@@ -67,7 +59,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             };
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, LOGIN_URI, login);
+            var response = await Client.SendFormAsync(HttpMethod.Post, LOGIN_URI, login);
 
             //Assert
             var cookies = response.Headers

@@ -31,14 +31,8 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         [Fact]
         public async Task ForgotPassword_WhenEmailIsSent_ShouldRedirectToLoginPage()
         {
-            //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, FORGOT_URI, _vm);
+            var response = await Client.SendFormAsync(HttpMethod.Post, FORGOT_URI, _vm);
 
             //Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
@@ -49,10 +43,6 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async Task ForgotPassword_WhenEmailDoesntExist_ShouldRedirectToLoginPage()
         {
             //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
             using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
                 var user = new ApplicationUser(_vm.Email, "John", "Smith");
@@ -60,7 +50,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             }
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, FORGOT_URI, _vm);
+            var response = await Client.SendFormAsync(HttpMethod.Post, FORGOT_URI, _vm);
 
             //Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
@@ -71,10 +61,6 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async Task ForgotPassword_WhenEmailExistsButFailsToSend_ShouldReturnSameView()
         {
             //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
             _vm.Email = "fail@test.com";
             using (var userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>())
             {
@@ -83,7 +69,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             }
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, FORGOT_URI, _vm);
+            var response = await Client.SendFormAsync(HttpMethod.Post, FORGOT_URI, _vm);
 
             //Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
