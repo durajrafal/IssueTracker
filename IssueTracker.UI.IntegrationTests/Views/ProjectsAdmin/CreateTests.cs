@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Projects
 {
-    public class CreateTests : UiBaseTest
+    public class CreateTests : UiTestsFixture
     {
         private const string FORM_ACTION = "action=\"/Project-Management/Create\"";
 

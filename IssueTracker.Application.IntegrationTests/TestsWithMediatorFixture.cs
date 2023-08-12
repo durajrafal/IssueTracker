@@ -3,14 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.Application.IntegrationTests
 {
-    public class ApplicationBaseTest : BaseTest
+    public class TestsWithMediatorFixture : TestsFixture
     {
-        public ApplicationBaseTest()
+        public TestsWithMediatorFixture()
             : base()
         {
         }
 
-        public ApplicationBaseTest(CustomWebApplicationFactory factory) 
+        public TestsWithMediatorFixture(CustomWebApplicationFactory factory) 
             : base(factory)
         {
         }

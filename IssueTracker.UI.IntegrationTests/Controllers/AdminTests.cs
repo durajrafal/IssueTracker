@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace IssueTracker.UI.IntegrationTests.Controllers
 {
-    public class AdminTests : UiBaseTest
+    public class AdminTests : UiTestsFixture
     {
         public AdminTests(CustomWebApplicationFactory factory) 
             : base(factory)

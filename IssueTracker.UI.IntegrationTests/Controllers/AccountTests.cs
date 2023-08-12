@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.UI.IntegrationTests.Controllers
 {
-    public class AccountTests : UiBaseTest
+    public class AccountTests : UiTestsFixture
     {
 
         public AccountTests(CustomWebApplicationFactory factory)

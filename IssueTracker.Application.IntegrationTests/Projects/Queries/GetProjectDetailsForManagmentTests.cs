@@ -3,7 +3,7 @@ using IssueTracker.Infrastructure.Identity;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {
-    public class GetProjectDetailsForManagmentTests : ApplicationBaseTest
+    public class GetProjectDetailsForManagmentTests : TestsWithMediatorFixture
     {
         public GetProjectDetailsForManagmentTests(CustomWebApplicationFactory factory) 
             : base(factory)

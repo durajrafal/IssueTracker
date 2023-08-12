@@ -8,7 +8,7 @@ using System.Net;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
-    public class RegisterTests : UiBaseTest
+    public class RegisterTests : UiTestsFixture
     {
         private const string REGISTER_URI = "/Identity/Account/Register";
         private RegisterViewModel _user;

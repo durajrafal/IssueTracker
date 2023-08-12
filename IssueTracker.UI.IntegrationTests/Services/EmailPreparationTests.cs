@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Services
 {
-    public class EmailPreparationTests : UiBaseTest
+    public class EmailPreparationTests : UiTestsFixture
     {
         public EmailPreparationTests(CustomWebApplicationFactory factory)
             :base(factory)

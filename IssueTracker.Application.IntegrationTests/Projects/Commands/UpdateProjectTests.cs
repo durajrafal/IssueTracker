@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
-    public class UpdateProjectTests : ApplicationBaseTest
+    public class UpdateProjectTests : TestsWithMediatorFixture
     {
         public UpdateProjectTests(CustomWebApplicationFactory factory)
             : base(factory)

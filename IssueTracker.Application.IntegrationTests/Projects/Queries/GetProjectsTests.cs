@@ -5,7 +5,7 @@ using IssueTracker.Application.Projects.Queries.GetProjects;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {
-    public class GetProjectsTests : ApplicationBaseTest
+    public class GetProjectsTests : TestsWithMediatorFixture
     {
         public GetProjectsTests()
             :base()

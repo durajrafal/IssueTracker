@@ -6,14 +6,14 @@ using System.Security.Claims;
 
 namespace IssueTracker.UI.IntegrationTests
 {
-    public class UiBaseTest : BaseTest
+    public class UiTestsFixture : TestsFixture
     {
-        public UiBaseTest()
+        public UiTestsFixture()
             : base()
         {
         }
 
-        public UiBaseTest(CustomWebApplicationFactory factory) 
+        public UiTestsFixture(CustomWebApplicationFactory factory) 
             : base(factory)
         {
         }

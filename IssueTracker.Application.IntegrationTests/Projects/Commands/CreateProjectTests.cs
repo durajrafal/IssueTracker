@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
-    public class CreateProjectTests : ApplicationBaseTest
+    public class CreateProjectTests : TestsWithMediatorFixture
     {
         public CreateProjectTests(CustomWebApplicationFactory factory)
             :base(factory)

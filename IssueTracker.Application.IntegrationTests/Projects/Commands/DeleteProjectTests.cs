@@ -5,7 +5,7 @@ using IssueTracker.Domain.Entities;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
-    public class DeleteProjectTests : ApplicationBaseTest
+    public class DeleteProjectTests : TestsWithMediatorFixture
     {
         public DeleteProjectTests(CustomWebApplicationFactory factory) 
             : base(factory)

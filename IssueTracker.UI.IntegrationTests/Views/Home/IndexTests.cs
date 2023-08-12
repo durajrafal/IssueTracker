@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Home
 {
-    public class IndexTests : UiBaseTest
+    public class IndexTests : UiTestsFixture
     {
         public IndexTests(CustomWebApplicationFactory factory)
             :base(factory)

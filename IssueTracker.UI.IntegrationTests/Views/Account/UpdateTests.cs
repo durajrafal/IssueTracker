@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Account
 {
-    public class UpdateTests : UiBaseTest
+    public class UpdateTests : UiTestsFixture
     {
         UpdateViewModel _vm;
         private const string UPDATE_URI = "/Identity/Account/Update";
