@@ -14,7 +14,7 @@ namespace IssueTracker.UI.Controllers
 {
     [Route("Project-Management")]
     [Authorize(Policy = "ProjectManagement")]
-    public class ProjectsAdminController : CustomController
+    public class ProjectsAdminController : ControllerWithMediatR
     {
         [HttpGet("")]
         public async Task<IActionResult> Index()

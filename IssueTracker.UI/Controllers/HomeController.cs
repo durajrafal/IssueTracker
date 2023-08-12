@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace IssueTracker.UI.Controllers
 {
     
-    public class HomeController : CustomController
+    public class HomeController : ControllerWithMediatR
     {
         private readonly ILogger<HomeController> _logger;
 
