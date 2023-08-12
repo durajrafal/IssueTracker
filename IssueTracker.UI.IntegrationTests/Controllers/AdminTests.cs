@@ -11,9 +11,9 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
 {
     public class AdminTests : UiTestsFixture
     {
-        public AdminTests(CustomWebApplicationFactory factory) 
-            : base(factory)
+        public AdminTests() : base()
         {
+
         }
 
         [Fact]

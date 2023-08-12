@@ -10,8 +10,7 @@ namespace IssueTracker.UI.IntegrationTests.Services
 {
     public class EmailPreparationTests : UiTestsFixture
     {
-        public EmailPreparationTests(CustomWebApplicationFactory factory)
-            :base(factory)
+        public EmailPreparationTests() : base()
         {
 
         }

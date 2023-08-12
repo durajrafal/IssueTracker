@@ -20,8 +20,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         private const string FORGOT_URI = "/Identity/Account/ForgotPassword";
         private ForgotPasswordViewModel _vm;
 
-        public ForgotPasswordTests(CustomWebApplicationFactory factory) 
-            : base(factory)
+        public ForgotPasswordTests() : base()
         {
             _vm = new ForgotPasswordViewModel
             {

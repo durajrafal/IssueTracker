@@ -2,12 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using IssueTracker.UI.Areas.Identity.Controllers;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
 using IssueTracker.UI.Models.Account;
-using Microsoft.AspNetCore.TestHost;
 
 namespace IssueTracker.UI.IntegrationTests.Controllers
 {
@@ -15,8 +11,7 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
     {
         private EmailController _controller;
         private const string PASSWORD = "Pass123";
-        public EmailTests(CustomWebApplicationFactory factory)
-            : base(factory)
+        public EmailTests() : base()
         {
             _controller = new EmailController()
             {

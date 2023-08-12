@@ -10,9 +10,9 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
     public class LoginTests : UiTestsFixture
     {
         private const string LOGIN_URI = "/Identity/Account/Login";
-        public LoginTests(CustomWebApplicationFactory factory)
-            : base(factory)
+        public LoginTests() : base()
         {
+
         }
 
         [Fact]

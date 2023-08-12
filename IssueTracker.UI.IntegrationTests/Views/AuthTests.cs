@@ -11,9 +11,9 @@ namespace IssueTracker.UI.IntegrationTests.Views
 {
     public class AuthTests : UiTestsFixture
     {
-        public AuthTests(CustomWebApplicationFactory factory)
-            : base(factory)
+        public AuthTests() : base()
         {
+
         }
 
         [Theory]

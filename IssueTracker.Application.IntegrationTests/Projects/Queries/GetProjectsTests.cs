@@ -7,9 +7,9 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {
     public class GetProjectsTests : TestsWithMediatorFixture
     {
-        public GetProjectsTests()
-            :base()
+        public GetProjectsTests() : base()
         {
+
         }
 
         [Theory]

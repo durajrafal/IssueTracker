@@ -10,8 +10,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
     {
         UpdateViewModel _vm;
         private const string UPDATE_URI = "/Identity/Account/Update";
-        public UpdateTests(CustomWebApplicationFactory factory) 
-            : base(factory)
+        public UpdateTests() : base()
         {
             AuthenticateFactory();
             _vm = new UpdateViewModel

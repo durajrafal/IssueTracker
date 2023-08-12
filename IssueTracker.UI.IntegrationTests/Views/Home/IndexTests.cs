@@ -15,8 +15,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Home
 {
     public class IndexTests : UiTestsFixture
     {
-        public IndexTests(CustomWebApplicationFactory factory)
-            :base(factory)
+        public IndexTests() : base()
         {
             AuthenticateFactory();
         }

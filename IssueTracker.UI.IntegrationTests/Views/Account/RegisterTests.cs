@@ -12,8 +12,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
     {
         private const string REGISTER_URI = "/Identity/Account/Register";
         private RegisterViewModel _user;
-        public RegisterTests()
-            : base()
+        public RegisterTests() : base()
         {
             _user = new RegisterViewModel
             {

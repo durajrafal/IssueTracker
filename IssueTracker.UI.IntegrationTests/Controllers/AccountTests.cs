@@ -12,9 +12,9 @@ namespace IssueTracker.UI.IntegrationTests.Controllers
     public class AccountTests : UiTestsFixture
     {
 
-        public AccountTests(CustomWebApplicationFactory factory)
-            : base(factory)
+        public AccountTests() : base()
         {
+
         }
 
         [Theory]

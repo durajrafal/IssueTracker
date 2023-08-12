@@ -8,14 +8,9 @@ namespace IssueTracker.UI.IntegrationTests
 {
     public class UiTestsFixture : TestsFixture
     {
-        public UiTestsFixture()
-            : base()
+        public UiTestsFixture() : base()
         {
-        }
 
-        public UiTestsFixture(CustomWebApplicationFactory factory) 
-            : base(factory)
-        {
         }
 
         public void AuthenticateFactory()

@@ -7,8 +7,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
     public class DeleteProjectTests : TestsWithMediatorFixture
     {
-        public DeleteProjectTests(CustomWebApplicationFactory factory) 
-            : base(factory)
+        public DeleteProjectTests() : base()
         {
             
         }

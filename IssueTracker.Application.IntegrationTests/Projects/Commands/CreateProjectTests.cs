@@ -8,9 +8,9 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
     public class CreateProjectTests : TestsWithMediatorFixture
     {
-        public CreateProjectTests(CustomWebApplicationFactory factory)
-            :base(factory)
+        public CreateProjectTests() : base()
         {
+
         }
 
         [Fact]

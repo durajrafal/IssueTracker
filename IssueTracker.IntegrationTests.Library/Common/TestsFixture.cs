@@ -11,12 +11,6 @@ namespace IssueTracker.IntegrationTests.Library.Common
         public DatabaseHelpers Database { get; protected set; }
         public IServiceScopeFactory ScopeFactory { get => Factory.Services.GetRequiredService<IServiceScopeFactory>();}
 
-        public TestsFixture(CustomWebApplicationFactory factory)
-        {
-            Factory = factory;
-            Database = new DatabaseHelpers(ScopeFactory);
-        }
-
         public TestsFixture()
         {
             Factory = new CustomWebApplicationFactory();
