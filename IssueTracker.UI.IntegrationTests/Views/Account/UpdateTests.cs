@@ -27,7 +27,6 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async Task PostUpdate_WhenRequiredFieldsArePresentAndChanged_ShouldUpdateUser()
         {
             //Arrange
-            var client = SetupClient();
             var user = new ApplicationUser(_vm.Email, _vm.FirstName, _vm.LastName);
             using (var userManager = GetScopedService<UserManager<ApplicationUser>>())
             {
@@ -41,7 +40,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             _vm.LastName = "Von User";
             _vm.Password = "";
             _vm.ConfirmPassword = "";
-            await client.SendFormAsync(HttpMethod.Post, UPDATE_URI, _vm);
+            await Client.SendFormAsync(HttpMethod.Post, UPDATE_URI, _vm);
 
             //Assert
             ApplicationUser updatedUser;
@@ -57,7 +56,6 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async Task PostUpdate_WhenRequiredFieldIsNotPresent_ShouldNotUpdateUser()
         {
             //Arrange
-            var client = SetupClient();
             var user = new ApplicationUser(_vm.Email, _vm.FirstName, _vm.LastName);
             using (var userManager = GetScopedService<UserManager<ApplicationUser>>())
             {
@@ -68,7 +66,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
 
             //Act
             _vm.FirstName = "";
-            await client.SendFormAsync(HttpMethod.Post, UPDATE_URI, _vm);
+            await Client.SendFormAsync(HttpMethod.Post, UPDATE_URI, _vm);
 
             //Assert
             ApplicationUser updatedUser;
@@ -86,7 +84,6 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
         public async Task PostUpdate_WhenPasswordIsChanged_ShouldUpdateOnlyWhenRequested(bool requested)
         {
             //Arrange
-            var client = SetupClient();
             var user = new ApplicationUser(_vm.Email, _vm.FirstName, _vm.LastName);
             using (var userManager = GetScopedService<UserManager<ApplicationUser>>())
             {
@@ -99,7 +96,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Account
             _vm.PasswordChangeRequested = requested;
             _vm.Password = "Newpas123";
             _vm.ConfirmPassword = "Newpas123";
-            await client.SendFormAsync(HttpMethod.Post, UPDATE_URI, _vm);
+            await Client.SendFormAsync(HttpMethod.Post, UPDATE_URI, _vm);
 
             //Assert
             ApplicationUser updatedUser;

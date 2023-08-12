@@ -12,8 +12,7 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
     {
         private const string FORM_ACTION = "action=\"/Project-Management/Create\"";
 
-        public CreateTests(CustomWebApplicationFactory factory)
-            :base(factory)
+        public CreateTests() : base()
         {
 
         }
@@ -21,17 +20,13 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
         [Fact]
         public async Task Get_WhenUserInManagerRole_ShouldShowFormToCreateNewProject()
         {
+            //Arrange
             var claims = new List<Claim> { new Claim(ClaimTypes.Role, "Manager") };
             AuthenticateFactory(claims);
-            //Arrange
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
             //Act
-            var page = await client.GetAsync("/Project-Management/Create");
+            var page = await Client.GetAsync("/Project-Management/Create");
             var pageHtml = await page.Content.ReadAsStringAsync();
 
             //Assert
@@ -42,15 +37,14 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
         [Fact]
         public async Task Get_WhenUserIsNotInRole_ShouldNotShowFormToCreateNewProject()
         {
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+            //Arrange
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
-            var page = await client.GetAsync("/");
+            //Act
+            var page = await Client.GetAsync("/");
             var pageHtml = await page.Content.ReadAsStringAsync();
 
+            //Assert
             Assert.DoesNotContain(FORM_ACTION, pageHtml);
         }
 
@@ -60,15 +54,11 @@ namespace IssueTracker.UI.IntegrationTests.Views.Projects
             //Arrange
             var claims = new List<Claim> { new Claim(ClaimTypes.Role, "Manager") };
             AuthenticateFactory(claims);
-            var client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
-            var model = new { Title = "Test Project" };
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+            var model = new { Title = nameof(Post_WhenUserInManagerRole_ShouldAddProjectToDatabase) };
 
             //Act
-            var response = await client.SendFormAsync(HttpMethod.Post, "/Project-Management/Create", model);
+            var response = await Client.SendFormAsync(HttpMethod.Post, "/Project-Management/Create", model);
 
             //Assert
             var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;

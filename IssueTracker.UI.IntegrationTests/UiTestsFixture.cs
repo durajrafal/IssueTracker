@@ -8,24 +8,31 @@ namespace IssueTracker.UI.IntegrationTests
 {
     public class UiTestsFixture : TestsFixture
     {
+        public HttpClient Client { get; private set; }
         public UiTestsFixture() : base()
         {
-
+            Client = SetupClient();
         }
 
         public void AuthenticateFactory()
         {
             Factory = Factory.MakeAuthenticated();
-            Database = new DatabaseHelpers(ScopeFactory);
+            UpdateFactoryDependentProperties();
         }
 
         public void AuthenticateFactory(List<Claim> claims)
         {
             Factory = Factory.MakeAuthenticatedWithClaims(claims);
-            Database = new DatabaseHelpers(ScopeFactory);
+            UpdateFactoryDependentProperties();
         }
 
-        public HttpClient SetupClient()
+        private void UpdateFactoryDependentProperties()
+        {
+            Database = new DatabaseHelpers(ScopeFactory);
+            Client = SetupClient();
+        }
+
+        private HttpClient SetupClient()
         {
             return Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
