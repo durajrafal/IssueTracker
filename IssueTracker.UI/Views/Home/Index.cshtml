@@ -15,6 +15,7 @@
                 <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Id)</th>
                 <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.Title)</th>
                 <th scope="col">@Html.DisplayNameForInnerType((ProjectSummaryDto p) => p.NumberOfMembers)</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,11 @@
                         <td class="text-end">@projects[i].Id</td>
                         <td style="width:99%" scope="row">@projects[i].Title</td>
                         <td class="text-center"><i class="bi bi-person-fill"></i> @projects[i].NumberOfMembers</td>
+                        <td class ="text-center" style="vertical-align:middle">
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id=@projects[i].Id>
+                                <i class="bi bi-box-arrow-in-up-right text-white"></i>
+                            </a>
+                        </td>
                     </tr>
                 }
             }
