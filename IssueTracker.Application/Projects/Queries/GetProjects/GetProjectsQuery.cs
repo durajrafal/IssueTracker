@@ -3,12 +3,12 @@ using MediatR;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjects
 {
-    public class GetProjectsQuery : IRequest<IQueryable<ProjectSummaryDto>>
+    public class GetProjectsQuery : IRequest<IEnumerable<ProjectSummaryDto>>
     {
 
     }
 
-    public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IQueryable<ProjectSummaryDto>>
+    public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IEnumerable<ProjectSummaryDto>>
     {
         private readonly IApplicationDbContext _ctx;
         private readonly ICurrentUserService _currentUserService;
@@ -19,7 +19,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjects
             _currentUserService = currentUserService;
         }
 
-        public Task<IQueryable<ProjectSummaryDto>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<ProjectSummaryDto>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
         {
             var output = _ctx.Projects
                 .Where(x =>
@@ -32,7 +32,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjects
                         Title = x.Title,
                         NumberOfMembers = x.Members.Count,
                     }
-                );
+                ).AsEnumerable();
                 
 
             return Task.FromResult(output);

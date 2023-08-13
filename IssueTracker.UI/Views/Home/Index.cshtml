@@ -1,7 +1,8 @@
 ﻿@using IssueTracker.Application.Projects.Queries.GetProjects;
-@using Microsoft.AspNetCore.Authorization
+@using IssueTracker.UI.Models.Projects;
+@using Microsoft.AspNetCore.Authorization;
 
-@model IQueryable<IssueTracker.Application.Projects.Queries.GetProjects.ProjectSummaryDto>
+@model ProjectsSummaryListViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -18,13 +19,13 @@
         </thead>
         <tbody>
             @{
-                var modelArr = Model.ToArray();
-                for (int i = 0; i < modelArr.Length; i++)
+                var projects = Model.Projects;
+                for (int i = 0; i < projects.Count; i++)
                 {
                     <tr>
-                        <td class="text-end">@modelArr[i].Id</td>
-                        <td style="width:99%" scope="row">@modelArr[i].Title</td>
-                        <td class="text-center"><i class="bi bi-person-fill"></i> @modelArr[i].NumberOfMembers</td>
+                        <td class="text-end">@projects[i].Id</td>
+                        <td style="width:99%" scope="row">@projects[i].Title</td>
+                        <td class="text-center"><i class="bi bi-person-fill"></i> @projects[i].NumberOfMembers</td>
                     </tr>
                 }
             }

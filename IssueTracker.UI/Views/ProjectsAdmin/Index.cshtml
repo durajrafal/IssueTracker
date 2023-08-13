@@ -1,7 +1,7 @@
 ﻿@using IssueTracker.Application.Projects.Queries.GetProjects;
-@using IssueTracker.UI.Models.ProjectsAdmin;
+@using IssueTracker.UI.Models.Projects;
 
-@model ProjectsAdminIndexViewModel
+@model ProjectsSummaryListViewModel
 
 @{
     ViewData["Title"] = "Projects";
@@ -27,21 +27,21 @@
             </thead>
             <tbody>
                 @{
-                    var modelArr = Model.Projects.ToArray();
-                    for (int i = 0; i < modelArr?.Length; i++)
+                    var projects = Model.Projects;
+                    for (int i = 0; i < projects?.Count; i++)
                     {
                         <tr>
-                            <td class="text-end" style="vertical-align:middle">@modelArr[i].Id</td>
-                            <td style="width:99%; vertical-align:middle;" scope="row">@modelArr[i].Title</td>
-                            <td class="text-center" style="vertical-align:middle"><i class="bi bi-person-fill"></i> @modelArr[i].NumberOfMembers</td>
+                            <td class="text-end" style="vertical-align:middle">@projects[i].Id</td>
+                            <td style="width:99%; vertical-align:middle;" scope="row">@projects[i].Title</td>
+                            <td class="text-center" style="vertical-align:middle"><i class="bi bi-person-fill"></i> @projects[i].NumberOfMembers</td>
                             <td class="text-center" style="vertical-align:middle">
-                                <a class="btn btn-primary" asp-action="Details" asp-route-id="@modelArr[i].Id">
+                                <a class="btn btn-primary" asp-action="Details" asp-route-id="@projects[i].Id">
                                     <i class="bi bi-pencil-square text-white"></i>
                                 </a>
                             </td>
                             <td class="text-center">
                                 <button type="button" data-show-delete-modal class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjectModal"
-                                        data-id="@modelArr[i].Id" data-title="@modelArr[i].Title">
+                                        data-id="@projects[i].Id" data-title="@projects[i].Title">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </td>

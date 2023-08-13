@@ -1,5 +1,6 @@
 ﻿using IssueTracker.Application.Projects.Queries.GetProjects;
 using IssueTracker.UI.Models;
+using IssueTracker.UI.Models.Projects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -21,7 +22,8 @@ namespace IssueTracker.UI.Controllers
         {
             var query = new GetProjectsQuery();
             var result = await Mediator.Send(query);
-            return View(result);
+            var vm = new ProjectsSummaryListViewModel() { Projects = result.ToList() };
+            return View(vm);
         }
 
         public IActionResult Privacy()

@@ -5,7 +5,7 @@ using IssueTracker.Application.Projects.Commands.Delete;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment;
 using IssueTracker.Application.Projects.Queries.GetProjects;
-using IssueTracker.UI.Filters;
+using IssueTracker.UI.Models.Projects;
 using IssueTracker.UI.Models.ProjectsAdmin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +21,8 @@ namespace IssueTracker.UI.Controllers
         {
             var query = new GetProjectsQuery();
             var result = await Mediator.Send(query);
-            var model = new ProjectsAdminIndexViewModel { Projects = result };
-            return View(model);
+            var vm = new ProjectsSummaryListViewModel { Projects = result.ToList() };
+            return View(vm);
         }
 
         [HttpGet("[action]")]
@@ -46,7 +46,7 @@ namespace IssueTracker.UI.Controllers
         }
 
         [HttpGet("~/api/project-management/{id}")]
-        public async Task<IActionResult> GetProjectForManage(int id)
+        public async Task<IActionResult> Get(int id)
         {
             var query = new GetProjectDetailsForManagmentQuery { ProjectId = id };
             var result = await Mediator.Send(query);
@@ -54,7 +54,7 @@ namespace IssueTracker.UI.Controllers
         }
 
         [HttpPut("~/api/project-management/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateProjectCommand command)
+        public async Task<IActionResult> Edit(int id, [FromBody] UpdateProjectCommand command)
         {
             try
             {
