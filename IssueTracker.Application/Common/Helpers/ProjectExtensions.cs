@@ -19,7 +19,7 @@ namespace IssueTracker.Application.Common.Helpers
             }
         }
 
-        public static async void PopulateMembersWithUsers(this IEnumerable<Member> members, IUserService userService)
+        public static async Task PopulateMembersWithUsers(this IEnumerable<Member> members, IUserService userService)
         {
             foreach (var member in members)
             {
