@@ -30,7 +30,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 .ThenInclude(y => y.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
 
-            await entity.Members.PopulateMembersWithUsers(_userService);
+            await entity.Members.PopulateMembersWithUsersAsync(_userService);
 
             return entity;
         }

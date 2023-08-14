@@ -31,7 +31,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
             output.Id = entity.Id;
             output.Title = entity.Title;
             output.Members = entity.Members;
-            await output.Members.PopulateMembersWithUsers(_userService);
+            await output.Members.PopulateMembersWithUsersAsync(_userService);
 
             var allUsers = await _userService.GetAllUsersAsync();
             output.OtherUsers = allUsers.ExceptBy(entity.Members.Select(x => x.UserId), allUsers => allUsers.UserId);
