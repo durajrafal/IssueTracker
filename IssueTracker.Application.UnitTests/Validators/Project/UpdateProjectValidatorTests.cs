@@ -1,19 +1,25 @@
 ﻿using FluentValidation.TestHelper;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.CreateProject;
+using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Application.UnitTests.Common;
 using IssueTracker.Domain.Entities;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace IssueTracker.Application.UnitTests.Projects.Commands
+namespace IssueTracker.Application.UnitTests.Validators.Project
 {
-    public class CreateProjectValidatorTests
+    public class UpdateProjectValidatorTests
     {
         private Mock<IApplicationDbContext> _mockCtx = new();
-        private readonly CreateProjectValidator _validator;
+        private readonly UpdateProjectValidator _validator;
         const string PROJECT_NAME = "Test Project";
 
-        public CreateProjectValidatorTests()
+        public UpdateProjectValidatorTests()
         {
             _validator = new(_mockCtx.Object);
         }
@@ -21,8 +27,8 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsEmpty_ShouldHaveValidationError()
         {
-            var command = new CreateProject();
-            var mockSet = MockingEF.CreateFakeDbSet(new List<Project>());
+            var command = new UpdateProject { Title = String.Empty };
+            var mockSet = MockingEF.CreateFakeDbSet(new List<Domain.Entities.Project>());
             _mockCtx.Setup(x => x.Projects).Returns(mockSet.Object);
 
             var result = _validator.TestValidate(command);
@@ -33,11 +39,11 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsTooLong_ShouldHaveValidationError()
         {
-            var command = new CreateProject
+            var command = new UpdateProject
             {
                 Title = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
             };
-            var mockSet = MockingEF.CreateFakeDbSet(new List<Project>());
+            var mockSet = MockingEF.CreateFakeDbSet(new List<Domain.Entities.Project>());
             _mockCtx.Setup(x => x.Projects).Returns(mockSet.Object);
 
             var result = _validator.TestValidate(command);
@@ -48,16 +54,18 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsNotUnique_ShouldHaveValidationError()
         {
-            var command = new CreateProject
+            var command = new UpdateProject
             {
+                Id = 2,
                 Title = PROJECT_NAME
             };
-            var mockSet = MockingEF.CreateFakeDbSet(new List<Project>
+            var mockSet = MockingEF.CreateFakeDbSet(new List<Domain.Entities.Project>
             {
-                new Project
+                new Domain.Entities.Project
                 {
-                    Title = PROJECT_NAME 
-                } 
+                    Id = 1,
+                    Title = PROJECT_NAME,
+                }
             });
             _mockCtx.Setup(x => x.Projects).Returns(mockSet.Object);
 
@@ -69,13 +77,13 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsOk_ShouldNotHaveValidationError()
         {
-            var command = new CreateProject
+            var command = new UpdateProject
             {
                 Title = PROJECT_NAME
             };
-            var mockSet = MockingEF.CreateFakeDbSet(new List<Project>
+            var mockSet = MockingEF.CreateFakeDbSet(new List<Domain.Entities.Project>
             {
-                new Project
+                new Domain.Entities.Project
                 {
                     Title = "Another test project"
                 }
@@ -86,6 +94,5 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
 
             result.ShouldNotHaveValidationErrorFor(x => x.Title);
         }
-
     }
 }

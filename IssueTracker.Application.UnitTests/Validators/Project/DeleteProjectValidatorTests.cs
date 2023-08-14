@@ -5,7 +5,7 @@ using IssueTracker.Application.UnitTests.Common;
 using IssueTracker.Domain.Entities;
 using Moq;
 
-namespace IssueTracker.Application.UnitTests.Projects.Commands
+namespace IssueTracker.Application.UnitTests.Validators.Project
 {
     public class DeleteProjectValidatorTests
     {
@@ -26,9 +26,9 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
                 ProjectId = 1,
                 Title = PROJECT_NAME
             };
-            var mockSet = MockingEF.CreateFakeDbSet(new List<Project>
+            var mockSet = MockingEF.CreateFakeDbSet(new List<Domain.Entities.Project>
             {
-                new Project
+                new Domain.Entities.Project
                 {
                     Id = 1,
                     Title = PROJECT_NAME,
@@ -49,9 +49,9 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
                 ProjectId = 1,
                 Title = PROJECT_NAME + "s"
             };
-            var mockSet = MockingEF.CreateFakeDbSet(new List<Project>
+            var mockSet = MockingEF.CreateFakeDbSet(new List<Domain.Entities.Project>
             {
-                new Project
+                new Domain.Entities.Project
                 {
                     Id = 1,
                     Title = PROJECT_NAME,
