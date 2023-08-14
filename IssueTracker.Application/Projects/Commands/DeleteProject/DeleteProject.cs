@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Commands.DeleteProject
 {
-    public class DeleteProjectCommand : IRequest<int>, IHasTitle
+    public class DeleteProject : IRequest<int>, IHasTitle
     {
         public int ProjectId { get; set; }
         public string Title { get; set; }
     }
 
-    public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, int>
+    public class DeleteProjectCommandHandler : IRequestHandler<DeleteProject, int>
     {
         private readonly IApplicationDbContext _ctx;
 
@@ -25,7 +25,7 @@ namespace IssueTracker.Application.Projects.Commands.DeleteProject
             _ctx = ctx;
         }
 
-        public async Task<int> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(DeleteProject request, CancellationToken cancellationToken)
         {
             var entity = _ctx.Projects.FirstOrDefault(x => x.Id == request.ProjectId);
             _ctx.Projects.Remove(entity);

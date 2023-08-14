@@ -16,7 +16,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         {
             var project = new Project { Title = nameof(Handle_WhenTitleAndIdMatch_DeleteProjectFromDatabase) };
             await Database.ActionAsync(ctx => ctx.Projects.AddAsync(project));
-            var command = new DeleteProjectCommand { ProjectId = project.Id, Title = project.Title };
+            var command = new DeleteProject { ProjectId = project.Id, Title = project.Title };
 
             var addedProjectId = await Mediator.Send(command);
 
@@ -29,7 +29,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         {
             var project = new Project { Title = nameof(Handle_WhenTitleAndIdNotMatch_ShouldThrowValidationException) };
             await Database.ActionAsync(ctx => ctx.Projects.AddAsync(project));
-            var command = new DeleteProjectCommand { ProjectId = project.Id, Title = "Misspelled Title" };
+            var command = new DeleteProject { ProjectId = project.Id, Title = "Misspelled Title" };
 
             await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }

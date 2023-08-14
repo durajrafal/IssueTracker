@@ -16,7 +16,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_WhenProjectIdIsInvalid_ThrowsNotFoundException()
         {
-            var command = new UpdateProjectCommand { Id = 0 , Title = nameof(Handle_WhenProjectIdIsInvalid_ThrowsNotFoundException) };
+            var command = new UpdateProject { Id = 0 , Title = nameof(Handle_WhenProjectIdIsInvalid_ThrowsNotFoundException) };
 
             await Assert.ThrowsAsync<NotFoundException>(() => Mediator.Send(command));
         }
@@ -33,7 +33,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             ICollection<Member> members = project.Members;
             members.Add(new Member { UserId = Guid.NewGuid().ToString() });
 
-            var command = new UpdateProjectCommand 
+            var command = new UpdateProject 
             { 
                 Id = project.Id, 
                 Title = project.Title,
@@ -60,7 +60,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             project.Members.Remove(projectUser);
             ICollection<Member> members = project.Members;
 
-            var command = new UpdateProjectCommand 
+            var command = new UpdateProject 
             { 
                 Id = project.Id, 
                 Title = project.Title,
@@ -85,7 +85,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
                 await ctx.Projects.AddAsync(new Project { Title = takenTitle });
             });
 
-            var command = new UpdateProjectCommand { Id = project.Id, Title = takenTitle };
+            var command = new UpdateProject { Id = project.Id, Title = takenTitle };
 
             await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }

@@ -10,7 +10,7 @@ namespace IssueTracker.UI.Controllers
         [HttpGet("/project/{id}")]
         public async Task<IActionResult> Details (int id)
         {
-            var query = new GetProjectDetailsQuery { ProjectId = id };
+            var query = new GetProjectDetails { ProjectId = id };
             var result = await Mediator.Send(query);
             var vm = new ProjectViewModel()
             {

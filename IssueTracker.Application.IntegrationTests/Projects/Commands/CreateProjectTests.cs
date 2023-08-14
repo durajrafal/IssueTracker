@@ -16,7 +16,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_WhenTitleNotEmptyAndUnique_ShouldAddToDatabase()
         {
-            var command = new CreateProjectCommand { Title =  "Unique Test project"};
+            var command = new CreateProject { Title =  "Unique Test project"};
 
             var addedProjectId = await Mediator.Send(command);
 
@@ -27,7 +27,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_WhenTitleIsEmpty_ShouldThrowValidationException()
         {
-            var command = new CreateProjectCommand();
+            var command = new CreateProject();
 
             await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }
@@ -40,7 +40,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
                 await ctx.Projects.AddAsync(new Domain.Entities.Project { Title = "Not unique test project" });
             });
 
-            var command = new CreateProjectCommand { Title = "Not unique test project" };
+            var command = new CreateProject { Title = "Not unique test project" };
 
             await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }
@@ -66,7 +66,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [InlineData('=')]
         public async Task Handle_WhenTitleContainsForbiddenCharacter_ShouldThrowValidationException(char forbiddenChar)
         {
-            var command = new CreateProjectCommand { Title = "Forbidden title" + forbiddenChar };
+            var command = new CreateProject { Title = "Forbidden title" + forbiddenChar };
 
             await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }
@@ -74,7 +74,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_Always_ShouldAddCurrentUserAsMember()
         {
-            var command = new CreateProjectCommand { Title = nameof(Handle_Always_ShouldAddCurrentUserAsMember) };
+            var command = new CreateProject { Title = nameof(Handle_Always_ShouldAddCurrentUserAsMember) };
 
             var addedProjectId = await Mediator.Send(command);
 
@@ -86,8 +86,8 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_Always_ShouldAddAlreadyCreatedMember()
         {
-            var command = new CreateProjectCommand { Title = nameof(Handle_Always_ShouldAddAlreadyCreatedMember) };
-            var command2 = new CreateProjectCommand { Title = nameof(Handle_Always_ShouldAddAlreadyCreatedMember)+'2' };
+            var command = new CreateProject { Title = nameof(Handle_Always_ShouldAddAlreadyCreatedMember) };
+            var command2 = new CreateProject { Title = nameof(Handle_Always_ShouldAddAlreadyCreatedMember)+'2' };
 
             await Mediator.Send(command);
             await Mediator.Send(command2);

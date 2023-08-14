@@ -10,7 +10,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
     public class CreateProjectValidatorTests
     {
         private Mock<IApplicationDbContext> _mockCtx = new();
-        private readonly CreateProjectCommandValidator _validator;
+        private readonly CreateProjectValidator _validator;
         const string PROJECT_NAME = "Test Project";
 
         public CreateProjectValidatorTests()
@@ -21,7 +21,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsEmpty_ShouldHaveValidationError()
         {
-            var command = new CreateProjectCommand();
+            var command = new CreateProject();
             var mockSet = MockingEF.CreateFakeDbSet(new List<Project>());
             _mockCtx.Setup(x => x.Projects).Returns(mockSet.Object);
 
@@ -33,7 +33,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsTooLong_ShouldHaveValidationError()
         {
-            var command = new CreateProjectCommand
+            var command = new CreateProject
             {
                 Title = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
             };
@@ -48,7 +48,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsNotUnique_ShouldHaveValidationError()
         {
-            var command = new CreateProjectCommand
+            var command = new CreateProject
             {
                 Title = PROJECT_NAME
             };
@@ -69,7 +69,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsOk_ShouldNotHaveValidationError()
         {
-            var command = new CreateProjectCommand
+            var command = new CreateProject
             {
                 Title = PROJECT_NAME
             };

@@ -16,7 +16,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
     public class UpdateProjectValidatorTests
     {
         private Mock<IApplicationDbContext> _mockCtx = new();
-        private readonly UpdateProjectCommandValidator _validator;
+        private readonly UpdateProjectValidator _validator;
         const string PROJECT_NAME = "Test Project";
 
         public UpdateProjectValidatorTests()
@@ -27,7 +27,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsEmpty_ShouldHaveValidationError()
         {
-            var command = new UpdateProjectCommand { Title = String.Empty };
+            var command = new UpdateProject { Title = String.Empty };
             var mockSet = MockingEF.CreateFakeDbSet(new List<Project>());
             _mockCtx.Setup(x => x.Projects).Returns(mockSet.Object);
 
@@ -39,7 +39,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsTooLong_ShouldHaveValidationError()
         {
-            var command = new UpdateProjectCommand
+            var command = new UpdateProject
             {
                 Title = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
             };
@@ -54,7 +54,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsNotUnique_ShouldHaveValidationError()
         {
-            var command = new UpdateProjectCommand
+            var command = new UpdateProject
             {
                 Id = 2,
                 Title = PROJECT_NAME
@@ -77,7 +77,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleIsOk_ShouldNotHaveValidationError()
         {
-            var command = new UpdateProjectCommand
+            var command = new UpdateProject
             {
                 Title = PROJECT_NAME
             };

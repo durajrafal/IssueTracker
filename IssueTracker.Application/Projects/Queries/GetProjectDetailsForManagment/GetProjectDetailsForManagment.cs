@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment
 {
-    public class GetProjectDetailsForManagmentQuery : IRequest<ProjectManagmentDto>
+    public class GetProjectDetailsForManagment : IRequest<ProjectManagmentDto>
     {
         public int ProjectId { get; set; }
     }
 
-    public class GetProjectDetailsForManagmentQueryHandler : IRequestHandler<GetProjectDetailsForManagmentQuery, ProjectManagmentDto>
+    public class GetProjectDetailsForManagmentQueryHandler : IRequestHandler<GetProjectDetailsForManagment, ProjectManagmentDto>
     {
         private readonly IApplicationDbContext _ctx;
         private readonly IUserService _userService;
@@ -21,7 +21,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
             _userService = userService;
         }
 
-        public async Task<ProjectManagmentDto> Handle(GetProjectDetailsForManagmentQuery request, CancellationToken cancellationToken)
+        public async Task<ProjectManagmentDto> Handle(GetProjectDetailsForManagment request, CancellationToken cancellationToken)
         {
             var output = new ProjectManagmentDto();
 

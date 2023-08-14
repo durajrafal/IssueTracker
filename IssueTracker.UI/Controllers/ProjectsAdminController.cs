@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.CreateProject;
-using IssueTracker.Application.Projects.Commands.Delete;
+using IssueTracker.Application.Projects.Commands.DeleteProject;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment;
 using IssueTracker.Application.Projects.Queries.GetProjects;
@@ -19,7 +19,7 @@ namespace IssueTracker.UI.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var query = new GetProjectsQuery();
+            var query = new GetProjects();
             var result = await Mediator.Send(query);
             var vm = new ProjectsSummaryListViewModel { Projects = result.ToList() };
             return View(vm);
@@ -34,7 +34,7 @@ namespace IssueTracker.UI.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(ProjectsAdminCreateViewModel vm, [FromServices] IApplicationDbContext ctx)
         {
-            var command = new CreateProjectCommand { Title = vm.Title };
+            var command = new CreateProject { Title = vm.Title };
             await Mediator.Send(command);
             return RedirectToAction("Index");
         }
@@ -48,13 +48,13 @@ namespace IssueTracker.UI.Controllers
         [HttpGet("~/api/project-management/{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var query = new GetProjectDetailsForManagmentQuery { ProjectId = id };
+            var query = new GetProjectDetailsForManagment { ProjectId = id };
             var result = await Mediator.Send(query);
             return Ok(result);
         }
 
         [HttpPut("~/api/project-management/{id}")]
-        public async Task<IActionResult> Edit(int id, [FromBody] UpdateProjectCommand command)
+        public async Task<IActionResult> Edit(int id, [FromBody] UpdateProject command)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace IssueTracker.UI.Controllers
         [HttpDelete("~/api/project-management/{id}/{title}")]
         public async Task<IActionResult> Delete(int id, string title)
         {
-            var command = new DeleteProjectCommand { ProjectId = id, Title = title };
+            var command = new DeleteProject { ProjectId = id, Title = title };
             await Mediator.Send(command);
             return Ok();
         }

@@ -4,13 +4,13 @@ using IssueTracker.Application.Common.Validators;
 
 namespace IssueTracker.Application.Projects.Commands.CreateProject
 {
-    public class CreateProjectCommandValidator : TitleValidator<CreateProjectCommand>
+    public class CreateProjectValidator : TitleValidator<CreateProject>
     {
-        public CreateProjectCommandValidator(IApplicationDbContext ctx) :base(ctx)
+        public CreateProjectValidator(IApplicationDbContext ctx) :base(ctx)
         {    
         }
 
-        public override bool BeUniqueTitle(CreateProjectCommand model, string title)
+        public override bool BeUniqueTitle(CreateProject model, string title)
         {
             return !_ctx.Projects.Any(x => x.Title == title);
         }

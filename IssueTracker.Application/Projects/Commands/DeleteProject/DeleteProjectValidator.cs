@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Commands.DeleteProject
 {
-    public class DeleteProjectCommandValidator : AbstractValidator<DeleteProjectCommand>
+    public class DeleteProjectValidator : AbstractValidator<DeleteProject>
     {
         private readonly IApplicationDbContext _ctx;
 
-        public DeleteProjectCommandValidator(IApplicationDbContext ctx)
+        public DeleteProjectValidator(IApplicationDbContext ctx)
         {
             var id =
             _ctx = ctx;

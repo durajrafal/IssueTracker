@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
 {
-    public class GetProjectDetailsQuery : IRequest<Project>
+    public class GetProjectDetails : IRequest<Project>
     {
         public int ProjectId { get; set; }
     }
 
-    public class GetProjectDetailsQueryHandler : IRequestHandler<GetProjectDetailsQuery, Project>
+    public class GetProjectDetailsQueryHandler : IRequestHandler<GetProjectDetails, Project>
     {
         private readonly IApplicationDbContext _ctx;
         private readonly IUserService _userService;
@@ -22,7 +22,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
             _userService = userService;
         }
 
-        public async Task<Project> Handle(GetProjectDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<Project> Handle(GetProjectDetails request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Projects
                 .Include(x => x.Members)

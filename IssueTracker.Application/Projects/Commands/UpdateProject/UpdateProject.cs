@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Commands.UpdateProject
 {
-    public class UpdateProjectCommand : IRequest<int>, IHasTitle
+    public class UpdateProject : IRequest<int>, IHasTitle
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public IEnumerable<Member> Members { get; set; }
     }
 
-    public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, int>
+    public class UpdateProjectCommandHandler : IRequestHandler<UpdateProject, int>
     {
         private readonly IApplicationDbContext _ctx;
 
@@ -28,7 +28,7 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
             _ctx = ctx;
         }
 
-        public async Task<int> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdateProject request, CancellationToken cancellationToken)
         {
             Project entity;
 

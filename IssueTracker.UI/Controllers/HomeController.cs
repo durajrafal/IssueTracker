@@ -20,7 +20,7 @@ namespace IssueTracker.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var query = new GetProjectsQuery();
+            var query = new GetProjects();
             var result = await Mediator.Send(query);
             var vm = new ProjectsSummaryListViewModel() { Projects = result.ToList() };
             return View(vm);

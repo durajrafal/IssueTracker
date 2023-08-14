@@ -10,7 +10,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
     public class DeleteProjectValidatorTests
     {
         private Mock<IApplicationDbContext> _mockCtx = new();
-        private readonly DeleteProjectCommandValidator _validator;
+        private readonly DeleteProjectValidator _validator;
         const string PROJECT_NAME = "Test Project";
 
         public DeleteProjectValidatorTests()
@@ -21,7 +21,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleMatch_ShouldNotHaveValidationError()
         {
-            var command = new DeleteProjectCommand
+            var command = new DeleteProject
             {
                 ProjectId = 1,
                 Title = PROJECT_NAME
@@ -44,7 +44,7 @@ namespace IssueTracker.Application.UnitTests.Projects.Commands
         [Fact]
         public void Validate_WhenTitleDoesNotMatch_ShouldHaveValidationError()
         {
-            var command = new DeleteProjectCommand
+            var command = new DeleteProject
             {
                 ProjectId = 1,
                 Title = PROJECT_NAME + "s"

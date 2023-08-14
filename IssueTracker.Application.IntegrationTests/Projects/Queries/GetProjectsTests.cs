@@ -24,7 +24,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
                 await ctx.AddRangeAsync(testProjects)
             );
             
-            var query = new GetProjectsQuery();
+            var query = new GetProjects();
             var projects = await Mediator.Send(query);
 
             Assert.Equal(numberOfUserProject, projects.Count());

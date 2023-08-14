@@ -26,7 +26,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
                 await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
             }
 
-            var query = new GetProjectDetailsForManagmentQuery { ProjectId = project.Id};
+            var query = new GetProjectDetailsForManagment { ProjectId = project.Id};
             var result = await Mediator.Send(query);
 
             var projectMembersCount = project.Members.Count;
@@ -47,7 +47,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
                 await ctx.Projects.AddAsync(project);
             });
 
-            var query = new GetProjectDetailsForManagmentQuery { ProjectId = 2};
+            var query = new GetProjectDetailsForManagment { ProjectId = 2};
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => Mediator.Send(query));
             Assert.True(Database.Func(x => x.Projects.Count() > 0));
