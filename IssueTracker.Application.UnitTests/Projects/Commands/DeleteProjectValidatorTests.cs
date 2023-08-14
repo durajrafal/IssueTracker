@@ -1,16 +1,9 @@
 ﻿using FluentValidation.TestHelper;
 using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Application.Projects.Commands.CreateProject;
-using IssueTracker.Application.Projects.Commands.Delete;
-using IssueTracker.Application.Projects.Commands.UpdateProject;
+using IssueTracker.Application.Projects.Commands.DeleteProject;
 using IssueTracker.Application.UnitTests.Common;
 using IssueTracker.Domain.Entities;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.UnitTests.Projects.Commands
 {

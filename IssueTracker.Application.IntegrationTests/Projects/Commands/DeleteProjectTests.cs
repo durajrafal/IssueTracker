@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
-using IssueTracker.Application.Common.Exceptions;
-using IssueTracker.Application.Projects.Commands.Delete;
+using IssueTracker.Application.Projects.Commands.DeleteProject;
 using IssueTracker.Domain.Entities;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands

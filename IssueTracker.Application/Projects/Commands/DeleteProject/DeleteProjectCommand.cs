@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IssueTracker.Application.Projects.Commands.Delete
+namespace IssueTracker.Application.Projects.Commands.DeleteProject
 {
     public class DeleteProjectCommand : IRequest<int>, IHasTitle
     {

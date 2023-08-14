@@ -7,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IssueTracker.Application.Projects.Commands.Delete
+namespace IssueTracker.Application.Projects.Commands.DeleteProject
 {
     public class DeleteProjectCommandValidator : AbstractValidator<DeleteProjectCommand>
     {
