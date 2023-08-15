@@ -1,9 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.DeleteProject;
-using IssueTracker.Application.UnitTests.Common;
-using IssueTracker.Domain.Entities;
-using Moq;
 
 namespace IssueTracker.Application.UnitTests.Validators.Project
 {

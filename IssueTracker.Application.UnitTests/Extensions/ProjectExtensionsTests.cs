@@ -1,11 +1,6 @@
-﻿using FluentAssertions;
-using FluentAssertions.Execution;
-using IssueTracker.Application.Common.Helpers;
-using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Application.UnitTests.Common;
+﻿using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Models;
-using Moq;
 
 namespace IssueTracker.Application.UnitTests.Extensions
 {
