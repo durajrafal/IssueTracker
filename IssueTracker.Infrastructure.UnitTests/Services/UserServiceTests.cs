@@ -2,7 +2,7 @@
 using IssueTracker.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 
-namespace IssueTracker.Application.UnitTests.Services
+namespace IssueTracker.Infrastructure.UnitTests.Services
 {
     public class UserServiceTests
     {
