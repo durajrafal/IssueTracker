@@ -19,7 +19,6 @@ namespace IssueTracker.Infrastructure.Identity
             var output = new List<User>();
             foreach (var user in _userManager.Users)
             {
-                var claims = await GetUserClaimsAsync(user.Id);
                 output.Add(new User
                 {
                     UserId = user.Id,
@@ -31,10 +30,13 @@ namespace IssueTracker.Infrastructure.Identity
             return output;
         }
 
-        public async Task<User> GetUserByIdAsync(string id)
+        public async Task<User?> GetUserByIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            var claims = await GetUserClaimsAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
             return new User
             {
                 UserId = user.Id,
