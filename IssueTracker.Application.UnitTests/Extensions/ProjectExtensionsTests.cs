@@ -52,7 +52,7 @@ namespace IssueTracker.Application.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task PopulateMembersWithUsers_Always_ShouldPopulateExistingUsers()
+        public async Task SyncMembersWithUsers_WhenUserExists_ShouldPopulateMemberWithIt()
         {
             //Arrange
             var userId = "abcd";
@@ -74,7 +74,7 @@ namespace IssueTracker.Application.UnitTests.Extensions
             };
 
             //Act
-            await members.PopulateMembersWithUsersAsync(mockUserService.Object);
+            await members.SyncMembersWithUsers(mockUserService.Object);
 
             //Arrange
             members.First().User.FirstName.Should().Be(user.FirstName);
@@ -83,7 +83,7 @@ namespace IssueTracker.Application.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task PopulateMembersWithUsers_Always_ShouldLeaveNotExistingUsersAsNull()
+        public async Task SyncMembersWithUser_WhenUserDoesNotExists_ShouldDeleteMemberWithoutExistingUser()
         {
             //Arrange
             var userId = "abcd";
@@ -111,10 +111,11 @@ namespace IssueTracker.Application.UnitTests.Extensions
             };
 
             //Act
-            await members.PopulateMembersWithUsersAsync(mockUserService.Object);
+            await members.SyncMembersWithUsers(mockUserService.Object);
 
             //Assert
-            members.First(x => x.Id == 2).User.Should().BeNull();
+            members.FirstOrDefault(x => x.Id == 2).Should().BeNull();
+            members.Count.Should().Be(1);
         }
     }
 }

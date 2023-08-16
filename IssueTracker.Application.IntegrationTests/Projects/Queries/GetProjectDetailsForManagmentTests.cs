@@ -38,6 +38,32 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         }
 
         [Fact]
+        public async Task Handle_WhenMemberIsMissingUser_ShouldReturnOnlyMembersWithExistingUsers()
+        {
+            //Arrange
+            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenMemberIsMissingUser_ShouldReturnOnlyMembersWithExistingUsers));
+
+            await Database.ActionAsync(async ctx =>
+            {
+                await ctx.Projects.AddAsync(project);
+            });
+            foreach (var member in project.Members.Skip(1))
+            {
+                var appUser = new ApplicationUser(member.UserId.Substring(0, 8), "Name", "Surname");
+                appUser.Id = member.UserId;
+                await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
+            }
+
+            //Act
+            var query = new GetProjectDetailsForManagment { ProjectId = project.Id};
+            var result = await Mediator.Send(query);
+
+            //Assert
+            var projectMembersCount = project.Members.Count-1;
+            Assert.Equal(projectMembersCount, result.Members.Count());
+        }
+
+        [Fact]
         public async Task Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException()
         {
             var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException));

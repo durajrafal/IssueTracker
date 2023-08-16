@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
 {
-    public class GetProjectDetails : IRequest<Project>
+    public class GetProjectDetails : IRequest<ProjectDto>
     {
         public int ProjectId { get; set; }
     }
 
-    public class GetProjectDetailsQueryHandler : IRequestHandler<GetProjectDetails, Project>
+    public class GetProjectDetailsQueryHandler : IRequestHandler<GetProjectDetails, ProjectDto>
     {
         private readonly IApplicationDbContext _ctx;
         private readonly IUserService _userService;
@@ -22,7 +22,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
             _userService = userService;
         }
 
-        public async Task<Project> Handle(GetProjectDetails request, CancellationToken cancellationToken)
+        public async Task<ProjectDto> Handle(GetProjectDetails request, CancellationToken cancellationToken)
         {
             var entity = await _ctx.Projects
                 .Include(x => x.Members)
@@ -30,9 +30,17 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 .ThenInclude(y => y.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
 
-            await entity.Members.PopulateMembersWithUsersAsync(_userService);
+            entity.Issues.ToList().ForEach(async (x) => {
+                await x.Members.SyncMembersWithUsers(_userService);
+            });
 
-            return entity;
+            return new ProjectDto
+            {
+                Id = entity.Id,
+                Title = entity.Title,
+                Members = await entity.Members.SyncMembersWithUsers(_userService),
+                Issues = entity.Issues
+            };
         }
     }
 }

@@ -23,20 +23,20 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
 
         public async Task<ProjectManagmentDto> Handle(GetProjectDetailsForManagment request, CancellationToken cancellationToken)
         {
-            var output = new ProjectManagmentDto();
-
             var entity = await _ctx.Projects
                 .Include(x => x.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
-            output.Id = entity.Id;
-            output.Title = entity.Title;
-            output.Members = entity.Members;
-            await output.Members.PopulateMembersWithUsersAsync(_userService);
 
             var allUsers = await _userService.GetAllUsersAsync();
-            output.OtherUsers = allUsers.ExceptBy(entity.Members.Select(x => x.UserId), allUsers => allUsers.UserId);
+            var otherUsers = allUsers.ExceptBy(entity.Members.Select(x => x.UserId), allUsers => allUsers.UserId);
 
-            return output;
+            return new ProjectManagmentDto
+            {
+                Id = entity.Id,
+                Title = entity.Title,
+                Members = await entity.Members.SyncMembersWithUsers(_userService),
+                OtherUsers = otherUsers
+            };
         }
     }
 }

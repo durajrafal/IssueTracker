@@ -19,12 +19,26 @@ namespace IssueTracker.Application.Common.Helpers
             }
         }
 
-        public static async Task PopulateMembersWithUsersAsync(this IEnumerable<Member> members, IUserService userService)
+        public static async Task<ICollection<Member>> SyncMembersWithUsers(this ICollection<Member> members, IUserService userService)
+        {
+            await PopulateMembersWithUsersAsync(members, userService);
+            RemoveMembersWithoutExistingUsers(members);
+
+            return members;
+        }
+
+        private static async Task PopulateMembersWithUsersAsync(this ICollection<Member> members, IUserService userService)
         {
             foreach (var member in members)
             {
                 member.User = await userService.GetUserByIdAsync(member.UserId);
             }
+        }
+
+        private static void RemoveMembersWithoutExistingUsers(this ICollection<Member> members)
+        {
+            var emptyMembers = members.Where(x => x.User == null).ToList();
+            emptyMembers.ForEach(x => members.Remove(x));
         }
     }
 }

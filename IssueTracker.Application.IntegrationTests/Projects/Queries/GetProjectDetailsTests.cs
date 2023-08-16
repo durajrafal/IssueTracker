@@ -29,12 +29,35 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
             var query = new GetProjectDetails { ProjectId = project.Id};
             var result = await Mediator.Send(query);
 
-            Assert.Equal(project.Members.Count, result.Members.Count);
+            Assert.Equal(project.Members.Count, result.Members.Count());
             Assert.True(result.Members.All(x => x.User != null));
             Assert.Equal(project.Issues.Count, result.Issues.Count);
             Assert.True(result.Issues.All(x => x.Title != String.Empty));
             Assert.True(result.Issues.All(x => x.Members.Count > 0));
             Assert.True(result.Issues.All(x => x.Priority == Domain.Enums.PriorityLevel.None));
+        }
+        
+        [Fact]
+        public async Task Handle_WhenMemberIsMissingUser_ShoulIncludeOnlyMembersWithExistingUsers()
+        {
+            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenMemberIsMissingUser_ShoulIncludeOnlyMembersWithExistingUsers));
+            await Database.ActionAsync(async ctx =>
+            {
+                await ctx.Projects.AddAsync(project);
+            });
+            foreach (var member in project.Members.Skip(1))
+            {
+                var appUser = new ApplicationUser(member.UserId.Substring(0, 8), "Name", "Surname");
+                appUser.Id = member.UserId;
+                await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
+            }
+
+            var query = new GetProjectDetails { ProjectId = project.Id};
+            var result = await Mediator.Send(query);
+
+            Assert.Equal(project.Members.Count-1, result.Members.Count());
+            Assert.True(result.Members.All(x => x.User != null));
+            Assert.True(result.Issues.All(x => x.Members.All(y => y.User != null)));
         }
 
         [Fact]
