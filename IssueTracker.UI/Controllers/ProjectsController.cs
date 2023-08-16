@@ -1,14 +1,14 @@
 ﻿using IssueTracker.Application.Projects.Queries.GetProjectDetails;
-using IssueTracker.Application.Projects.Queries.GetProjects;
 using IssueTracker.UI.Models.Projects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IssueTracker.UI.Controllers
 {
+    [Route("[controller]")]
     public class ProjectsController : ControllerWithMediatR
     {
-        [HttpGet("/project/{id}")]
-        public async Task<IActionResult> Details (int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(int id, string? orderBy, string status = "all")
         {
             var query = new GetProjectDetails { ProjectId = id };
             var result = await Mediator.Send(query);
@@ -16,7 +16,8 @@ namespace IssueTracker.UI.Controllers
             {
                 Id = result.Id,
                 Title = result.Title,
-                Issues = result.Issues
+                Issues = result.Issues,
+                SelectedStatus = status
             };
             return View(vm);
         }

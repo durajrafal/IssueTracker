@@ -1,0 +1,34 @@
+﻿@using IssueTracker.UI.Models.Projects;
+@model ProjectViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="d-grid my-2">
+            <a href="#" class="btn btn-lg btn-success">
+                <i class="bi bi-plus-circle me-3"></i>Create new issue
+            </a>
+        </div>
+
+        <div class="list-group">
+            <div class="list-group-item p-0 d-grid">
+                <div class="btn-group" role="group" aria-label="Filtering Buttons">
+                    <a asp-route-status="all" class="btn btn-outline-primary @(Model.IsAllSelected ? "active" : "")" style="border-bottom-left-radius:0;">All</a>
+                    <a asp-route-status="opened" class="btn btn-outline-primary @(Model.IsOpenedSelected ? "active" : "")">Opened</a>
+                    <a asp-route-status="closed" asp class="btn btn-outline-primary @(Model.IsClosedSelected ? "active" : "")" style="border-bottom-right-radius:0;">Closed</a>
+                </div>
+            </div>
+            @foreach (var issue in Model.Issues)
+            {
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    @issue.Title
+                    <span class="badge bg-info">Info</span>
+                </a>
+            }
+            <a href="#" class="list-group-item list-group-item-action disabled">Morbi leo risus</a>
+        </div>
+    </div>
+</div>
