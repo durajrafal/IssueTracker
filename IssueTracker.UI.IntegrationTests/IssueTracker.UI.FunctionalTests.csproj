@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="6.11.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     <PackageReference Include="xunit" Version="2.4.2" />
@@ -23,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IssueTracker.Application.IntegrationTests\IssueTracker.Application.IntegrationTests.csproj" />
     <ProjectReference Include="..\IssueTracker.IntegrationTests.Library\IssueTracker.IntegrationTests.Library.csproj" />
   </ItemGroup>
 
