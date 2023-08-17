@@ -27,7 +27,7 @@ namespace IssueTracker.Application.Projects.Commands.CreateProject
             {
                 Title = request.Title,
             };
-            entity.AddNewOrExistingMember(_ctx.Members, _currentUserService.UserId);
+            entity.Members.AddNewOrExistingMember(_ctx.Members, _currentUserService.UserId);
 
             _ctx.Projects.Add(entity);
             await _ctx.SaveChangesAsync(cancellationToken);

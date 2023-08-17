@@ -4,9 +4,9 @@ using IssueTracker.Domain.Models;
 
 namespace IssueTracker.Application.UnitTests.Extensions
 {
-    public class ProjectExtensionsTests
+    public class MembersExtensionsTests
     {
-        public ProjectExtensionsTests()
+        public MembersExtensionsTests()
         {
 
         }
@@ -21,13 +21,13 @@ namespace IssueTracker.Application.UnitTests.Extensions
                 UserId = "abcd"
             };
             var mockSet = MockingEF.CreateFakeDbSet(new List<Member>() { existingMember });
-            var project = new Project();
+            var members = new List<Member>();
 
             //Act
-            project.AddNewOrExistingMember(mockSet.Object, existingMember.UserId);
+            members.AddNewOrExistingMember(mockSet.Object, existingMember.UserId);
 
             //Assert
-            project.Members.First().Id.Should().Be(existingMember.Id);
+            members.First().Id.Should().Be(existingMember.Id);
 
 
         }
@@ -42,13 +42,13 @@ namespace IssueTracker.Application.UnitTests.Extensions
                 UserId = "abcd"
             };
             var mockSet = MockingEF.CreateFakeDbSet(new List<Member>() { existingMember });
-            var project = new Project();
+            var members = new List<Member>();
 
             //Act
-            project.AddNewOrExistingMember(mockSet.Object, "otherUserId");
+            members.AddNewOrExistingMember(mockSet.Object, "otherUserId");
 
             //Assert
-            project.Members.First().Id.Should().NotBe(existingMember.Id);
+            members.First().Id.Should().NotBe(existingMember.Id);
         }
 
         [Fact]
