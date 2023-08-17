@@ -14,17 +14,10 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         [Fact]
         public async Task Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers()
         {
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers));
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
-            foreach (var member in project.Members)
-            {
-                var appUser = new ApplicationUser(member.UserId.Substring(0, 8), "Name", "Surname");
-                appUser.Id = member.UserId;
-                await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
-            }
+            var project = await ProjectHelpers
+                .CreateTestProject(nameof(Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers))
+                .AddToDatabaseAsync(Database)
+                .SeedDatabaseWithMembersUsersAsync(Database);
 
             var query = new GetProjectDetails { ProjectId = project.Id};
             var result = await Mediator.Send(query);
@@ -40,17 +33,10 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         [Fact]
         public async Task Handle_WhenMemberIsMissingUser_ShoulIncludeOnlyMembersWithExistingUsers()
         {
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenMemberIsMissingUser_ShoulIncludeOnlyMembersWithExistingUsers));
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
-            foreach (var member in project.Members.Skip(1))
-            {
-                var appUser = new ApplicationUser(member.UserId.Substring(0, 8), "Name", "Surname");
-                appUser.Id = member.UserId;
-                await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
-            }
+            var project = await ProjectHelpers
+                .CreateTestProject(nameof(Handle_WhenMemberIsMissingUser_ShoulIncludeOnlyMembersWithExistingUsers))
+                .AddToDatabaseAsync(Database)
+                .SeedDatabaseWithMembersUsersAsync(Database,1);
 
             var query = new GetProjectDetails { ProjectId = project.Id};
             var result = await Mediator.Send(query);

@@ -1,15 +1,7 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Application.IntegrationTests.Projects.Queries;
 using IssueTracker.Domain.Entities;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.UI.IntegrationTests.Views.Home
 {
