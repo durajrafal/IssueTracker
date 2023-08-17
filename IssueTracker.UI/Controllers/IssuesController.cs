@@ -1,5 +1,5 @@
 ﻿using IssueTracker.Application.Projects.Queries.GetProjectDetails;
-using IssueTracker.Domain.Entities;
+using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IssueTracker.UI.Controllers
@@ -12,8 +12,12 @@ namespace IssueTracker.UI.Controllers
         {
             var query = new GetProjectDetails { ProjectId = projectId };
             var result = await Mediator.Send(query);
-            //var vm = 
-            return View();
+            var vm = new CreateIssueViewModel()
+            {
+                ProjectId = projectId,
+                Members = result.Members,
+            };
+            return View(vm);
         }
 
     }

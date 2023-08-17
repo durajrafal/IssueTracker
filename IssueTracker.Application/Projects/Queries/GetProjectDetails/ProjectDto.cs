@@ -11,7 +11,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public IEnumerable<Member> Members { get; set; }
+        public ICollection<Member> Members { get; set; }
         public ICollection<Issue> Issues { get; set; }
     }
 }

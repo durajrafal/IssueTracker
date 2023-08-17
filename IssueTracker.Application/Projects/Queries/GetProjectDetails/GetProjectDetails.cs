@@ -30,9 +30,10 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 .ThenInclude(y => y.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
 
-            entity.Issues.ToList().ForEach(async (x) => {
-                await x.Members.SyncMembersWithUsers(_userService);
-            });
+            foreach (var issue in entity.Issues)
+            {
+                await issue.Members.SyncMembersWithUsers(_userService);
+            }
 
             return new ProjectDto
             {
