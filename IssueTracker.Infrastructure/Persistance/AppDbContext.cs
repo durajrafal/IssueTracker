@@ -19,7 +19,7 @@ namespace IssueTracker.Infrastructure.Persistance
 
         public DbSet<Project> Projects => Set<Project>();
         public DbSet<Member> Members => Set<Member>();
-        public DbSet<Issue> Issues { get; set; }
+        public DbSet<Issue> Issues => Set<Issue>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

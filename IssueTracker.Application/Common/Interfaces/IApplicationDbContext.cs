@@ -12,7 +12,7 @@ namespace IssueTracker.Application.Common.Interfaces
     {
         DbSet<Project> Projects { get; }
         DbSet<Member> Members { get; }
-
+        DbSet<Issue> Issues { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
