@@ -47,6 +47,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "issues",
+    pattern: "Projects/{projectid}/{controller=Issues}/{action=Details}");
+
 app.Run();
 
 public partial class Program { }
