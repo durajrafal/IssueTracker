@@ -38,11 +38,27 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
 
             foreach (var property in props)
             {
-                var key = property.Name;
-                var value = property.GetValue(obj)?.ToString();
-                if (value != null)
+                if (!property.PropertyType.FullName.StartsWith("System.Collections."))
                 {
-                    output.Add(key, value);
+                    var key = property.Name;
+                    var value = property.GetValue(obj)?.ToString();
+                    if (value != null)
+                    {
+                        output.Add(key, value);
+                    }
+                }
+                else
+                {
+                    var collection = property.GetValue(obj) as System.Collections.IEnumerable;
+                    if (collection != null)
+                    {
+                        int index = 0;
+                        foreach (var item in collection)
+                        {
+                            output[$"{property.Name}[{index}]"] = item.ToString();
+                            index++;
+                        }
+                    }
                 }
             }
 

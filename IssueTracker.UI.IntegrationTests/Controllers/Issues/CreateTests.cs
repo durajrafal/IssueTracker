@@ -22,8 +22,8 @@ namespace IssueTracker.UI.FunctionalTests.Controllers.Issues
         {
             AuthenticateFactory();
             var httpContext = new DefaultHttpContext()
-            { 
-                RequestServices = ScopeFactory.CreateScope().ServiceProvider 
+            {
+                RequestServices = ScopeFactory.CreateScope().ServiceProvider
             };
             var controllerContext = new ControllerContext()
             {
@@ -36,11 +36,11 @@ namespace IssueTracker.UI.FunctionalTests.Controllers.Issues
         }
 
         [Fact]
-        public async Task GetCreate_Always_ShouldReturnViewWithSeededModel()
+        public async Task GetCreate_WhenProjectIdIsValid_ShouldReturnViewWithSeededModel()
         {
             //Arrange
             var project = await ProjectHelpers
-                .CreateTestProject(nameof(GetCreate_Always_ShouldReturnViewWithSeededModel))
+                .CreateTestProject(nameof(GetCreate_WhenProjectIdIsValid_ShouldReturnViewWithSeededModel))
                 .AddToDatabaseAsync(Database)
                 .SeedDatabaseWithMembersUsersAsync(Database);
 
@@ -49,8 +49,31 @@ namespace IssueTracker.UI.FunctionalTests.Controllers.Issues
             var model = response.Model as CreateIssueViewModel;
 
             //Assert
-            model.Members.Should().HaveCount(project.Members.Count);
+            model.ProjectMembersSelecList.Should().HaveCount(project.Members.Count);
             model.ProjectId.Should().Be(project.Id);
+            response.ViewData.ModelState.Values.Should().BeEmpty();
+
+        }
+
+        [Fact]
+        public async Task PostCreate_WhenDataIsInvalid_ShoulReturnViewWithSeededModelAndValidationErrors()
+        {
+            //Arrange
+            var project = await ProjectHelpers
+                .CreateTestProject(nameof(PostCreate_WhenDataIsInvalid_ShoulReturnViewWithSeededModelAndValidationErrors))
+                .AddToDatabaseAsync(Database)
+                .SeedDatabaseWithMembersUsersAsync(Database);
+            var responseGet = await _controller.Create(project.Id) as ViewResult;
+            var model = responseGet.Model as CreateIssueViewModel;
+
+            //Act
+            var responsePost = await _controller.Create(model) as ViewResult;
+
+            //Assert
+            var responseModel = responsePost.Model as CreateIssueViewModel;
+            responseModel.ProjectMembersSelecList.Should().NotBeEmpty();
+            responsePost.ViewData.ModelState.ErrorCount.Should().BeGreaterThan(0);
+            responsePost.ViewData.ModelState.Values.Should().NotBeEmpty();
         }
     }
 }
