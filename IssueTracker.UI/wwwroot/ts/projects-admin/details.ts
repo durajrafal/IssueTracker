@@ -17,10 +17,16 @@ class ProjectAdminDetails {
         const id = location.href.split('/').pop();
         const url = this.baseUrl + '/api/project-management/' + id;
         fetch(url)
-            .then(res => res.text())
+            .then(res => {
+                if (res.ok) {
+                    return res.text()
+                }
+                throw Error("Something went wrong. Please try again.")
+            })
             .then(data => { this.project = JSON.parse(data); })
             .then(() => { this.memberManagement = new MembersManagementTablesHandler('[data-members-table] > tbody', '[data-other-users-table] > tbody', this.project); })
-            .then(() => { this.displayData(); });
+            .then(() => { this.displayData(); })
+            .catch(err => this.displayError(err));
     }
 
     private setupEventListeners() {
