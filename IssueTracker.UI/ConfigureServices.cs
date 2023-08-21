@@ -29,6 +29,7 @@ namespace IssueTracker.UI
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Home/AccessDenied";
             });
             services.AddAuthorization(options =>
             {
