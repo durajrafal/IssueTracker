@@ -1,6 +1,8 @@
-﻿using FluentValidation;
+﻿using FluentAssertions;
+using FluentValidation;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.CreateProject;
+using IssueTracker.Domain.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

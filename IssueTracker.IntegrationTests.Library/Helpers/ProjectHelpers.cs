@@ -1,4 +1,5 @@
-﻿using IssueTracker.Domain.Entities;
+﻿using Azure.Core.Pipeline;
+using IssueTracker.Domain.Entities;
 using IssueTracker.Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
@@ -49,9 +50,7 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
             var _project = project.GetAwaiter().GetResult();
             foreach (var member in _project.Members.Skip(numberOfMembersToSkip))
             {
-                var appUser = new ApplicationUser(member.UserId.Substring(0, 8), "Name", "Surname");
-                appUser.Id = member.UserId;
-                await database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
+                await IdentityHelpers.AddIdentityUserFromUserIdAsync(member.UserId, database);
             }
 
             return _project;

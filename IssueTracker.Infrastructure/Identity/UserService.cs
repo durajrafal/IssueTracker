@@ -1,4 +1,5 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Domain.Constants;
 using IssueTracker.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -8,10 +9,12 @@ namespace IssueTracker.Infrastructure.Identity
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UserService(UserManager<ApplicationUser> userManager)
+        public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }   
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
@@ -71,6 +74,29 @@ namespace IssueTracker.Infrastructure.Identity
                     await _userManager.AddClaimAsync(user, newRoleClaim);
                 else
                     await _userManager.ReplaceClaimAsync(user, previousRoleClaim, newRoleClaim);
+            }
+        }
+
+        public async Task AddProjectAccessClaimToUserAsync(string userId, int projectId)
+        {
+            var appUser = await _userManager.FindByIdAsync(userId);
+            if (appUser is not null)
+            {
+                await _userManager.AddClaimAsync(appUser, new Claim(AppClaimTypes.ProjectAccess, projectId.ToString()));
+                await _signInManager.RefreshSignInAsync(appUser);
+            }
+        }
+
+        public async Task RemoveProjectAccessClaimFromUserAsync(string userId, int projectId)
+        {
+            var appUser = await _userManager.FindByIdAsync(userId);
+            if(appUser is not null)
+            {
+                var claims = await _userManager.GetClaimsAsync(appUser);
+                var claim = claims.FirstOrDefault(x => x.Type == AppClaimTypes.ProjectAccess && x.Value == projectId.ToString());
+                if (claim is not null)
+                    await _userManager.RemoveClaimAsync(appUser, claim);
+
             }
         }
     }

@@ -10,6 +10,7 @@ namespace IssueTracker.Application.Common.Interfaces
         Task<IEnumerable<Claim>> GetUserClaimsAsync(string id);
         Task<Claim> GetUserRoleClaimAsync(string id);
         Task ChangeUserRoleClaimAsync(string id, string newRoleClaimValue);
-        
+        Task AddProjectAccessClaimToUserAsync(string userId, int projectId);
+        Task RemoveProjectAccessClaimFromUserAsync(string userId, int projectId);
     }
 }
