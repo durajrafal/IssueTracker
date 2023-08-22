@@ -1,7 +1,9 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Infrastructure.Identity;
+using IssueTracker.UI.Authorization;
 using IssueTracker.UI.Filters;
 using IssueTracker.UI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -45,7 +47,13 @@ namespace IssueTracker.UI
                 {
                     pb.RequireRole("Developer", "Manager", "Admin");
                 });
+                options.AddPolicy("ProjectAccess", pb =>
+                {
+                    pb.Requirements.Add(new ProjectAccessRequirement());
+                });
             });
+
+            services.AddSingleton<IAuthorizationHandler, ProjectAccessHandler>();
 
             return services;
         }

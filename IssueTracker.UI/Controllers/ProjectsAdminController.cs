@@ -39,12 +39,14 @@ namespace IssueTracker.UI.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = "ProjectAccess")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
             return View();
         }
 
+        [Authorize(Policy = "ProjectAccess")]
         [HttpGet("~/api/project-management/{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -53,6 +55,7 @@ namespace IssueTracker.UI.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "ProjectAccess")]
         [HttpPut("~/api/project-management/{id}")]
         public async Task<IActionResult> Edit(int id, [FromBody] UpdateProject command)
         {
@@ -67,6 +70,7 @@ namespace IssueTracker.UI.Controllers
             return Ok();
         }
 
+        [Authorize(Policy = "ProjectAccess")]
         [HttpDelete("~/api/project-management/{id}/{title}")]
         public async Task<IActionResult> Delete(int id, string title)
         {

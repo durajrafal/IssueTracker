@@ -1,7 +1,5 @@
-﻿using IssueTracker.Infrastructure.Identity;
-using IssueTracker.UI.Areas.Identity.Controllers;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
+﻿using IssueTracker.Domain.Constants;
+using IssueTracker.Infrastructure.Identity;
 using System.Collections;
 using System.Net;
 using System.Net.Http.Headers;
@@ -81,12 +79,16 @@ namespace IssueTracker.UI.IntegrationTests.Views
 
     public class AuthorizeTestData : IEnumerable<object[]>
     {
+        private const string Id = "1";
         private const string ACCOUNT_CONTROLLER = "Identity/Account/";
         private const string ADMIN_CONTROLLER = "Identity/Admin/";
         private const string HOME_CONTROLLER = "Home/";
         private const string PROJECTS_ADMIN_CONTROLLER = "Project-Management/";
+        private const string PROJECTS_CONTROLLER = "Projects/";
+        private const string ISSUES_CONTROLLER = $"Projects/{Id}/Issues/";
         private Claim _userAdministrationClaim = new Claim(ClaimTypes.Role, "Admin");
         private Claim _projectManagerClaim = new Claim(ClaimTypes.Role, "Manager");
+        private Claim _projectAccessClaim = new Claim(AppClaimTypes.ProjectAccess, Id);
         public IEnumerator<object[]> GetEnumerator()
         {
             yield return new object[] { ACCOUNT_CONTROLLER + "Update", new List<Claim>(), true };
@@ -97,7 +99,11 @@ namespace IssueTracker.UI.IntegrationTests.Views
             yield return new object[] { HOME_CONTROLLER + "Index", new List<Claim>() };
 
             yield return new object[] { PROJECTS_ADMIN_CONTROLLER + "", new List<Claim> { _projectManagerClaim } };
-            yield return new object[] { PROJECTS_ADMIN_CONTROLLER + "1", new List<Claim> { _projectManagerClaim } };
+            yield return new object[] { PROJECTS_ADMIN_CONTROLLER + Id, new List<Claim> { _projectManagerClaim, _projectAccessClaim } };
+
+            yield return new object[] { PROJECTS_CONTROLLER + Id, new List<Claim> { _projectAccessClaim } , true };
+
+            yield return new object[] { ISSUES_CONTROLLER + "Create", new List<Claim> { _projectAccessClaim }, true };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

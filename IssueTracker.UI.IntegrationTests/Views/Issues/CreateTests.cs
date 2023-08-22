@@ -1,15 +1,11 @@
 ﻿using FluentAssertions;
+using IssueTracker.Domain.Constants;
 using IssueTracker.Domain.Entities;
 using IssueTracker.UI.IntegrationTests;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace IssueTracker.UI.FunctionalTests.Views.Issues
 {
@@ -20,10 +16,13 @@ namespace IssueTracker.UI.FunctionalTests.Views.Issues
         private string FORM_ACTION { get => $"action=\"{URI}\""; }
         public CreateTests() : base()
         {
-            AuthenticateFactory();
-            _project = ProjectHelpers
-                .CreateTestProject("Test Project")
-                .AddToDatabaseAsync(Database)
+            AuthenticateFactory(new List<Claim>()
+            {
+                new Claim(AppClaimTypes.ProjectAccess, "1")
+            });
+            _project = ProjectHelpers.CreateTestProject("Test Project");
+            _project.Id = 1;
+            _project.AddToDatabaseAsync(Database)
                 .SeedDatabaseWithMembersUsersAsync(Database).GetAwaiter().GetResult();
         }
 
@@ -31,7 +30,7 @@ namespace IssueTracker.UI.FunctionalTests.Views.Issues
         public async Task Get_WhenUserAuthenticated_ShouldReturnViewWithFormToCreateIssue()
         { 
             //Act
-            var page = await Client.GetAsync($"/Projects/{_project.Id}/Issues/Create");
+            var page = await Client.GetAsync(URI);
             var pageHtml = await page.Content.ReadAsStringAsync();
 
             //Assert

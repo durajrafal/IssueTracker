@@ -4,11 +4,13 @@ using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Entities;
 using IssueTracker.UI.Filters;
 using IssueTracker.UI.Models.Issues;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IssueTracker.UI.Controllers
 {
+    [Authorize(Policy = "ProjectAccess")]
     [Route("Projects/{projectid}/[controller]")]
     public class IssuesController : ControllerWithMediatR
     {

@@ -1,5 +1,6 @@
 ﻿using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.UI.Models.Projects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IssueTracker.UI.Controllers
@@ -8,6 +9,7 @@ namespace IssueTracker.UI.Controllers
     public class ProjectsController : ControllerWithMediatR
     {
         [HttpGet("{id}")]
+        [Authorize(Policy = "ProjectAccess")]
         public async Task<IActionResult> Details(int id, string? orderBy, string status = "all")
         {
             var query = new GetProjectDetails { ProjectId = id };
