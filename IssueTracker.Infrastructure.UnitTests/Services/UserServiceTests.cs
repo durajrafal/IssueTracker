@@ -56,12 +56,12 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
         }
 
         [Fact]
-        public async Task AddProjectAccessClaimToUserAsync_WhenUserExists_ShouldAddClaimAndRefreshSignIn()
+        public async Task AddProjectAccessClaimToUserAsync_WhenUserExists_ShouldCallAddClaimAndRefreshSignIn()
         {
             //Arrange
             var projectId = 1;
             var appUser = new ApplicationUser("email@test.com", "Joe", "Doe");
-            var claim = new System.Security.Claims.Claim(AppClaimTypes.ProjectAccess, projectId.ToString());
+            var claim = new Claim(AppClaimTypes.ProjectAccess, projectId.ToString());
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(appUser);
             _mockUserManager.Setup(x => x.AddClaimAsync(appUser, claim));
@@ -71,8 +71,30 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
             await userService.AddProjectAccessClaimToUserAsync(appUser.Id, projectId);
 
             //Assert
-            _mockUserManager.Verify(x => x.AddClaimAsync(It.IsAny<ApplicationUser>(), It.IsAny<Claim>()));
+            _mockUserManager.Verify(x => 
+                x.AddClaimAsync(appUser, It.Is<Claim>(x => x.Type == AppClaimTypes.ProjectAccess &&  x.Value == projectId.ToString())));
             _mockSignInManager.Verify(x => x.RefreshSignInAsync(appUser), Times.Once);
+        }
+
+        [Fact]
+        public async Task RemoveProjectAccessClaimFromUserAsync_WhenUserExistsAndHasClaim_ShouldCallRemoveClaim()
+        {
+            //Arrange
+            var projectId = 1;
+            var appUser = new ApplicationUser("email@test.com", "Joe", "Doe");
+            var claim = new Claim(AppClaimTypes.ProjectAccess, projectId.ToString());
+            _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(appUser);
+            _mockUserManager.Setup(x => x.GetClaimsAsync(appUser)).ReturnsAsync(new List<Claim>() { claim });
+            _mockUserManager.Setup(x => x.RemoveClaimAsync(appUser, claim));
+            IUserService userService = new UserService(_mockUserManager.Object, _mockSignInManager.Object);
+
+            //Act
+            await userService.RemoveProjectAccessClaimFromUserAsync(appUser.Id, projectId);
+
+            //Assert
+            _mockUserManager.Verify(x => x.RemoveClaimAsync(It.IsAny<ApplicationUser>(), It.IsAny<Claim>()));
+            _mockUserManager.Verify(x => x.RemoveClaimAsync(appUser, claim));
         }
     }
 }
