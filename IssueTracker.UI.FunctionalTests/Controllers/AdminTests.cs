@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 
-namespace IssueTracker.UI.IntegrationTests.Controllers
+namespace IssueTracker.UI.FunctionalTests.Controllers
 {
     public class AdminTests : UiTestsFixture
     {

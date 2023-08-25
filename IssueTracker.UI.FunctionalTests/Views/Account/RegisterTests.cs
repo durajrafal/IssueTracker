@@ -1,12 +1,10 @@
 ﻿using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
-namespace IssueTracker.UI.IntegrationTests.Views.Account
+namespace IssueTracker.UI.FunctionalTests.Views.Account
 {
     public class RegisterTests : UiTestsFixture
     {

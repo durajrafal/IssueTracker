@@ -1,19 +1,10 @@
-﻿using Castle.Components.DictionaryAdapter.Xml;
-using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Infrastructure.Identity;
+﻿using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IssueTracker.UI.IntegrationTests.Views.Account
+namespace IssueTracker.UI.FunctionalTests.Views.Account
 {
     public class ForgotPasswordTests : UiTestsFixture
     {

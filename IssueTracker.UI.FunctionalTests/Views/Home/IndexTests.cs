@@ -3,7 +3,7 @@ using IssueTracker.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 
-namespace IssueTracker.UI.IntegrationTests.Views.Home
+namespace IssueTracker.UI.FunctionalTests.Views.Home
 {
     public class IndexTests : UiTestsFixture
     {

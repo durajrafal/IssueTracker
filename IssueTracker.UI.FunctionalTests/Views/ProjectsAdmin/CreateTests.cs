@@ -4,10 +4,9 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using IssueTracker.Application.Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using FluentAssertions;
 using IssueTracker.Domain.Constants;
 
-namespace IssueTracker.UI.IntegrationTests.Views.Projects
+namespace IssueTracker.UI.FunctionalTests.Views.Projects
 {
     public class CreateTests : UiTestsFixture
     {

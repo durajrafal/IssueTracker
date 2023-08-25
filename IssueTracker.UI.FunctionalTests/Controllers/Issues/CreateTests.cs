@@ -1,17 +1,8 @@
 ﻿using IssueTracker.UI.Controllers;
-using IssueTracker.UI.IntegrationTests;
+using IssueTracker.UI.FunctionalTests;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Mvc;
-using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
-using IssueTracker.Infrastructure.Identity;
 
 namespace IssueTracker.UI.FunctionalTests.Controllers.Issues
 {

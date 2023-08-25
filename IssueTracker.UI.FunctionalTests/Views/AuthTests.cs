@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 
-namespace IssueTracker.UI.IntegrationTests.Views
+namespace IssueTracker.UI.FunctionalTests.Views
 {
     public class AuthTests : UiTestsFixture
     {

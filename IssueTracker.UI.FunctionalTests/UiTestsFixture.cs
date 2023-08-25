@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using System.Security.Claims;
 
-namespace IssueTracker.UI.IntegrationTests
+namespace IssueTracker.UI.FunctionalTests
 {
     public class UiTestsFixture : TestsFixture
     {

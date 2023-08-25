@@ -1,7 +1,5 @@
-﻿using FluentAssertions;
-using IssueTracker.Domain.Constants;
+﻿using IssueTracker.Domain.Constants;
 using IssueTracker.Domain.Entities;
-using IssueTracker.UI.IntegrationTests;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.EntityFrameworkCore;
 using System.Net;

@@ -4,7 +4,7 @@ using IssueTracker.UI.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IssueTracker.UI.IntegrationTests.Views.Account
+namespace IssueTracker.UI.FunctionalTests.Views.Account
 {
     public class UpdateTests : UiTestsFixture
     {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using IssueTracker.UI.Areas.Identity.Controllers;
 using IssueTracker.UI.Models.Account;
 
-namespace IssueTracker.UI.IntegrationTests.Controllers
+namespace IssueTracker.UI.FunctionalTests.Controllers
 {
     public class EmailTests : UiTestsFixture
     {
