@@ -12,6 +12,10 @@ namespace IssueTracker.Domain.Entities
 
         public bool Equals(Member other)
         {
+            if (other is null)
+            {
+                return false;
+            }
             return UserId == other.UserId;
         }
 

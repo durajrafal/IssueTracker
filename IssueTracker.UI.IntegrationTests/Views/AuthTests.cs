@@ -84,6 +84,7 @@ namespace IssueTracker.UI.IntegrationTests.Views
         private const string ADMIN_CONTROLLER = "Identity/Admin/";
         private const string HOME_CONTROLLER = "Home/";
         private const string PROJECTS_ADMIN_CONTROLLER = "Project-Management/";
+        private const string PROJECTS_ADMIN_API = "/api/project-management/";
         private const string PROJECTS_CONTROLLER = "Projects/";
         private const string ISSUES_CONTROLLER = $"Projects/{Id}/Issues/";
         private Claim _userAdministrationClaim = new Claim(ClaimTypes.Role, "Admin");
@@ -100,6 +101,7 @@ namespace IssueTracker.UI.IntegrationTests.Views
 
             yield return new object[] { PROJECTS_ADMIN_CONTROLLER + "", new List<Claim> { _projectManagerClaim } };
             yield return new object[] { PROJECTS_ADMIN_CONTROLLER + Id, new List<Claim> { _projectManagerClaim, _projectAccessClaim } };
+            yield return new object[] { PROJECTS_ADMIN_API + Id, new List<Claim> { _projectManagerClaim, _projectAccessClaim }, true };
 
             yield return new object[] { PROJECTS_CONTROLLER + Id, new List<Claim> { _projectAccessClaim } , true };
 
