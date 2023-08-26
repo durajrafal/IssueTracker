@@ -1,51 +1,54 @@
-﻿using IssueTracker.Domain.Constants;
+﻿using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Domain.Constants;
+using IssueTracker.Domain.Entities;
 using IssueTracker.Infrastructure.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 
 namespace IssueTracker.UI.FunctionalTests.Views
 {
     public class AuthTests : UiTestsFixture
     {
+        private Project _project;
         public AuthTests() : base()
         {
-
+            _project = ProjectHelpers.CreateTestProject(nameof(AuthTests));
+            _project.Id = 1;
         }
 
         [Theory]
         [ClassData(typeof(AuthorizeTestData))]
-        public async Task GetEndpoint_WhenAuthorized_ShouldReturnEndpoint(string uri, List<Claim> claims, bool expectError = false)
+        public async Task GetEndpoint_WhenAuthorized_ShouldReturnEndpoint(string uri, List<Claim> claims)
         {
+            //Arrange
             AuthenticateFactory(claims);
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
+            var updatedUri = await PrepareApplicationForTestAsync(uri);
 
-            var response = await Client.GetAsync(uri);
-            if (expectError)
-            {
-                Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            }
-            else
-            {
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            }
-                
+            //Act
+            var response = await Client.GetAsync(updatedUri);
+
+            //Assert 
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
         }
 
         [Theory]
         [ClassData(typeof(AuthorizeTestData))]
-        public async Task GetEndpoint_WhenNotAuthorized_ShouldNotReturnEndpoint(string uri, List<Claim> claims, bool expectError = false)
+        public async Task GetEndpoint_WhenNotAuthorized_ShouldNotReturnEndpoint(string uri, List<Claim> claims)
         {
+            //Arrange
             bool hasClaim = claims.Count > 0;
             if (hasClaim)
             {
                 AuthenticateFactory();
             }
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthHandler.AuthenticationScheme);
 
+            //Act
             var response = await Client.GetAsync(uri);
 
+            //Assert
             if (hasClaim)
                 Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
             else
@@ -58,6 +61,7 @@ namespace IssueTracker.UI.FunctionalTests.Views
         [Fact]
         public void SeedDatabase_Always_ShouldHaveAllTestUsers()
         {
+            //Assert
             var users = Database.Func<AuthDbContext, List<ApplicationUser>>(ctx =>
             {
                 return ctx.Users.ToList();
@@ -75,6 +79,33 @@ namespace IssueTracker.UI.FunctionalTests.Views
             Assert.Contains("admin@test.com", users.Select(x => x.UserName));
         }
 
+        private async Task<string> PrepareApplicationForTestAsync(string uri)
+        {
+            if (uri.Contains("1"))
+            {
+                _project.AddToDatabaseAsync(Database).GetAwaiter().GetResult();
+            }
+            if (uri.StartsWith("Identity"))
+            {
+                var currentUserService = Factory.Services.GetRequiredService<ICurrentUserService>();
+                var appUser = new ApplicationUser("email@test.com", "Current", "User");
+                appUser.Id = currentUserService.UserId;
+                await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
+                var userClaim = new Microsoft.AspNetCore.Identity.IdentityUserClaim<string>()
+                {
+                    UserId = appUser.Id,
+                    ClaimType = ClaimTypes.Role,
+                    ClaimValue = "Developer"
+                };
+                await Database.ActionAsync<AuthDbContext>(ctx => ctx.UserClaims.AddAsync(userClaim));
+                if (uri.EndsWith("GetUserClaims/"))
+                {
+                    return uri + currentUserService.UserId;
+                }
+            }
+
+            return uri;
+        }
     }
 
     public class AuthorizeTestData : IEnumerable<object[]>
@@ -92,20 +123,20 @@ namespace IssueTracker.UI.FunctionalTests.Views
         private Claim _projectAccessClaim = new Claim(AppClaimTypes.ProjectAccess, Id);
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { ACCOUNT_CONTROLLER + "Update", new List<Claim>(), true };
+            yield return new object[] { ACCOUNT_CONTROLLER + "Update", new List<Claim>() };
 
             yield return new object[] { ADMIN_CONTROLLER + "Users", new List<Claim> { _userAdministrationClaim } };
-            yield return new object[] { ADMIN_CONTROLLER + "GetUserClaims", new List<Claim> { _userAdministrationClaim }, true };
-            
+            yield return new object[] { ADMIN_CONTROLLER + "GetUserClaims/", new List<Claim> { _userAdministrationClaim } };
+
             yield return new object[] { HOME_CONTROLLER + "Index", new List<Claim>() };
 
             yield return new object[] { PROJECTS_ADMIN_CONTROLLER + "", new List<Claim> { _projectManagerClaim } };
             yield return new object[] { PROJECTS_ADMIN_CONTROLLER + Id, new List<Claim> { _projectManagerClaim, _projectAccessClaim } };
-            yield return new object[] { PROJECTS_ADMIN_API + Id, new List<Claim> { _projectManagerClaim, _projectAccessClaim }, true };
+            yield return new object[] { PROJECTS_ADMIN_API + Id, new List<Claim> { _projectManagerClaim, _projectAccessClaim } };
 
-            yield return new object[] { PROJECTS_CONTROLLER + Id, new List<Claim> { _projectAccessClaim } , true };
+            yield return new object[] { PROJECTS_CONTROLLER + Id, new List<Claim> { _projectAccessClaim } };
 
-            yield return new object[] { ISSUES_CONTROLLER + "Create", new List<Claim> { _projectAccessClaim }, true };
+            yield return new object[] { ISSUES_CONTROLLER + "Create", new List<Claim> { _projectAccessClaim } };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
