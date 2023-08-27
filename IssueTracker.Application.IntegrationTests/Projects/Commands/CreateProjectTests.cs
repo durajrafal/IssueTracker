@@ -98,5 +98,23 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 
             Assert.Equal(1, Database.Func(x => x.Members.Where(m => m.UserId == userId).Count()));
         }
+
+        [Fact]
+        public async Task Handle_WhenProjectAddedToDatabase_ShouldAddClaimToProjectMember()
+        {
+            //Arrange
+            var command = new CreateProject { Title = nameof(Handle_WhenProjectAddedToDatabase_ShouldAddClaimToProjectMember) };
+            var userService = GetScopedService<IUserService>();
+            var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
+            await IdentityHelpers.AddIdentityUserFromUserIdAsync(userId, Database);
+
+            //Act
+            var response = await Mediator.Send(command);
+
+            //Assert
+            var userClaims = await userService.GetUserClaimsAsync(userId);
+            var addedProject = Database.Func(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Title == command.Title));
+            userClaims.Should().Contain(x => x.Type == AppClaimTypes.ProjectAccess && x.Value == addedProject.Id.ToString());
+        }
     }
 }

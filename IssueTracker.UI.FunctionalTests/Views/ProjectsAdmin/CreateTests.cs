@@ -65,25 +65,5 @@ namespace IssueTracker.UI.FunctionalTests.Views.Projects
             var addedProject = Database.Func(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Title == model.Title));
             Assert.Contains(userId, addedProject.Members.Select(x => x.UserId));
         }
-
-        [Fact]
-        public async Task Handle_WhenProjectAddedToDatabase_ShouldAddClaimToProjectMember()
-        {
-            //Arrange
-            var claims = new List<Claim> { new Claim(ClaimTypes.Role, "Manager") };
-            AuthenticateFactory(claims);
-            var model = new { Title = nameof(Post_WhenUserInManagerRole_ShouldAddProjectToDatabase) };
-            var userService = GetScopedService<IUserService>();
-            var userId = Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
-            await IdentityHelpers.AddIdentityUserFromUserIdAsync(userId, Database);
-
-            //Act
-            var response = await Client.SendFormAsync(HttpMethod.Post, "/Project-Management/Create", model);
-
-            //Assert
-            var userClaims = await userService.GetUserClaimsAsync(userId);
-            var addedProject = Database.Func(ctx => ctx.Projects.Include(x => x.Members).First(x => x.Title == model.Title));
-            userClaims.Should().Contain(x => x.Type == AppClaimTypes.ProjectAccess && x.Value == addedProject.Id.ToString());
-        }
     }
 }

@@ -5,13 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.IntegrationTests.Library.Common
 {
-    public partial class TestUserService : ICurrentUserService
+    public partial class TestCurrentUserService : ICurrentUserService
     {
         private readonly string _userId;
 
         public string UserId => _userId;
 
-        public TestUserService()
+        public TestCurrentUserService()
         {
             _userId = Guid.NewGuid().ToString();
         }

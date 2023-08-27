@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using IssueTracker.Infrastructure.Identity;
 using Moq;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace IssueTracker.IntegrationTests.Library.Common
 {
@@ -31,7 +34,7 @@ namespace IssueTracker.IntegrationTests.Library.Common
                     options.UseInMemoryDatabase(dbName);
                 });
                 services.Remove<ICurrentUserService>()
-                    .AddSingleton<ICurrentUserService, TestUserService>();
+                    .AddSingleton<ICurrentUserService, TestCurrentUserService>();
 
                 services.AddAntiforgery(setup =>
                 {
@@ -67,10 +70,20 @@ namespace IssueTracker.IntegrationTests.Library.Common
                     It.IsNotNull<string>()))
                     .Returns(Task.FromResult(false));
                 });
+
+                var mockSignInManager = new Mock<SignInManager<ApplicationUser>>(
+                    services.BuildServiceProvider().GetRequiredService<UserManager<ApplicationUser>>(),
+                    Mock.Of<IHttpContextAccessor>(),
+                    Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>(),
+                    null, null, null, null);
+
+                services.Remove<IUserService>()
+                    .AddScoped<IUserService>(serviceProvider =>
+                    new UserService(serviceProvider.GetRequiredService<UserManager<ApplicationUser>>(), mockSignInManager.Object));
             });
 
         }
 
-        
+
     }
 }
