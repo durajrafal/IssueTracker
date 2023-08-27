@@ -6,11 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.UI.FunctionalTests.Views.Account
 {
-    public class UpdateTests : UiTestsFixture
+    public class UpdateViewTests : UiTestsFixture
     {
         UpdateViewModel _vm;
         private const string UPDATE_URI = "/Identity/Account/Update";
-        public UpdateTests() : base()
+        public UpdateViewTests() : base()
         {
             AuthenticateFactory();
             _vm = new UpdateViewModel

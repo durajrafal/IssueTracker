@@ -6,11 +6,11 @@ using System.Net;
 
 namespace IssueTracker.UI.FunctionalTests.Views.Account
 {
-    public class RegisterTests : UiTestsFixture
+    public class RegisterViewTests : UiTestsFixture
     {
         private const string REGISTER_URI = "/Identity/Account/Register";
         private RegisterViewModel _user;
-        public RegisterTests() : base()
+        public RegisterViewTests() : base()
         {
             _user = new RegisterViewModel
             {

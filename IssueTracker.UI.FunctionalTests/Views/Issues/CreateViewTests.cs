@@ -7,12 +7,12 @@ using System.Security.Claims;
 
 namespace IssueTracker.UI.FunctionalTests.Views.Issues
 {
-    public class CreateTests : UiTestsFixture
+    public class CreateViewTests : UiTestsFixture
     {
         private Project _project;
         private string URI { get => $"/Projects/{_project.Id}/Issues/Create"; }
         private string FORM_ACTION { get => $"action=\"{URI}\""; }
-        public CreateTests() : base()
+        public CreateViewTests() : base()
         {
             AuthenticateFactory(new List<Claim>()
             {

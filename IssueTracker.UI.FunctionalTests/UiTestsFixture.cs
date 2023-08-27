@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IssueTracker.UI.Controllers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
@@ -24,6 +26,22 @@ namespace IssueTracker.UI.FunctionalTests
         {
             Factory = Factory.MakeAuthenticatedWithClaims(claims);
             UpdateFactoryDependentProperties();
+        }
+
+        public T CreateControllerWithContext<T>() where T: ControllerWithMediatR, new()
+        {
+            var httpContext = new DefaultHttpContext()
+            {
+                RequestServices = ScopeFactory.CreateScope().ServiceProvider
+            };
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext
+            };
+            return new T()
+            {
+                ControllerContext = controllerContext
+            };
         }
 
         private void UpdateFactoryDependentProperties()

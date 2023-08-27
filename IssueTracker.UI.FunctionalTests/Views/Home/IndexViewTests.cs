@@ -5,9 +5,9 @@ using System.Net.Http.Headers;
 
 namespace IssueTracker.UI.FunctionalTests.Views.Home
 {
-    public class IndexTests : UiTestsFixture
+    public class IndexViewTests : UiTestsFixture
     {
-        public IndexTests() : base()
+        public IndexViewTests() : base()
         {
             AuthenticateFactory();
         }

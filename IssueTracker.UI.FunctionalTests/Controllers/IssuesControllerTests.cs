@@ -1,29 +1,16 @@
 ﻿using IssueTracker.UI.Controllers;
-using IssueTracker.UI.FunctionalTests;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
-namespace IssueTracker.UI.FunctionalTests.Controllers.Issues
+namespace IssueTracker.UI.FunctionalTests.Controllers
 {
-    public class CreateTests : UiTestsFixture
+    public class IssuesControllerTests : UiTestsFixture
     {
         private readonly IssuesController _controller;
-        public CreateTests()
+        public IssuesControllerTests()
         {
             AuthenticateFactory();
-            var httpContext = new DefaultHttpContext()
-            {
-                RequestServices = ScopeFactory.CreateScope().ServiceProvider
-            };
-            var controllerContext = new ControllerContext()
-            {
-                HttpContext = httpContext
-            };
-            _controller = new IssuesController()
-            {
-                ControllerContext = controllerContext
-            };
+            _controller = CreateControllerWithContext<IssuesController>();
         }
 
         [Fact]

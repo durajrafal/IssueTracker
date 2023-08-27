@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.UI.FunctionalTests.Services
 {
-    public class EmailPreparationTests : UiTestsFixture
+    public class EmailPreparationServiceTests : UiTestsFixture
     {
-        public EmailPreparationTests() : base()
+        public EmailPreparationServiceTests() : base()
         {
 
         }

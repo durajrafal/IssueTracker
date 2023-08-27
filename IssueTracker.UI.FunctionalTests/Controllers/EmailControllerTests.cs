@@ -7,11 +7,11 @@ using IssueTracker.UI.Models.Account;
 
 namespace IssueTracker.UI.FunctionalTests.Controllers
 {
-    public class EmailTests : UiTestsFixture
+    public class EmailControllerTests : UiTestsFixture
     {
         private EmailController _controller;
         private const string PASSWORD = "Pass123";
-        public EmailTests() : base()
+        public EmailControllerTests() : base()
         {
             _controller = new EmailController()
             {

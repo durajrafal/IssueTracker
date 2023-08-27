@@ -6,12 +6,12 @@ using System.Net;
 
 namespace IssueTracker.UI.FunctionalTests.Views.Account
 {
-    public class ForgotPasswordTests : UiTestsFixture
+    public class ForgotPasswordViewTests : UiTestsFixture
     {
         private const string FORGOT_URI = "/Identity/Account/ForgotPassword";
         private ForgotPasswordViewModel _vm;
 
-        public ForgotPasswordTests() : base()
+        public ForgotPasswordViewTests() : base()
         {
             _vm = new ForgotPasswordViewModel
             {

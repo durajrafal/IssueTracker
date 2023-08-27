@@ -6,10 +6,10 @@ using System.Net;
 
 namespace IssueTracker.UI.FunctionalTests.Views.Account
 {
-    public class LoginTests : UiTestsFixture
+    public class LoginViewTests : UiTestsFixture
     {
         private const string LOGIN_URI = "/Identity/Account/Login";
-        public LoginTests() : base()
+        public LoginViewTests() : base()
         {
 
         }

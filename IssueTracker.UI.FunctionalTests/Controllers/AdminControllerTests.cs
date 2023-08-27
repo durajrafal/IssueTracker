@@ -9,9 +9,9 @@ using System.Security.Claims;
 
 namespace IssueTracker.UI.FunctionalTests.Controllers
 {
-    public class AdminTests : UiTestsFixture
+    public class AdminControllerTests : UiTestsFixture
     {
-        public AdminTests() : base()
+        public AdminControllerTests() : base()
         {
 
         }

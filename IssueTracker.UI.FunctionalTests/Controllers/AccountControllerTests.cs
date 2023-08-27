@@ -8,10 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.UI.FunctionalTests.Controllers
 {
-    public class AccountTests : UiTestsFixture
+    public class AccountControllerTests : UiTestsFixture
     {
 
-        public AccountTests() : base()
+        public AccountControllerTests() : base()
         {
 
         }

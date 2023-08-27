@@ -8,11 +8,11 @@ using IssueTracker.Domain.Constants;
 
 namespace IssueTracker.UI.FunctionalTests.Views.Projects
 {
-    public class CreateTests : UiTestsFixture
+    public class CreateViewTests : UiTestsFixture
     {
         private const string FORM_ACTION = "action=\"/Project-Management/Create\"";
 
-        public CreateTests() : base()
+        public CreateViewTests() : base()
         {
 
         }
