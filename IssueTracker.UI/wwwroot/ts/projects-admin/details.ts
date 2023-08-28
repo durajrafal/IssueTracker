@@ -49,7 +49,7 @@ class ProjectAdminDetails {
                 if (res.ok)
                     window.history.back();
                 else
-                    res.text().then(t => this.displayError(t));
+                    res.text().then(t => this.displayError(t.substring(1, t.length-1)));
             })
             .catch();
     }

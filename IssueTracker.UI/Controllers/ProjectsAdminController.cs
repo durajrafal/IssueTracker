@@ -48,16 +48,28 @@ namespace IssueTracker.UI.Controllers
 
         [Authorize(Policy = "ProjectAccess")]
         [HttpGet("~/api/project-management/{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IResult> GetDetails(int id)
         {
             var query = new GetProjectDetailsForManagment { ProjectId = id };
-            var result = await Mediator.Send(query);
-            return Ok(result);
+            ProjectManagmentDto result;
+            try
+            {
+                result = await Mediator.Send(query);
+            }
+            catch (Exception e)
+            {
+                if (e is InvalidOperationException && e.Message.Contains("Sequence contains no elements"))
+                {
+                    return TypedResults.NotFound();
+                }
+                return TypedResults.BadRequest();
+            }
+            return TypedResults.Ok(result);
         }
 
         [Authorize(Policy = "ProjectAccess")]
         [HttpPut("~/api/project-management/{id}")]
-        public async Task<IActionResult> Edit(int id, [FromBody] UpdateProject command)
+        public async Task<IResult> Edit(int id, [FromBody] UpdateProject command)
         {
             try
             {
@@ -65,18 +77,25 @@ namespace IssueTracker.UI.Controllers
             }
             catch (ValidationException ve)
             {
-                return BadRequest(ve.Errors.First().ErrorMessage);
+                return TypedResults.BadRequest(ve.Errors.First().ErrorMessage);
             }
-            return Ok();
+            return TypedResults.Ok();
         }
 
         [Authorize(Policy = "ProjectAccess")]
         [HttpDelete("~/api/project-management/{id}/{title}")]
-        public async Task<IActionResult> Delete(int id, string title)
+        public async Task<IResult> Delete(int id, string title)
         {
             var command = new DeleteProject { ProjectId = id, Title = title };
-            await Mediator.Send(command);
-            return Ok();
+            try
+            {
+                await Mediator.Send(command);
+            }
+            catch (ValidationException ve)
+            {
+                return TypedResults.BadRequest(ve.Errors.First().ErrorMessage);
+            }
+            return TypedResults.Ok();
         }
     }
 }

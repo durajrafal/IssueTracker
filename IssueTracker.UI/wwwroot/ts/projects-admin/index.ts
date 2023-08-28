@@ -1,10 +1,11 @@
 class DeleteProjectModal {
-
+    private enteredTitleField: HTMLInputElement
     constructor() {
         const deleteButtons = document.querySelectorAll('[data-show-delete-modal]') as NodeListOf<HTMLButtonElement>;
         deleteButtons.forEach(button => {
             button.addEventListener('click', () => { this.setDeleteModal(button.dataset.title, button.dataset.id); });
         });
+        this.enteredTitleField = document.querySelector('[data-delete-project-title]') as HTMLInputElement;
     }
 
     private setDeleteModal(title: string, id: string) {
@@ -20,32 +21,43 @@ class DeleteProjectModal {
     }
 
     private deleteProject(title: string, id: string) {
-        const enteredTitleField = document.querySelector('[data-delete-project-title]') as HTMLInputElement;
-        const enteredTitle = enteredTitleField.value;
+        const enteredTitle = this.enteredTitleField.value;
         if (title === enteredTitle) {
             const baseUrl = window.location.origin;
-            const url = baseUrl + '/api/project-management/' + id + '/' + title;
+            const url = baseUrl + '/api/project-management/' + id + '/' + enteredTitle;
             fetch(url, {
                 method: 'DELETE',
                 headers: {
                     "RequestVerificationToken": (<HTMLInputElement>document.querySelector('input[name="__RequestVerificationToken"]')).value as string
                 },
             })
-                .then(() => {
-                    window.location.href = baseUrl + '/project-management/';
-                });
+                .then(res => {
+                    if (res.ok)
+                        window.location.href = baseUrl + '/project-management/';
+                    else
+                        res.text().then(t => {
+                            const validationFeedback = document.querySelector('[data-delete-project-feedback]');
+                            validationFeedback.textContent = t.substring(1, t.length - 1);
+                            this.AddKeyStrokeInputValidation(title);
+                        })
+                })
+                .catch();
         }
         else {
-            enteredTitleField.classList.add('is-invalid');
-            enteredTitleField.addEventListener('keyup', () => {
-                if (title === enteredTitleField.value) {
-                    enteredTitleField.classList.replace('is-invalid', 'is-valid');
-                }
-                else {
-                    enteredTitleField.classList.replace('is-valid', 'is-invalid');
-                }
-            });
+            this.AddKeyStrokeInputValidation(title);
         }
+    }
+
+    private AddKeyStrokeInputValidation(title: string) {
+        this.enteredTitleField.classList.add('is-invalid');
+        this.enteredTitleField.addEventListener('keyup', () => {
+            if (title === this.enteredTitleField.value) {
+                this.enteredTitleField.classList.replace('is-invalid', 'is-valid');
+            }
+            else {
+                this.enteredTitleField.classList.replace('is-valid', 'is-invalid');
+            }
+        });
     }
 }
 
