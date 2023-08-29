@@ -1,8 +1,12 @@
-﻿using FluentValidation;
+﻿using FluentAssertions;
+using FluentValidation;
 using IssueTracker.Application.Common.Exceptions;
+using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
+using IssueTracker.Domain.Constants;
 using IssueTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
@@ -88,6 +92,36 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             var command = new UpdateProject { Id = project.Id, Title = takenTitle };
 
             await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
+        }
+
+        [Fact]
+        public async Task Handle_WhenMembersAddedAndRemoved_ShouldAddAndRemoveProjectAccessClaims()
+        {
+            //Arrange
+            var project = await ProjectHelpers
+                .CreateTestProject(nameof(Handle_WhenMembersAddedAndRemoved_ShouldAddAndRemoveProjectAccessClaims))
+                .AddToDatabaseAsync(Database)
+                .SeedDatabaseWithMembersUsersAsync(Database);
+            var addedUserId = Guid.NewGuid().ToString();
+            await IdentityHelpers.AddIdentityUserFromUserIdAsync(addedUserId, Database);
+            ICollection<Member> members = project.Members.Skip(1).ToList();
+            members.Add(new Member() { UserId = addedUserId });
+            var userService = GetScopedService<IUserService>();
+
+            //Act
+            var command = new UpdateProject()
+            {
+                Id = project.Id,
+                Title = project.Title,
+                Members = members
+            };
+            await Mediator.Send(command);
+
+            //Assert
+            var removedUserClaims = await userService.GetUserClaimsAsync(project.Members.First().UserId);
+            var addedUserClaims = await userService.GetUserClaimsAsync(addedUserId);
+            removedUserClaims.Should().NotContain(x => x.Type == AppClaimTypes.ProjectAccess && x.Value == project.Id.ToString());
+            addedUserClaims.Should().Contain(x => x.Type == AppClaimTypes.ProjectAccess && x.Value == project.Id.ToString());
         }
     }
 }

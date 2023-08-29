@@ -22,10 +22,12 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
     public class UpdateProjectCommandHandler : IRequestHandler<UpdateProject, int>
     {
         private readonly IApplicationDbContext _ctx;
+        private readonly IUserService _userService;
 
-        public UpdateProjectCommandHandler(IApplicationDbContext ctx)
+        public UpdateProjectCommandHandler(IApplicationDbContext ctx, IUserService userService)
         {
             _ctx = ctx;
+            _userService = userService;
         }
 
         public async Task<int> Handle(UpdateProject request, CancellationToken cancellationToken)
@@ -45,9 +47,18 @@ namespace IssueTracker.Application.Projects.Commands.UpdateProject
 
             entity.Title = request.Title;
             var membersToAdd = request.Members.Except(entity.Members).ToList();
-            membersToAdd.ForEach(x => entity.Members.AddNewOrExistingMember(_ctx.Members, x.UserId));
+            foreach (var member in membersToAdd)
+            {
+                entity.Members.AddNewOrExistingMember(_ctx.Members, member.UserId);
+                await _userService.AddProjectAccessClaimToUserAsync(member.UserId, entity.Id);
+            }
+
             var membersToRemove = entity.Members.Except(request.Members).ToList();
-            membersToRemove.ForEach(x => entity.Members.Remove(x));
+            foreach (var member in membersToRemove)
+            {
+                entity.Members.Remove(member);
+                await _userService.RemoveProjectAccessClaimFromUserAsync(member.UserId, entity.Id);
+            }
 
             return await _ctx.SaveChangesAsync(cancellationToken);
         }

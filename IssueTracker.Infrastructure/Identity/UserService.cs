@@ -102,7 +102,11 @@ namespace IssueTracker.Infrastructure.Identity
             }
         }
 
-            }
+        public async Task RefreshCurrentUserSignInAsync()
+        {
+            var appUser = await _userManager.FindByIdAsync(_currentUserService.UserId);
+            if (appUser is not null)
+                await _signInManager.RefreshSignInAsync(appUser);
         }
     }
 }
