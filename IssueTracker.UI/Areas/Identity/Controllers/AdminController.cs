@@ -19,7 +19,7 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Users()
         {
-            var users = await _userService.GetAllUsersAsync();
+            var users = _userService.GetAllUsers();
             var vm = users.Select(x => new UserAdminViewModel
             {
                 UserId = x.UserId,

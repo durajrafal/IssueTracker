@@ -10,14 +10,16 @@ namespace IssueTracker.Infrastructure.Identity
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ICurrentUserService currentUserService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _currentUserService = currentUserService;
         }   
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public IEnumerable<User> GetAllUsers()
         {
             var output = new List<User>();
             foreach (var user in _userManager.Users)
@@ -49,16 +51,18 @@ namespace IssueTracker.Infrastructure.Identity
             };
         }
 
-        public async Task<IEnumerable<Claim>> GetUserClaimsAsync(string id)
+        public async Task<IEnumerable<Claim>?> GetUserClaimsAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
+            if (user is null)
+                return default;
             return await _userManager.GetClaimsAsync(user);
         }
 
-        public async Task<Claim> GetUserRoleClaimAsync(string id)
+        public async Task<Claim?> GetUserRoleClaimAsync(string id)
         {
             var claims = await GetUserClaimsAsync(id);
-            return claims.FirstOrDefault(x => x.Type == ClaimTypes.Role);
+            return claims?.FirstOrDefault(x => x.Type == ClaimTypes.Role);
         }
 
         public async Task ChangeUserRoleClaimAsync(string id, string newRoleClaimValue)
@@ -83,7 +87,6 @@ namespace IssueTracker.Infrastructure.Identity
             if (appUser is not null)
             {
                 await _userManager.AddClaimAsync(appUser, new Claim(AppClaimTypes.ProjectAccess, projectId.ToString()));
-                await _signInManager.RefreshSignInAsync(appUser);
             }
         }
 
@@ -96,6 +99,8 @@ namespace IssueTracker.Infrastructure.Identity
                 var claim = claims.FirstOrDefault(x => x.Type == AppClaimTypes.ProjectAccess && x.Value == projectId.ToString());
                 if (claim is not null)
                     await _userManager.RemoveClaimAsync(appUser, claim);
+            }
+        }
 
             }
         }

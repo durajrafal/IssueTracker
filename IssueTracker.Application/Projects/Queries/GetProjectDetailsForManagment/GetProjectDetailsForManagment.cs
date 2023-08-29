@@ -27,7 +27,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
                 .Include(x => x.Members)
                 .FirstAsync(x => x.Id == request.ProjectId);
 
-            var allUsers = await _userService.GetAllUsersAsync();
+            var allUsers = _userService.GetAllUsers();
             var otherUsers = allUsers.ExceptBy(entity.Members.Select(x => x.UserId), allUsers => allUsers.UserId);
 
             return new ProjectManagmentDto

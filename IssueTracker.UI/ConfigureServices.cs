@@ -55,7 +55,7 @@ namespace IssueTracker.UI
                 });
             });
 
-            services.AddSingleton<IAuthorizationHandler, ProjectAccessHandler>();
+            services.AddScoped<IAuthorizationHandler, ProjectAccessHandler>();
 
             return services;
         }

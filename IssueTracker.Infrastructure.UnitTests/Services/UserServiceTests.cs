@@ -11,6 +11,7 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
     {
         private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
         private readonly Mock<SignInManager<ApplicationUser>> _mockSignInManager;
+        private readonly Mock<ICurrentUserService> _mockCurrentUserService;
         public UserServiceTests()
         {
             _mockUserManager = new Mock<UserManager<ApplicationUser>>(
@@ -20,6 +21,7 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
                 Mock.Of<IHttpContextAccessor>(), 
                 Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>(), 
                 null, null, null);
+            _mockCurrentUserService = new Mock<ICurrentUserService>();
         }
 
         [Fact]
@@ -29,7 +31,8 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
             var appUser = new ApplicationUser("email@test.com", "Joe", "Doe");
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(appUser);
-            IUserService userService = new UserService(_mockUserManager.Object, _mockSignInManager.Object);
+            IUserService userService = new UserService(_mockUserManager.Object, 
+                _mockSignInManager.Object, _mockCurrentUserService.Object);
 
             //Act
             var user = await userService.GetUserByIdAsync("invalidId");
@@ -46,7 +49,8 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
             //Arrange
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync((ApplicationUser)null);
-            IUserService userService = new UserService(_mockUserManager.Object,_mockSignInManager.Object);
+            IUserService userService = new UserService(_mockUserManager.Object,
+                _mockSignInManager.Object, _mockCurrentUserService.Object);
 
             //Act
             var user = await userService.GetUserByIdAsync("invalidId");
@@ -56,7 +60,7 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
         }
 
         [Fact]
-        public async Task AddProjectAccessClaimToUserAsync_WhenUserExists_ShouldCallAddClaimAndRefreshSignIn()
+        public async Task AddProjectAccessClaimToUserAsync_WhenUserExists_ShouldCallAddClaim()
         {
             //Arrange
             var projectId = 1;
@@ -65,7 +69,8 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
             _mockUserManager.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(appUser);
             _mockUserManager.Setup(x => x.AddClaimAsync(appUser, claim));
-            IUserService userService = new UserService(_mockUserManager.Object, _mockSignInManager.Object);
+            IUserService userService = new UserService(_mockUserManager.Object, 
+                _mockSignInManager.Object, _mockCurrentUserService.Object);
 
             //Act
             await userService.AddProjectAccessClaimToUserAsync(appUser.Id, projectId);
@@ -73,7 +78,6 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
             //Assert
             _mockUserManager.Verify(x => 
                 x.AddClaimAsync(appUser, It.Is<Claim>(x => x.Type == AppClaimTypes.ProjectAccess &&  x.Value == projectId.ToString())));
-            _mockSignInManager.Verify(x => x.RefreshSignInAsync(appUser), Times.Once);
         }
 
         [Fact]
@@ -87,7 +91,8 @@ namespace IssueTracker.Infrastructure.UnitTests.Services
                 .ReturnsAsync(appUser);
             _mockUserManager.Setup(x => x.GetClaimsAsync(appUser)).ReturnsAsync(new List<Claim>() { claim });
             _mockUserManager.Setup(x => x.RemoveClaimAsync(appUser, claim));
-            IUserService userService = new UserService(_mockUserManager.Object, _mockSignInManager.Object);
+            IUserService userService = new UserService(_mockUserManager.Object, 
+                _mockSignInManager.Object, _mockCurrentUserService.Object);
 
             //Act
             await userService.RemoveProjectAccessClaimFromUserAsync(appUser.Id, projectId);

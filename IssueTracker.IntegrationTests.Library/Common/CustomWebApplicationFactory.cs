@@ -79,7 +79,9 @@ namespace IssueTracker.IntegrationTests.Library.Common
 
                 services.Remove<IUserService>()
                     .AddScoped<IUserService>(serviceProvider =>
-                    new UserService(serviceProvider.GetRequiredService<UserManager<ApplicationUser>>(), mockSignInManager.Object));
+                    new UserService(serviceProvider.GetRequiredService<UserManager<ApplicationUser>>(),
+                    mockSignInManager.Object, 
+                    serviceProvider.GetRequiredService<ICurrentUserService>()));
             });
 
         }
