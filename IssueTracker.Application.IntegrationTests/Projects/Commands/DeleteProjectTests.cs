@@ -18,8 +18,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         public async Task Handle_WhenTitleAndIdMatch_DeleteProjectFromDatabase()
         {
             //Arrange
-            var project = new Project { Title = nameof(Handle_WhenTitleAndIdMatch_DeleteProjectFromDatabase) };
-            await Database.ActionAsync(ctx => ctx.Projects.AddAsync(project));
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenTitleAndIdMatch_DeleteProjectFromDatabase));
 
             //Act
             var command = new DeleteProject { ProjectId = project.Id, Title = project.Title };
@@ -49,11 +48,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         {
             //Arrange
             var userService = GetScopedService<IUserService>();
-            var project = await ProjectHelpers
-                .CreateTestProject(nameof(Handle_WhenProjectDeletedFromDatabase_ShouldRemoveProjectAccessClaimFromAllMembers))
-                .AddToDatabaseAsync(Database)
-                .SeedDatabaseWithMembersUsersAsync(Database);
-
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenProjectDeletedFromDatabase_ShouldRemoveProjectAccessClaimFromAllMembers));
             var members = project.Members.ToList();
             members.ForEach(async x => await userService.AddProjectAccessClaimToUserAsync(x.UserId, project.Id));
 
@@ -67,6 +62,21 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
                 var claims = await userService.GetUserClaimsAsync(member.UserId);
                 claims.FirstOrDefault(x => x.Type == AppClaimTypes.ProjectAccess)?.Value.Should().BeNull();
             }
+        }
+
+        [Fact]
+        public async Task Handle_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
+                false);
+
+            //Act
+            var command = new DeleteProject { ProjectId = project.Id, Title = project.Title };
+            Func<Task> act = async () => await Mediator.Send(command);
+
+            //Assert
+            await act.Should().ThrowAsync<UnauthorizedAccessException>();
         }
     }
 }

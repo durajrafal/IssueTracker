@@ -150,7 +150,20 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             response.StatusCode.Should().Be(400);
             response.Value.Should().NotBeEmpty();
             Database.Func(ctx => ctx.Projects.FirstOrDefault(x => x.Id == _project.Id)).Should().NotBeNull();
+        }
 
+        [Fact]
+        public async Task DeleteDelete_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var notCurrentUserProject = await SetupTestProjectAsync(nameof(DeleteDelete_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
+                false);
+
+            //Act
+            var response = await _controller.Delete(notCurrentUserProject.Id, notCurrentUserProject.Title) as ForbidHttpResult;
+
+            //Assert
+            response.Should().NotBeNull();
         }
     }
 }

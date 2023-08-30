@@ -1,13 +1,10 @@
-﻿using IssueTracker.Application.Common.Exceptions;
+﻿using IssueTracker.Application.Common.AccessPolicies;
+using IssueTracker.Application.Common.Exceptions;
+using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Projects.Commands.DeleteProject
 {
@@ -32,7 +29,12 @@ namespace IssueTracker.Application.Projects.Commands.DeleteProject
         {
             var entity = _ctx.Projects
                 .Include(x => x.Members)
-                .FirstOrDefault(x => x.Id == request.ProjectId);
+                .FirstOrDefault(x => x.Id == request.ProjectId)
+                .ApplyPolicy(new ProjectCanBeAccessedOnlyByMember(),_userService.GetCurrentUserId());
+
+            if (entity is null)
+                throw new NotFoundException(nameof(Project), request.ProjectId.ToString());
+
             entity.Members.ToList().ForEach(x => _userService.RemoveProjectAccessClaimFromUserAsync(x.UserId, entity.Id));
             _ctx.Projects.Remove(entity);
             return await _ctx.SaveChangesAsync(cancellationToken);
