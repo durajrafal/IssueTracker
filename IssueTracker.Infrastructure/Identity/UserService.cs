@@ -108,5 +108,10 @@ namespace IssueTracker.Infrastructure.Identity
             if (appUser is not null)
                 await _signInManager.RefreshSignInAsync(appUser);
         }
+
+        public string GetCurrentUserId()
+        {
+            return _currentUserService.UserId;
+        }
     }
 }

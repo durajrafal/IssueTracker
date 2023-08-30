@@ -1,4 +1,5 @@
-﻿using IssueTracker.Application.Common.Helpers;
+﻿using IssueTracker.Application.Common.AccessPolicies;
+using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +24,10 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
 
         public async Task<ProjectManagmentDto> Handle(GetProjectDetailsForManagment request, CancellationToken cancellationToken)
         {
-            var entity = await _ctx.Projects
+            var entity = _ctx.Projects
                 .Include(x => x.Members)
-                .FirstAsync(x => x.Id == request.ProjectId);
+                .FirstAsync(x => x.Id == request.ProjectId).GetAwaiter().GetResult()
+                .ApplyPolicy(new ProjectCanBeAccessedOnlyByMember(),_userService.GetCurrentUserId());
 
             var allUsers = _userService.GetAllUsers();
             var otherUsers = allUsers.ExceptBy(entity.Members.Select(x => x.UserId), allUsers => allUsers.UserId);

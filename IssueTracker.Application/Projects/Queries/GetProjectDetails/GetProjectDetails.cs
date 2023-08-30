@@ -1,6 +1,6 @@
-﻿using IssueTracker.Application.Common.Helpers;
+﻿using IssueTracker.Application.Common.AccessPolicies;
+using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,22 +15,26 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
     {
         private readonly IApplicationDbContext _ctx;
         private readonly IUserService _userService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public GetProjectDetailsQueryHandler(IApplicationDbContext ctx, IUserService userService)
+        public GetProjectDetailsQueryHandler(IApplicationDbContext ctx, IUserService userService, ICurrentUserService currentUserService)
         {
             _ctx = ctx;
             _userService = userService;
+            _currentUserService = currentUserService;
         }
 
         public async Task<ProjectDto> Handle(GetProjectDetails request, CancellationToken cancellationToken)
         {
-            var entity = await _ctx.Projects
+            var entity = _ctx.Projects
+                .AsNoTracking()
                 .Include(x => x.Members)
                 .Include(x => x.Issues)
                 .ThenInclude(y => y.Members)
-                .FirstAsync(x => x.Id == request.ProjectId);
+                .FirstAsync(x => x.Id == request.ProjectId).GetAwaiter().GetResult()
+                .ApplyPolicy(new ProjectCanBeAccessedOnlyByMember(), _currentUserService.UserId);
 
-            foreach (var issue in entity.Issues)
+            foreach (var issue in entity?.Issues)
             {
                 await issue.Members.SyncMembersWithUsers(_userService);
             }

@@ -11,11 +11,8 @@ namespace IssueTracker.UI.FunctionalTests.Views
 {
     public class AuthTests : UiTestsFixture
     {
-        private Project _project;
         public AuthTests() : base()
         {
-            _project = ProjectHelpers.CreateTestProject(nameof(AuthTests));
-            _project.Id = 1;
         }
 
         [Theory]
@@ -83,7 +80,9 @@ namespace IssueTracker.UI.FunctionalTests.Views
         {
             if (uri.Contains("1"))
             {
-                _project.AddToDatabaseAsync(Database).GetAwaiter().GetResult();
+                var project = ProjectHelpers.CreateTestProject(nameof(AuthTests), GetCurrentUserId());
+                project.Id = 1;
+                await project.AddToDatabaseAsync(Database);
             }
             if (uri.StartsWith("Identity"))
             {
@@ -110,17 +109,17 @@ namespace IssueTracker.UI.FunctionalTests.Views
 
     public class AuthorizeTestData : IEnumerable<object[]>
     {
-        private const string Id = "1";
+        private const string ProjectId = "1";
         private const string ACCOUNT_CONTROLLER = "Identity/Account/";
         private const string ADMIN_CONTROLLER = "Identity/Admin/";
         private const string HOME_CONTROLLER = "Home/";
         private const string PROJECTS_ADMIN_CONTROLLER = "Project-Management/";
         private const string PROJECTS_ADMIN_API = "/api/project-management/";
         private const string PROJECTS_CONTROLLER = "Projects/";
-        private const string ISSUES_CONTROLLER = $"Projects/{Id}/Issues/";
+        private const string ISSUES_CONTROLLER = $"Projects/{ProjectId}/Issues/";
         private Claim _userAdministrationClaim = new Claim(ClaimTypes.Role, "Admin");
         private Claim _projectManagerClaim = new Claim(ClaimTypes.Role, "Manager");
-        private Claim _projectAccessClaim = new Claim(AppClaimTypes.ProjectAccess, Id);
+        private Claim _projectAccessClaim = new Claim(AppClaimTypes.ProjectAccess, ProjectId);
         public IEnumerator<object[]> GetEnumerator()
         {
             yield return new object[] { ACCOUNT_CONTROLLER + "Update", new List<Claim>() };
@@ -131,10 +130,10 @@ namespace IssueTracker.UI.FunctionalTests.Views
             yield return new object[] { HOME_CONTROLLER + "Index", new List<Claim>() };
 
             yield return new object[] { PROJECTS_ADMIN_CONTROLLER + "", new List<Claim> { _projectManagerClaim } };
-            yield return new object[] { PROJECTS_ADMIN_CONTROLLER + Id, new List<Claim> { _projectManagerClaim, _projectAccessClaim } };
-            yield return new object[] { PROJECTS_ADMIN_API + Id, new List<Claim> { _projectManagerClaim, _projectAccessClaim } };
+            yield return new object[] { PROJECTS_ADMIN_CONTROLLER + ProjectId, new List<Claim> { _projectManagerClaim, _projectAccessClaim } };
+            yield return new object[] { PROJECTS_ADMIN_API + ProjectId, new List<Claim> { _projectManagerClaim, _projectAccessClaim } };
 
-            yield return new object[] { PROJECTS_CONTROLLER + Id, new List<Claim> { _projectAccessClaim } };
+            yield return new object[] { PROJECTS_CONTROLLER + ProjectId, new List<Claim> { _projectAccessClaim } };
 
             yield return new object[] { ISSUES_CONTROLLER + "Create", new List<Claim> { _projectAccessClaim } };
         }

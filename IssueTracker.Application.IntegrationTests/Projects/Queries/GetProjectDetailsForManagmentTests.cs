@@ -13,22 +13,14 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         [Fact]
         public async Task Handle_WhenProjectIdIsValid_ShouldReturnMembersAndAllOtherUsers()
         {
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValid_ShouldReturnMembersAndAllOtherUsers));
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenProjectIdIsValid_ShouldReturnMembersAndAllOtherUsers));
 
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
-            foreach (var member in project.Members)
-            {
-                var appUser = new ApplicationUser(member.UserId.Substring(0, 8), "Name", "Surname");
-                appUser.Id = member.UserId;
-                await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
-            }
-
+            //Act
             var query = new GetProjectDetailsForManagment { ProjectId = project.Id};
             var result = await Mediator.Send(query);
 
+            //Assert
             var projectMembersCount = project.Members.Count;
             var allUsersCount = Database.Func<AuthDbContext, int>(ctx => ctx.Users.Count());
             var otherUsersCount = allUsersCount - projectMembersCount;
@@ -41,18 +33,8 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         public async Task Handle_WhenMemberIsMissingUser_ShouldReturnOnlyMembersWithExistingUsers()
         {
             //Arrange
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenMemberIsMissingUser_ShouldReturnOnlyMembersWithExistingUsers));
-
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
-            foreach (var member in project.Members.Skip(1))
-            {
-                var appUser = new ApplicationUser(member.UserId.Substring(0, 8), "Name", "Surname");
-                appUser.Id = member.UserId;
-                await Database.ActionAsync<AuthDbContext>(ctx => ctx.Users.AddAsync(appUser));
-            }
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenMemberIsMissingUser_ShouldReturnOnlyMembersWithExistingUsers),
+                skipUser: true);
 
             //Act
             var query = new GetProjectDetailsForManagment { ProjectId = project.Id};
@@ -66,6 +48,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         [Fact]
         public async Task Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException()
         {
+            //Arrange
             var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException));
 
             await Database.ActionAsync(async ctx =>
@@ -73,10 +56,27 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
                 await ctx.Projects.AddAsync(project);
             });
 
+            //Act
             var query = new GetProjectDetailsForManagment { ProjectId = 2};
 
+            //Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() => Mediator.Send(query));
             Assert.True(Database.Func(x => x.Projects.Count() > 0));
+        }
+
+        [Fact]
+        public async Task Handle_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
+                false);
+
+            //Act
+            var query = new GetProjectDetailsForManagment() { ProjectId = project.Id };
+            Func<Task> act = async () => await Mediator.Send(query);
+
+            //Assert
+            await act.Should().ThrowAsync<UnauthorizedAccessException>();
         }
     }
 }

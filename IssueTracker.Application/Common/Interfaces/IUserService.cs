@@ -13,5 +13,6 @@ namespace IssueTracker.Application.Common.Interfaces
         Task AddProjectAccessClaimToUserAsync(string userId, int projectId);
         Task RemoveProjectAccessClaimFromUserAsync(string userId, int projectId);
         Task RefreshCurrentUserSignInAsync();
+        string GetCurrentUserId();
     }
 }

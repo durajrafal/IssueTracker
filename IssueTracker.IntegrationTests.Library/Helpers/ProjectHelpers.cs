@@ -1,6 +1,7 @@
 ﻿using Azure.Core.Pipeline;
 using IssueTracker.Domain.Entities;
 using IssueTracker.Infrastructure.Identity;
+using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,16 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
 {
     public static class ProjectHelpers
     {
-        public static Project CreateTestProject(string title)
+        public static Project CreateTestProject(string title, string currentUserId = "")
         {
-            var projectMember1 = new Member { UserId = Guid.NewGuid().ToString() };
-            var projectMember2 = new Member { UserId = Guid.NewGuid().ToString() };
+            Member projectMember2;
 
+            if (currentUserId != "")
+                projectMember2 = new Member { UserId = currentUserId };
+            else
+                projectMember2 = new Member { UserId = Guid.NewGuid().ToString() };
+
+            var projectMember1 = new Member { UserId = Guid.NewGuid().ToString() };
             var issueMember1 = new Member { UserId = projectMember1.UserId };
             var issueMember2 = new Member { UserId = projectMember2.UserId };
 

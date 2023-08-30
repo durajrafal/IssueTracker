@@ -17,10 +17,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
         public async Task GetCreate_WhenProjectIdIsValid_ShouldReturnViewWithSeededModel()
         {
             //Arrange
-            var project = await ProjectHelpers
-                .CreateTestProject(nameof(GetCreate_WhenProjectIdIsValid_ShouldReturnViewWithSeededModel))
-                .AddToDatabaseAsync(Database)
-                .SeedDatabaseWithMembersUsersAsync(Database);
+            var project = await SetupTestProjectAsync(nameof(GetCreate_WhenProjectIdIsValid_ShouldReturnViewWithSeededModel));
 
             //Act
             var response = await _controller.Create(project.Id) as ViewResult;
@@ -37,10 +34,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
         public async Task PostCreate_WhenDataIsInvalid_ShoulReturnViewWithSeededModelAndValidationErrors()
         {
             //Arrange
-            var project = await ProjectHelpers
-                .CreateTestProject(nameof(PostCreate_WhenDataIsInvalid_ShoulReturnViewWithSeededModelAndValidationErrors))
-                .AddToDatabaseAsync(Database)
-                .SeedDatabaseWithMembersUsersAsync(Database);
+            var project = await SetupTestProjectAsync(nameof(PostCreate_WhenDataIsInvalid_ShoulReturnViewWithSeededModelAndValidationErrors));
             var responseGet = await _controller.Create(project.Id) as ViewResult;
             var model = responseGet.Model as CreateIssueViewModel;
 

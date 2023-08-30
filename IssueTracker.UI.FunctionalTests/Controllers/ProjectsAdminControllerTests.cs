@@ -1,13 +1,10 @@
-﻿using IssueTracker.Application.Projects.Commands.DeleteProject;
-using IssueTracker.Application.Projects.Commands.UpdateProject;
+﻿using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment;
 using IssueTracker.Domain.Constants;
 using IssueTracker.Domain.Entities;
 using IssueTracker.UI.Controllers;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace IssueTracker.UI.FunctionalTests.Controllers
@@ -26,9 +23,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             };
             AuthenticateFactory(claims);
 
-            _project = ProjectHelpers.CreateTestProject(nameof(ProjectsAdminControllerTests))
-                .AddToDatabaseAsync(Database)
-                .SeedDatabaseWithMembersUsersAsync(Database).GetAwaiter().GetResult();
+            _project = SetupTestProjectAsync(nameof(ProjectsAdminControllerTests)).GetAwaiter().GetResult();
 
             _controller = CreateControllerWithContext<ProjectsAdminController>();
         }
@@ -56,6 +51,20 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             //Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(404);
+        }
+
+        [Fact]
+        public async Task GetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var notCurrentUserProject = await SetupTestProjectAsync(nameof(GetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
+                false);
+
+            //Act
+            Func<Task> act = async () => await _controller.GetDetails(notCurrentUserProject.Id);
+
+            //Assert
+            act.Should().ThrowAsync<UnauthorizedAccessException>();
         }
 
         [Fact]

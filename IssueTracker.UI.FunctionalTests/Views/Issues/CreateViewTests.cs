@@ -18,10 +18,7 @@ namespace IssueTracker.UI.FunctionalTests.Views.Issues
             {
                 new Claim(AppClaimTypes.ProjectAccess, "1")
             });
-            _project = ProjectHelpers.CreateTestProject("Test Project");
-            _project.Id = 1;
-            _project.AddToDatabaseAsync(Database)
-                .SeedDatabaseWithMembersUsersAsync(Database).GetAwaiter().GetResult();
+            _project = SetupTestProjectAsync("Test Project").GetAwaiter().GetResult();
         }
 
         [Fact]

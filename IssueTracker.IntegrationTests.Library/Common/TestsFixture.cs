@@ -1,4 +1,6 @@
-﻿using IssueTracker.IntegrationTests.Library.Helpers;
+﻿using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Domain.Entities;
+using IssueTracker.IntegrationTests.Library.Helpers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -20,6 +22,20 @@ namespace IssueTracker.IntegrationTests.Library.Common
         public T GetScopedService<T>() where T : notnull
         {
             return ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<T>();
+        }
+
+        public string GetCurrentUserId()
+        {
+            return Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
+        }
+
+        public async Task<Project> SetupTestProjectAsync(string title, bool addCurrentUser = true, bool skipUser = false)
+        {
+            var currentUserId = addCurrentUser ? GetCurrentUserId() : "";
+            var numberOfUsersToSkip = skipUser ? 1 : 0;
+            return await ProjectHelpers.CreateTestProject(title, currentUserId)
+                .AddToDatabaseAsync(Database)
+                .SeedDatabaseWithMembersUsersAsync(Database, numberOfUsersToSkip);
         }
     }
 }

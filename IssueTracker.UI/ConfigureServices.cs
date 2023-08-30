@@ -20,6 +20,7 @@ namespace IssueTracker.UI
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.Filters.Add<ValidationExceptionFilter>();
+                options.Filters.Add<UnauthorizedAccessExceptionFilter>();
             })
                 .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 

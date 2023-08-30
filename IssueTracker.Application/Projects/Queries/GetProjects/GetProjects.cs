@@ -1,4 +1,6 @@
-﻿using IssueTracker.Application.Common.Interfaces;
+﻿using IssueTracker.Application.Common.AccessPolicies;
+using IssueTracker.Application.Common.Helpers;
+using IssueTracker.Application.Common.Interfaces;
 using MediatR;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjects
@@ -22,9 +24,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjects
         public Task<IEnumerable<ProjectSummaryDto>> Handle(GetProjects request, CancellationToken cancellationToken)
         {
             var output = _ctx.Projects
-                .Where(x =>
-                    x.Members.Select(y => y.UserId).Contains(_currentUserService.UserId)
-                )
+                .ApplyPolicy(new ProjectCanBeAccessedOnlyByMember(), _currentUserService.UserId)
                 .Select(x =>
                     new ProjectSummaryDto
                     {
@@ -33,7 +33,6 @@ namespace IssueTracker.Application.Projects.Queries.GetProjects
                         NumberOfMembers = x.Members.Count,
                     }
                 ).AsEnumerable();
-                
 
             return Task.FromResult(output);
         }
