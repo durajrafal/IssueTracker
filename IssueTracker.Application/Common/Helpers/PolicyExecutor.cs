@@ -2,10 +2,10 @@
 
 namespace IssueTracker.Application.Common.Helpers
 {
-    public static class PolicyExecutor
+    internal static class PolicyExecutor
     {
 
-        public static TEntity? ApplyPolicy<TEntity>(this TEntity? entity, IAccessPolicy<TEntity> policy, string userId)
+        internal static TEntity? ApplyPolicy<TEntity>(this TEntity? entity, IAccessPolicy<TEntity> policy, string userId)
         {
             if (entity is null)
                 return default;
