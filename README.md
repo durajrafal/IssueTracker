@@ -14,9 +14,11 @@ Creating issues (tickets) with descriptions, comments, attachments. Issues have 
 * Entity Framework Core
 * Clean architecture
 * CQRS + MediatR
-* Bootstrap 5
 * Unit and integration testing (Xunit) - TDD
 * FluentValidation
+* FluentAssertions
+* Bootstrap 5
+* Typescript
 
 ### Features
 * ✅ Registration + email confirmation + password recovery
@@ -24,6 +26,7 @@ Creating issues (tickets) with descriptions, comments, attachments. Issues have 
 * ✅ Integration testing enviroment setup (factory + helpers methods)
 * ✅ CRUD actions for Project entity
 * ✅ Assigning members to Projects
+* ✅ Project access only for members
 * 🔜 CRUD actions for Issue entity
 * 🔜 Assigning members to Issues
 * 🔜 Working with Issues (commenting, changing status etc.)
