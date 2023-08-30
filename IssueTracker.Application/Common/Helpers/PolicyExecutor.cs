@@ -14,9 +14,5 @@ namespace IssueTracker.Application.Common.Helpers
                 throw new UnauthorizedAccessException();
             return output;
         }
-        public static IQueryable<TEntity> ApplyPolicy<TEntity>(this IQueryable<TEntity> queryable, IAccessPolicy<TEntity> policy, string userId)
-        {
-            return policy.Apply(queryable, userId);
-        }
     }
 }

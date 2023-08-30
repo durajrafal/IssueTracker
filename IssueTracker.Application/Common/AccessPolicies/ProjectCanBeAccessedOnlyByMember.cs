@@ -16,10 +16,5 @@ namespace IssueTracker.Application.Common.AccessPolicies
                 return entity;
             return null;
         }
-        
-        public IQueryable<Project> Apply(IQueryable<Project> queryable, string userId)
-        {
-            return queryable.Where(x => x.Members.Any(m => m.UserId == userId));
-        }
     }
 }

@@ -24,7 +24,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjects
         public Task<IEnumerable<ProjectSummaryDto>> Handle(GetProjects request, CancellationToken cancellationToken)
         {
             var output = _ctx.Projects
-                .ApplyPolicy(new ProjectCanBeAccessedOnlyByMember(), _currentUserService.UserId)
+                .ApplyPolicy(new ProjectsCanBeAccessibleOnlyByMember(), _currentUserService.UserId)!
                 .Select(x =>
                     new ProjectSummaryDto
                     {
