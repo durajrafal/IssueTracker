@@ -46,7 +46,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
         public async Task GetDetails_WhenInvalidId_ShouldReturnNotFound()
         {
             //Act
-            var response = await _controller.GetDetails(0) as NotFound;
+            var response = await _controller.GetDetails(0) as NotFound<string>;
 
             //Assert
             response.Should().NotBeNull();

@@ -1,13 +1,12 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Infrastructure.Identity;
 using IssueTracker.UI.Authorization;
 using IssueTracker.UI.Filters;
 using IssueTracker.UI.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Security.Cryptography.Xml;
+using System.Net;
 using System.Text.Json.Serialization;
 
 namespace IssueTracker.UI
@@ -35,7 +34,11 @@ namespace IssueTracker.UI
             {
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Home/AccessDenied";
+                options.Events.OnRedirectToAccessDenied = ReplaceRedirector(HttpStatusCode.Forbidden, options.Events.OnRedirectToAccessDenied);
+                options.Events.OnRedirectToLogin = ReplaceRedirector(HttpStatusCode.Unauthorized, options.Events.OnRedirectToLogin);
             });
+
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ProjectManagement", pb =>
@@ -60,5 +63,16 @@ namespace IssueTracker.UI
 
             return services;
         }
+        private static Func<RedirectContext<CookieAuthenticationOptions>, Task> ReplaceRedirector(HttpStatusCode statusCode, 
+            Func<RedirectContext<CookieAuthenticationOptions>, Task> existingRedirector) =>
+        context =>
+        {
+            if (context.Request.Path.StartsWithSegments("/api"))
+            {
+                context.Response.StatusCode = (int)statusCode;
+                return Task.CompletedTask;
+            }
+            return existingRedirector(context);
+        };
     }
 }

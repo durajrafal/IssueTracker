@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using IssueTracker.Application.Common.Interfaces;
+﻿using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.CreateProject;
 using IssueTracker.Application.Projects.Commands.DeleteProject;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
@@ -58,11 +57,7 @@ namespace IssueTracker.UI.Controllers
             }
             catch (Exception e)
             {
-                if (e is InvalidOperationException && e.Message.Contains("Sequence contains no elements"))
-                {
-                    return TypedResults.NotFound();
-                }
-                return TypedResults.BadRequest();
+                return GetTypedResultBasedOnExceptionType(e);
             }
             return TypedResults.Ok(result);
         }
@@ -75,9 +70,9 @@ namespace IssueTracker.UI.Controllers
             {
                 await Mediator.Send(command);
             }
-            catch (ValidationException ve)
+            catch (Exception e)
             {
-                return TypedResults.BadRequest(ve.Errors.First().ErrorMessage);
+                return GetTypedResultBasedOnExceptionType(e);
             }
             return TypedResults.Ok();
         }
@@ -91,9 +86,9 @@ namespace IssueTracker.UI.Controllers
             {
                 await Mediator.Send(command);
             }
-            catch (ValidationException ve)
+            catch (Exception e)
             {
-                return TypedResults.BadRequest(ve.Errors.First().ErrorMessage);
+                return GetTypedResultBasedOnExceptionType(e);
             }
             return TypedResults.Ok();
         }

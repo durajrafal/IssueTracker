@@ -16,10 +16,14 @@ class ProjectAdminDetails {
     private getProjectDetails() {
         const id = location.href.split('/').pop();
         const url = this.baseUrl + '/api/project-management/' + id;
+
         fetch(url)
             .then(res => {
-                if (res.ok) {
+                if (res.status == 200) {
                     return res.text()
+                }
+                if (res.status == 404) {
+                    return res.text().then(t => { throw Error(t.substring(1, t.length - 1)); })
                 }
                 throw Error("Something went wrong. Please try again.")
             })
@@ -49,9 +53,9 @@ class ProjectAdminDetails {
                 if (res.ok)
                     window.history.back();
                 else
-                    res.text().then(t => this.displayError(t.substring(1, t.length-1)));
+                    return res.text().then(t => { throw Error(t.substring(1, t.length - 1)); });
             })
-            .catch();
+            .catch(err => this.displayError(err));
     }
 
     private displayData() {
