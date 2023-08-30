@@ -1,6 +1,8 @@
 ﻿using IssueTracker.Application.Common.AccessPolicies;
+using IssueTracker.Application.Common.Exceptions;
 using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,10 +33,13 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 .Include(x => x.Members)
                 .Include(x => x.Issues)
                 .ThenInclude(y => y.Members)
-                .FirstAsync(x => x.Id == request.ProjectId).GetAwaiter().GetResult()
+                .FirstOrDefaultAsync(x => x.Id == request.ProjectId).GetAwaiter().GetResult()
                 .ApplyPolicy(new ProjectCanBeAccessedOnlyByMember(), _currentUserService.UserId);
 
-            foreach (var issue in entity?.Issues)
+            if (entity is null)
+                throw new NotFoundException(nameof(Project), request.ProjectId.ToString());
+
+            foreach (var issue in entity.Issues)
             {
                 await issue.Members.SyncMembersWithUsers(_userService);
             }

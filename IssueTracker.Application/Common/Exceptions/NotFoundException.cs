@@ -21,12 +21,12 @@ namespace IssueTracker.Application.Common.Exceptions
         }
 
         public NotFoundException(string name, string id)
-            : base($"Entity {name} with id={id} not found.")
+            : base($"{name} entity with id={id} not found.")
         {
         }        
         
         public NotFoundException(string name, string id, Exception? innerException)
-            : base($"Entity {name} with id={id} not found.", innerException)
+            : base($"{name} entity with id={id} not found.", innerException)
         {
         }
     }

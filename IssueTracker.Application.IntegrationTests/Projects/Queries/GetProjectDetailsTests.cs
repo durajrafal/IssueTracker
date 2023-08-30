@@ -1,4 +1,5 @@
-﻿using IssueTracker.Application.Projects.Queries.GetProjectDetails;
+﻿using IssueTracker.Application.Common.Exceptions;
+using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 {
@@ -46,10 +47,10 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         }
 
         [Fact]
-        public async Task Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException()
+        public async Task Handle_WhenProjectIdIsInvalid_ThrowsNotFoundException()
         {
             //Arrange
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsInvalid_ThrowsInvalidOperationException), GetCurrentUserId());
+            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsInvalid_ThrowsNotFoundException), GetCurrentUserId());
             await Database.ActionAsync(async ctx =>
             {
                 await ctx.Projects.AddAsync(project);
@@ -59,7 +60,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
             var query = new GetProjectDetails { ProjectId = 0 };
 
             //Assert
-            await Assert.ThrowsAsync<InvalidOperationException>( () => Mediator.Send(query));
+            await Assert.ThrowsAsync<NotFoundException>( () => Mediator.Send(query));
             Assert.True(Database.Func(x => x.Projects.Count() > 0));
         }
 
