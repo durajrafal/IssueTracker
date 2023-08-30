@@ -57,5 +57,27 @@ namespace IssueTracker.UI.FunctionalTests.Views.Issues
             addedIssue.Priority.Should().Be(model.Priority);
             addedIssue.Members.Should().HaveCount(_project.Members.Count);
         }
+
+        [Fact]
+        public async Task Post_WhenIssueIsAddedToProjectWithoutMembership_ShouldReturnForbidden()
+        {
+            //Arrange
+            var projectWithoutMembership = await SetupTestProjectAsync(nameof(Post_WhenIssueIsAddedToProjectWithoutMembership_ShouldReturnForbidden),
+                false);
+            var model = new CreateIssueViewModel()
+            {
+                ProjectId = projectWithoutMembership.Id,
+                Title = nameof(Post_WhenIssueIsAddedToProjectWithoutMembership_ShouldReturnForbidden),
+                Description = "Description",
+                Priority = Domain.Enums.PriorityLevel.Medium,
+                AssignedMembersId = projectWithoutMembership.Members.Select(x => x.UserId)
+            };
+
+            //Act
+            var response = await Client.SendFormAsync(HttpMethod.Post, URI, model);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
     }
 }

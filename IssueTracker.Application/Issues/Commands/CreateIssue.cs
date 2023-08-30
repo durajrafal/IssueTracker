@@ -1,4 +1,5 @@
-﻿using IssueTracker.Application.Common.Helpers;
+﻿using IssueTracker.Application.Common.AccessPolicies;
+using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Enums;
@@ -18,10 +19,12 @@ namespace IssueTracker.Application.Issues.Commands
     public class CreateIssueHandler : IRequestHandler<CreateIssue, int>
     {
         private readonly IApplicationDbContext _ctx;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CreateIssueHandler(IApplicationDbContext ctx)
+        public CreateIssueHandler(IApplicationDbContext ctx, ICurrentUserService currentUserService)
         {
             _ctx = ctx;
+            _currentUserService = currentUserService;
         }
 
         public async Task<int> Handle(CreateIssue request, CancellationToken cancellationToken)
@@ -33,6 +36,9 @@ namespace IssueTracker.Application.Issues.Commands
                 Description = request.Description,
                 Priority = request.Priority,
             };
+
+            entity.ApplyPolicy(new IssueCanBeAccessedOnlyByProjectMember(_ctx), _currentUserService.UserId);
+
             request.Members?.ToList().ForEach(x => entity.Members.AddNewOrExistingMember(_ctx.Members, x.UserId));
 
             await _ctx.Issues.AddAsync(entity);

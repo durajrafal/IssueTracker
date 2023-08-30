@@ -1,10 +1,4 @@
 ﻿using IssueTracker.Application.Issues.Commands;
-using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentValidation;
 using IssueTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +17,7 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
         public async Task Handle_WhenTitleNotEmptyAndUnique_ShouldAddToDatabase()
         {
             //Arrange
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenTitleNotEmptyAndUnique_ShouldAddToDatabase));
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenTitleNotEmptyAndUnique_ShouldAddToDatabase));
 
             //Act
             var command = new CreateIssue { Title = nameof(Handle_WhenTitleNotEmptyAndUnique_ShouldAddToDatabase), ProjectId = project.Id};
@@ -53,12 +43,10 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
         public async Task Handle_WhenTitleIsNotUniqueWithinTheProject_ShouldThrowValidationException()
         {
             //Arrange
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenTitleIsNotUniqueWithinTheProject_ShouldThrowValidationException));
+            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenTitleIsNotUniqueWithinTheProject_ShouldThrowValidationException),
+                GetCurrentUserId());
             project.Issues.Add(new Issue { Title = "Not unique issue title" });
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
+            await project.AddToDatabaseAsync(Database);
 
             //Act
             var command = new CreateIssue { Title = "Not unique issue title", ProjectId = project.Id };
@@ -71,13 +59,8 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
         [Fact]
         public async Task Handle_WhenIssueIsAddedToDatabase_ShouldBeConnectedToParentProject()
         {
-
             //Arrange
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenIssueIsAddedToDatabase_ShouldBeConnectedToParentProject));
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenIssueIsAddedToDatabase_ShouldBeConnectedToParentProject));
 
             //Act
             var command = new CreateIssue { Title = nameof(Handle_WhenIssueIsAddedToDatabase_ShouldBeConnectedToParentProject), ProjectId = project.Id };
@@ -94,11 +77,7 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
         public async Task Handle_WhenIssueIsAddedToDatabase_ShouldHaveAllDataSaved()
         {
             //Arrange
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenIssueIsAddedToDatabase_ShouldHaveAllDataSaved));
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenIssueIsAddedToDatabase_ShouldHaveAllDataSaved));
             var member = project.Members.First();
 
             //Act
@@ -124,11 +103,7 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
         public async Task Handle_WhenIssueIsAddedToDatabase_ShouldHaveCorrectEnumsValuesByDefault()
         {
             //Arrange
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenIssueIsAddedToDatabase_ShouldHaveCorrectEnumsValuesByDefault));
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenIssueIsAddedToDatabase_ShouldHaveCorrectEnumsValuesByDefault));
 
             //Act
             var command = new CreateIssue
@@ -142,6 +117,25 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
             var addedIssue = Database.Func(ctx => ctx.Issues.First(x => x.Id == addedIssueId));
             addedIssue.Priority.Should().Be(PriorityLevel.None);
             addedIssue.Status.Should().Be(WorkingStatus.Pending);
+        }
+
+        [Fact]
+        public async Task Handle_WhenIssueIsAddedToProjectWithoutMembership_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenIssueIsAddedToProjectWithoutMembership_ShouldThrowUnauthorizedAccessException),
+                false);
+
+            //Act
+            var command = new CreateIssue
+            {
+                Title = nameof(Handle_WhenIssueIsAddedToProjectWithoutMembership_ShouldThrowUnauthorizedAccessException),
+                ProjectId = project.Id
+            };
+            var act = async () => await Mediator.Send(command);
+
+            //Assert
+            await act.Should().ThrowAsync<UnauthorizedAccessException>();
         }
     }
 }
