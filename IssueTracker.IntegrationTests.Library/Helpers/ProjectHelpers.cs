@@ -53,7 +53,7 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
 
         public static async Task<Project> SeedDatabaseWithMembersUsersAsync(this Task<Project> project, DatabaseHelpers database, int numberOfMembersToSkip = 0)
         {
-            var _project = project.GetAwaiter().GetResult();
+            var _project = await project;
             foreach (var member in _project.Members.Skip(numberOfMembersToSkip))
             {
                 await IdentityHelpers.AddIdentityUserFromUserIdAsync(member.UserId, database);

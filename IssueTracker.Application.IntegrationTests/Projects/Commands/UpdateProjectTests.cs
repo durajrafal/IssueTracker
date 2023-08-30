@@ -1,12 +1,10 @@
-﻿using FluentAssertions;
-using FluentValidation;
+﻿using FluentValidation;
 using IssueTracker.Application.Common.Exceptions;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Domain.Constants;
 using IssueTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
@@ -28,15 +26,13 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_WhenProjectIdIsValidAndTitleUnique_ShouldAddNewUser()
         {
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValidAndTitleUnique_ShouldAddNewUser));
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenProjectIdIsValidAndTitleUnique_ShouldAddNewUser));
             var projectMembersStartCount = project.Members.Count;   
             ICollection<Member> members = project.Members;
             members.Add(new Member { UserId = Guid.NewGuid().ToString() });
 
+            //Act
             var command = new UpdateProject 
             { 
                 Id = project.Id, 
@@ -45,6 +41,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             };
             await Mediator.Send(command);
 
+            //Assert
             var udpatedProject = Database.Func(ctx => 
                 ctx.Projects.Include(x => x.Members).First(x => x.Id == project.Id)
             );
@@ -54,16 +51,14 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_WhenProjectIdIsValidAndTitleUnique_ShouldDeleteUser()
         {
-            var project = ProjectHelpers.CreateTestProject(nameof(Handle_WhenProjectIdIsValidAndTitleUnique_ShouldDeleteUser));
-            await Database.ActionAsync(async ctx =>
-            {
-                await ctx.Projects.AddAsync(project);
-            });
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenProjectIdIsValidAndTitleUnique_ShouldDeleteUser));
             var projectMembersStartCount = project.Members.Count;
             var projectUser = project.Members.First();
             project.Members.Remove(projectUser);
             ICollection<Member> members = project.Members;
 
+            //Act
             var command = new UpdateProject 
             { 
                 Id = project.Id, 
@@ -72,6 +67,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             };
             await Mediator.Send(command);
 
+            //Assert
             var udpatedProject = Database.Func(ctx => 
                 ctx.Projects.Include(x => x.Members).First(x => x.Id == project.Id)
             );
@@ -81,6 +77,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         [Fact]
         public async Task Handle_WhenTitleIsNotUnique_ThrowsValidationException()
         {
+            //Arrange
             var project = new Project { Title = nameof(Handle_WhenTitleIsNotUnique_ThrowsValidationException) };
             string takenTitle = "Already taken title";
             await Database.ActionAsync(async ctx =>
@@ -89,8 +86,10 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
                 await ctx.Projects.AddAsync(new Project { Title = takenTitle });
             });
 
+            //Act
             var command = new UpdateProject { Id = project.Id, Title = takenTitle };
 
+            //Assert
             await Assert.ThrowsAsync<ValidationException>(() => Mediator.Send(command));
         }
 
@@ -98,10 +97,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         public async Task Handle_WhenMembersAddedAndRemoved_ShouldAddAndRemoveProjectAccessClaims()
         {
             //Arrange
-            var project = await ProjectHelpers
-                .CreateTestProject(nameof(Handle_WhenMembersAddedAndRemoved_ShouldAddAndRemoveProjectAccessClaims))
-                .AddToDatabaseAsync(Database)
-                .SeedDatabaseWithMembersUsersAsync(Database);
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenMembersAddedAndRemoved_ShouldAddAndRemoveProjectAccessClaims));
             var addedUserId = Guid.NewGuid().ToString();
             await IdentityHelpers.AddIdentityUserFromUserIdAsync(addedUserId, Database);
             ICollection<Member> members = project.Members.Skip(1).ToList();
@@ -122,6 +118,26 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             var addedUserClaims = await userService.GetUserClaimsAsync(addedUserId);
             removedUserClaims.Should().NotContain(x => x.Type == AppClaimTypes.ProjectAccess && x.Value == project.Id.ToString());
             addedUserClaims.Should().Contain(x => x.Type == AppClaimTypes.ProjectAccess && x.Value == project.Id.ToString());
+        }
+
+        [Fact]
+        public async Task Handle_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
+                false);
+
+            //Act
+            var command = new UpdateProject()
+            {
+                Id = project.Id,
+                Title = project.Title,
+                Members = project.Members
+            };
+            Func<Task> act = async () => await Mediator.Send(command);
+
+            //Assert
+            await act.Should().ThrowAsync<UnauthorizedAccessException>();
         }
     }
 }

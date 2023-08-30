@@ -29,7 +29,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
         }
 
         [Fact]
-        public async Task GetDetails_WhenAuthorized_ShouldReturnOkWithProjectManagementDto()
+        public async Task GetGetDetails_WhenAuthorized_ShouldReturnOkWithProjectManagementDto()
         {
             //Act
             var response = await _controller.GetDetails(_project.Id) as Ok<ProjectManagmentDto>;
@@ -43,7 +43,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
         }
 
         [Fact]
-        public async Task GetDetails_WhenInvalidId_ShouldReturnNotFound()
+        public async Task GetGetDetails_WhenInvalidId_ShouldReturnNotFound()
         {
             //Act
             var response = await _controller.GetDetails(0) as NotFound<string>;
@@ -54,17 +54,17 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
         }
 
         [Fact]
-        public async Task GetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        public async Task GetGetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
         {
             //Arrange
-            var notCurrentUserProject = await SetupTestProjectAsync(nameof(GetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
+            var notCurrentUserProject = await SetupTestProjectAsync(nameof(GetGetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
                 false);
 
             //Act
-            Func<Task> act = async () => await _controller.GetDetails(notCurrentUserProject.Id);
+            var response = await _controller.GetDetails(notCurrentUserProject.Id) as ForbidHttpResult;
 
             //Assert
-            act.Should().ThrowAsync<UnauthorizedAccessException>();
+            response.Should().NotBeNull();
         }
 
         [Fact]
@@ -105,6 +105,26 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(400);
             response.Value.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task PutEdit_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var notCurrentUserProject = await SetupTestProjectAsync(nameof(GetGetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
+                false);
+            var command = new UpdateProject()
+            {
+                Id = notCurrentUserProject.Id,
+                Title = "UpdatedTitle",
+                Members = notCurrentUserProject.Members
+            };
+
+            //Act
+            var response = await _controller.Edit(notCurrentUserProject.Id, command) as ForbidHttpResult;
+
+            //Assert
+            response.Should().NotBeNull();
         }
 
         [Fact]
