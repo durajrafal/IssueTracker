@@ -28,6 +28,9 @@ namespace IssueTracker.IntegrationTests.Library.Helpers
             var issue1 = new Issue
             {
                 Title = "Issue 1",
+                Description = "Issue 1 description",
+                Priority = Domain.Enums.PriorityLevel.High,
+                Status = Domain.Enums.WorkingStatus.Completed,
                 Members = new List<Member> { issueMember1 },
             };
 
