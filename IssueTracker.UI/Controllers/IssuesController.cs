@@ -19,19 +19,9 @@ namespace IssueTracker.UI.Controllers
         {
             var query = new GetProjectDetails { ProjectId = projectId };
             var result = await Mediator.Send(query);
-            var projectMembersSelectListItems = new List<SelectListItem>();
-            result.Members.ToList().ForEach(x =>
+            var vm = new CreateIssueViewModel(result.Members)
             {
-                projectMembersSelectListItems.Add(new SelectListItem
-                {
-                    Text = $"{x.User.FullName} ({x.User.Email})",
-                    Value = x.UserId
-                });
-            });
-            var vm = new CreateIssueViewModel()
-            {
-                ProjectId = projectId,
-                ProjectMembersSelecList = projectMembersSelectListItems,
+                ProjectId = projectId
             };
             return View(vm);
         }
