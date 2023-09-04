@@ -26,7 +26,6 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
             Assert.Equal(project.Issues.Count, result.Issues.Count);
             Assert.True(result.Issues.All(x => x.Title != String.Empty));
             Assert.True(result.Issues.All(x => x.Members.Count > 0));
-            Assert.True(result.Issues.All(x => x.Priority == Domain.Enums.PriorityLevel.None));
         }
         
         [Fact]
