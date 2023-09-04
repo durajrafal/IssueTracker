@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IssueTracker.Application.Issues.Commands
+namespace IssueTracker.Application.Issues.Commands.CreateIssue
 {
     public class CreateIssueValidator : TitleValidator<CreateIssue>
     {

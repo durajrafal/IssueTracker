@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
-using IssueTracker.Application.Issues.Commands;
+using IssueTracker.Application.Issues.Commands.CreateIssue;
 using IssueTracker.Application.Issues.Queries.GetIssueDetails;
 using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Entities;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IssueTracker.UI.Controllers
 {

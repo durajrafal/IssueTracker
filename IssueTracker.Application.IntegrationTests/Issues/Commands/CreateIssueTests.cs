@@ -1,8 +1,8 @@
-﻿using IssueTracker.Application.Issues.Commands;
-using FluentValidation;
+﻿using FluentValidation;
 using IssueTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using IssueTracker.Domain.Enums;
+using IssueTracker.Application.Issues.Commands.CreateIssue;
 
 namespace IssueTracker.Application.IntegrationTests.Issues.Commands
 {

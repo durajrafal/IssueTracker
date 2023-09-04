@@ -5,7 +5,7 @@ using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Enums;
 using MediatR;
 
-namespace IssueTracker.Application.Issues.Commands
+namespace IssueTracker.Application.Issues.Commands.CreateIssue
 {
     public class CreateIssue : IRequest<int>, IHasTitle
     {
