@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Issues.Commands;
+using IssueTracker.Application.Issues.Queries.GetIssueDetails;
 using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Entities;
-using IssueTracker.UI.Filters;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +38,6 @@ namespace IssueTracker.UI.Controllers
 
 
         [HttpPost("[action]")]
-        [ValidationExceptionFilter]
         public async Task<IActionResult> Create(CreateIssueViewModel model)
         {
             var members = new List<Member>();
@@ -62,6 +61,26 @@ namespace IssueTracker.UI.Controllers
                 return View(model);
             }
             return RedirectToAction("Details", "Projects", new { Id = model.ProjectId });
+        }
+
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var command = new GetIssueDetails(id);
+            var result = await Mediator.Send(command);
+
+            var vm = new IssueViewModel()
+            {
+                Id = result.Id,
+                Title = result.Title, 
+                Description = result.Description,
+                Priority = result.Priority,
+                Status = result.Status,
+                Project = result.Project,
+                Members = result.Members
+            };
+
+            return View(vm);
         }
     }
 

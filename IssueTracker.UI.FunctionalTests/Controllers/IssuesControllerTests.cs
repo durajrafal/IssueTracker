@@ -1,4 +1,5 @@
-﻿using IssueTracker.UI.Controllers;
+﻿using IssueTracker.Domain.Entities;
+using IssueTracker.UI.Controllers;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +47,43 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             responseModel.ProjectMembersSelecList.Should().NotBeEmpty();
             responsePost.ViewData.ModelState.ErrorCount.Should().BeGreaterThan(0);
             responsePost.ViewData.ModelState.Values.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task GetDetails_WhenIdIsValid_ShoulReturnViewWithSeededModel()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(PostCreate_WhenDataIsInvalid_ShoulReturnViewWithSeededModelAndValidationErrors));
+            var issue = project.Issues.First();
+
+            //Act
+            var response = await _controller.Details(issue.Id) as ViewResult;
+            var responseModel = response!.Model as IssueViewModel;
+
+            //Assert
+            responseModel.Id.Should().Be(issue.Id);
+            responseModel.Title.Should().Be(issue.Title);
+            responseModel.Description.Should().Be(issue.Description);
+            responseModel.Priority.Should().Be(issue.Priority);
+            responseModel.Status.Should().Be(issue.Status);
+            responseModel.Project.Should().NotBeNull();
+            responseModel.Members.Should().NotBeEmpty();
+            responseModel.Members.Should().AllSatisfy(x => x.User.Should().NotBeNull());
+        }
+
+        [Fact]
+        public async Task GetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync(nameof(GetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),
+                false);
+            var issue = project.Issues.First();
+
+            //Act
+            Func<Task> act = async () => await _controller.Details(issue.Id);
+
+            //Assert
+            await act.Should().ThrowAsync<UnauthorizedAccessException>();
         }
     }
 }
