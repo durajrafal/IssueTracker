@@ -33,6 +33,7 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
                 throw new NotFoundException(nameof(Issue), request.Id.ToString());
 
             await entity.Members.SyncMembersWithUsers(_userService);
+            await entity.Project.Members.SyncMembersWithUsers(_userService);
 
             return new IssueDto()
             {

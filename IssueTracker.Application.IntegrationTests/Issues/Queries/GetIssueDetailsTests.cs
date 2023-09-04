@@ -30,9 +30,11 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Queries
             result.Description.Should().Be(issue.Description);
             result.Priority.Should().Be(issue.Priority);
             result.Status.Should().Be(issue.Status);
-            result.Members.Should().HaveCount(issue.Members.Count());
-            result.Members.Should().AllSatisfy(x => x.User.Should().NotBeNull());
+            result.Members.Should().HaveCount(issue.Members.Count())
+                .And.AllSatisfy(x => x.User.Should().NotBeNull());
             result.Project.Should().NotBeNull();
+            result.Project.Members.Should().HaveCount(project.Members.Count)
+                .And.AllSatisfy(x => x.User.Should().NotBeNull());
         }
 
         [Fact]
