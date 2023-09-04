@@ -1,10 +1,5 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Application.Common.Validators
 {
@@ -21,7 +16,7 @@ namespace IssueTracker.Application.Common.Validators
                 .NotNull().NotEmpty().WithMessage("Title is required.")
                 .MaximumLength(MAX_TITLE_LENGTH).WithMessage($"Title must not exceed {MAX_TITLE_LENGTH}.")
                 .Matches("^[A-Za-z0-9_ ]+$").WithMessage("Must not contain any of the special characters.")
-                .Must(BeUniqueTitle).WithMessage("Project with the same name already exists.");
+                .Must(BeUniqueTitle).WithMessage("This title already exists.");
             _ctx = ctx;
         }
 

@@ -29,7 +29,7 @@ namespace IssueTracker.IntegrationTests.Library.Common
             return Factory.Services.GetRequiredService<ICurrentUserService>().UserId;
         }
 
-        public async Task<Project> SetupTestProjectAsync(string title, bool addCurrentUser = true, bool skipUser = false)
+        public async Task<Project> SetupTestProjectAsync(string title = "Project Title", bool addCurrentUser = true, bool skipUser = false)
         {
             var currentUserId = addCurrentUser ? GetCurrentUserId() : "";
             var numberOfUsersToSkip = skipUser ? 1 : 0;
