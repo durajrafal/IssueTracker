@@ -7,7 +7,7 @@ using System.Collections;
 using System.Net;
 using System.Security.Claims;
 
-namespace IssueTracker.UI.FunctionalTests.Views
+namespace IssueTracker.UI.FunctionalTests.Auth
 {
     public class AuthTests : UiTestsFixture
     {
@@ -110,6 +110,7 @@ namespace IssueTracker.UI.FunctionalTests.Views
     public class AuthorizeTestData : IEnumerable<object[]>
     {
         private const string ProjectId = "1";
+        private const string IssueId = "1/";
         private const string ACCOUNT_CONTROLLER = "Identity/Account/";
         private const string ADMIN_CONTROLLER = "Identity/Admin/";
         private const string HOME_CONTROLLER = "Home/";
@@ -136,6 +137,8 @@ namespace IssueTracker.UI.FunctionalTests.Views
             yield return new object[] { PROJECTS_CONTROLLER + ProjectId, new List<Claim> { _projectAccessClaim } };
 
             yield return new object[] { ISSUES_CONTROLLER + "Create", new List<Claim> { _projectAccessClaim } };
+            yield return new object[] { ISSUES_CONTROLLER + IssueId + "Details", new List<Claim> { _projectAccessClaim } };
+            yield return new object[] { ISSUES_CONTROLLER + IssueId + "Edit", new List<Claim> { _projectAccessClaim } };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

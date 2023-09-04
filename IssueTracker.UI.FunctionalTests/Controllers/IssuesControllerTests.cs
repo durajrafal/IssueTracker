@@ -1,4 +1,4 @@
-﻿using IssueTracker.Domain.Entities;
+﻿using IssueTracker.Domain.Enums;
 using IssueTracker.UI.Controllers;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Mvc;
@@ -67,8 +67,10 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             responseModel.Priority.Should().Be(issue.Priority);
             responseModel.Status.Should().Be(issue.Status);
             responseModel.Project.Should().NotBeNull();
-            responseModel.Members.Should().NotBeEmpty();
-            responseModel.Members.Should().AllSatisfy(x => x.User.Should().NotBeNull());
+            responseModel.Project.Members.Should().HaveCount(project.Members.Count)
+                .And.AllSatisfy(x => x.User.Should().NotBeNull());
+            responseModel.Members.Should().HaveCount(issue.Members.Count)
+                .And.AllSatisfy(x => x.User.Should().NotBeNull());
         }
 
         [Fact]
@@ -84,6 +86,77 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
 
             //Assert
             await act.Should().ThrowAsync<UnauthorizedAccessException>();
+        }
+
+        [Fact]
+        public async Task GetEdit_WhenDataIsValid_ShoulReturnViewWithSeededModel()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync();
+            var issue = project.Issues.First();
+
+            //Act
+            var response = await _controller.Edit(issue.Id) as ViewResult;
+            var responseModel = response!.Model as EditIssueViewModel;
+
+            //Assert
+            responseModel.Id.Should().Be(issue.Id);
+            responseModel.Title.Should().Be(issue.Title);
+            responseModel.Description.Should().Be(issue.Description);
+            responseModel.Priority.Should().Be(issue.Priority);
+            responseModel.Status.Should().Be(issue.Status);
+            responseModel.ProjectId.Should().Be(issue.Project.Id);
+        }
+
+        [Fact]
+        public async Task GetEdit_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync(addCurrentUser: false);
+            var issue = project.Issues.First();
+
+            //Act
+            Func<Task> act = async () => await _controller.Edit(issue.Id);
+
+            //Assert
+            await act.Should().ThrowAsync<UnauthorizedAccessException>();
+        }
+
+        [Fact]
+        public async Task PostEdit_WhenTitleIsValidAndNotEmpty_ShouldUpdateIssueInDatabase()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync();
+            var issue = project.Issues.First();
+
+            //Act
+            var vm = new EditIssueViewModel()
+            {
+                Id = issue.Id,
+                ProjectId = project.Id,
+                Title = "Updated Title",
+                Description = "Updated description",
+                Priority = PriorityLevel.Low,
+                Status = WorkingStatus.Completed
+            };
+
+            //TODO - find a way to create IUrlHelper so RedirectToAction don't throw exception
+            try
+            {
+                var response = await _controller.Edit(vm.Id, vm);
+            }
+            catch (Exception e)
+            {
+                if (e is not NullReferenceException)
+                    throw;
+            }
+
+            //Assert
+            var updatedIssue = Database.Func(ctx => ctx.Issues.First(x => x.Id == vm.Id));
+            updatedIssue.Title.Should().Be(vm.Title);
+            updatedIssue.Description.Should().Be(vm.Description);
+            updatedIssue.Priority.Should().Be(vm.Priority);
+            updatedIssue.Status.Should().Be(vm.Status);
         }
     }
 }

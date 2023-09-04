@@ -1,0 +1,57 @@
+﻿@using IssueTracker.Domain.Enums;
+@using IssueTracker.UI.HtmlHelpers;
+@using IssueTracker.UI.Models.Issues;
+@model EditIssueViewModel
+
+@{
+    ViewData["Title"] = $"Edit Issue #{Model.Id}";
+}
+
+<article class="card mt-2">
+    <form method="post" asp-controller="Issues" asp-action="Edit">
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.ProjectId)
+        <div class="card-header">
+            <div class="d-flex justify-content-between gap-1">
+                <div class="form-group">
+                    <input asp-for="Title" type="text" app-invalid-if-errors="Title" class="form-control">
+                    <span asp-validation-for="Title" class="invalid-feedback"></span>
+                </div>
+                <div class="d-flex gap-2 a">
+                    <button type="submit" class="btn btn-success d-flex align-items-center" href=""><i class="bi bi-check-lg text-white"></i></button>
+                    <a class="btn btn-danger d-flex align-items-center" asp-controller="Issues" asp-action="Details" asp-route-projectid="@Model.ProjectId" asp-route-id="@Model.Id"><i class="bi bi-x-lg text-white"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <div class="row gx-5">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        @Html.LabelOverLine("Description", "bi-info-circle")
+                        <textarea asp-for="Description" class="form-control" id="descriptionTextArea" rows="10"></textarea>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelOverLine("Status", "bi-question-circle")
+                        <select asp-for="Status" asp-items="@Html.GetEnumSelectList<WorkingStatus>()" class="form-select" id="selectStatus">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelOverLine("Priority", "bi-exclamation-triangle", "selectPriority")
+                        <select asp-for="Priority" asp-items="@Html.GetEnumSelectList<PriorityLevel>()" class="form-select" id="selectPriority">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-footer text-muted">
+        </div>
+    </form>
+
+</article>

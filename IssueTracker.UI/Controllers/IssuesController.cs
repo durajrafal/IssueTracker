@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Issues.Commands.CreateIssue;
+using IssueTracker.Application.Issues.Commands.UpdateIssue;
 using IssueTracker.Application.Issues.Queries.GetIssueDetails;
 using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Entities;
@@ -52,11 +53,11 @@ namespace IssueTracker.UI.Controllers
             return RedirectToAction("Details", "Projects", new { Id = model.ProjectId });
         }
 
-        [HttpGet("[action]/{id}")]
+        [HttpGet("{id}/[action]")]
         public async Task<IActionResult> Details(int id)
         {
-            var command = new GetIssueDetails(id);
-            var result = await Mediator.Send(command);
+            var query = new GetIssueDetails(id);
+            var result = await Mediator.Send(query);
 
             var vm = new IssueViewModel()
             {
@@ -70,6 +71,54 @@ namespace IssueTracker.UI.Controllers
             };
 
             return View(vm);
+        }
+
+        [HttpGet("{id}/[action]")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var query = new GetIssueDetails(id);
+            var result = await Mediator.Send(query);
+
+            var vm = new EditIssueViewModel()
+            {
+                Id = result.Id,
+                Title = result.Title,
+                Description = result.Description,
+                Priority = result.Priority,
+                Status = result.Status,
+                ProjectId = result.Project.Id,
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost("{id}/[action]")]
+        public async Task<IActionResult> Edit(int id, EditIssueViewModel model)
+        {
+            if (id != model.Id)
+                return BadRequest();
+
+            var command = new UpdateIssue()
+            {
+                Id = model.Id,
+                Title = model.Title,
+                Description = model.Description,
+                Priority = model.Priority,
+                Status = model.Status,
+                ProjectId = model.ProjectId
+            };
+
+            try
+            {
+                await Mediator.Send(command);
+            }
+            
+            catch (ValidationException exception)
+            {
+                exception.Errors.ToList().ForEach(x => ModelState.AddModelError(x.PropertyName, x.ErrorMessage));
+                return View(model);
+            }
+            return RedirectToAction("Details", new { id = model.Id, projectId = model.ProjectId});
         }
     }
 
