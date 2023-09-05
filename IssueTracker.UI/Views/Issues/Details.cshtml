@@ -1,4 +1,5 @@
 ﻿@using IssueTracker.UI.Models.Issues;
+@using IssueTracker.Domain.Enums;
 @using IssueTracker.UI.HtmlHelpers;
 @model IssueViewModel
 
@@ -12,12 +13,12 @@
         <div class="d-flex justify-content-between gap-1">
             <div>
                 <span class="fs-4 me-2">#@Model.Id</span>
-                <span class="fs-4 me-2">@Model.Title.ToUpper()</span>
+                <span class="fs-4 me-2 text-break">@Model.Title.ToUpper()</span>
                 <span class="fs-6 text-muted">in @Model.Project.Title.ToUpper() Project</span>
             </div>
             <div class="d-flex gap-2">
                 <a class="btn btn-primary d-flex align-items-center" asp-action="Edit" asp-route-projectid="@Model.Project.Id" asp-route-id="@Model.Id"><i class="bi bi-pencil-square text-white"></i></a>
-                <a class="btn btn-danger d-flex align-items-center" asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Project.Id"><i class="bi bi-x-lg text-white"></i></a>
+                <a class="btn btn-dark d-flex align-items-center" asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Project.Id"><i class="bi bi-x-lg text-white"></i></a>
             </div>
         </div>
     </div>
@@ -29,7 +30,7 @@
             </div>
             <div class="col-lg-3 col-6">
                 @Html.LabelOverLine("Status", "bi-question-circle")
-                <div class="ps-2">@Model.Status</div>
+                <div class="ps-2">@Model.Status.ToUserFriendlyString()</div>
             </div>
             <div class="col-lg-3 col-6">
                 @Html.LabelOverLine("Priority", "bi-exclamation-triangle")

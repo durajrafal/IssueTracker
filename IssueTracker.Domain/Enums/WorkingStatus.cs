@@ -9,4 +9,22 @@ namespace IssueTracker.Domain.Enums
         InProgress = 1,
         Completed = 2
     }
+
+    public static class WorkingStatusExtensions
+    {
+        public static string ToUserFriendlyString(this WorkingStatus status)
+        {
+            switch (status)
+            {
+                case WorkingStatus.Pending:
+                    return "Pending";
+                case WorkingStatus.InProgress:
+                    return "In Progress";
+                case WorkingStatus.Completed:
+                    return "Completed";
+                default:
+                    return "";
+            }
+        }
+    }
 }
