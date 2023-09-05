@@ -1,35 +1,81 @@
-﻿@using IssueTracker.UI.Models.Projects;
+﻿@using IssueTracker.UI.HtmlHelpers;
+@using IssueTracker.UI.Models.Projects;
 @model ProjectViewModel
 
 @{
     ViewData["Title"] = Model.Title;
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="d-grid my-2">
-            <a asp-controller="Issues" asp-action="Create" asp-route-projectid="@Model.Id" class="btn btn-lg btn-success">
+<div class="row py-2 mt-2">
+    <div class="col-md-6 col-lg-3" style="height: 3rem;">
+        <div class="d-grid h-100">
+            <a asp-controller="Issues" asp-action="Create" asp-route-projectid="@Model.Id" class="btn btn-outline-primary d-flex justify-content-center align-items-center">
                 <i class="bi bi-plus-circle me-3"></i>Create new issue
             </a>
         </div>
-
-        <div class="list-group">
-            <div class="list-group-item p-0 d-grid">
-                <div class="btn-group" role="group" aria-label="Filtering Buttons">
-                    <a asp-route-status="@ProjectViewModel.PENDING" class="btn btn-outline-primary @(Model.IsPendingSelected ? "active" : "")">Pending</a>
-                    <a asp-route-status="@ProjectViewModel.IN_PROGRESS" class="btn btn-outline-primary @(Model.IsInProgressSelected ? "active" : "")">In Progress</a>
-                    <a asp-route-status="@ProjectViewModel.COMPLETED" asp class="btn btn-outline-primary @(Model.IsCompletedSelected ? "active" : "")" style="border-bottom-right-radius:0;">Completed</a>
-                    <a asp-route-status="all" class="btn btn-outline-primary @(Model.IsAllSelected ? "active" : "")" style="border-bottom-left-radius:0;">All</a>
-                </div>
-            </div>
-            @foreach (var issue in Model.Issues)
-            {
-                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    @issue.Title
-                    <span class="badge bg-info">Info</span>
+    </div>
+    <div class="col-lg-6 mt-2 mt-lg-0 d-flex justify-content-center order-2 order-lg-1" style="height: 3rem;">
+        <div class="d-grid w-100">
+            <div class="btn-group" role="group" aria-label="Filtering Buttons">
+                <a asp-route-status="@ProjectViewModel.PENDING" asp-route-orderby="@Model.OrderBy"
+                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CheckIfActive(Model.IsPendingSelected)">
+                    Pending
                 </a>
-            }
-            <a href="#" class="list-group-item list-group-item-action disabled">Morbi leo risus</a>
+                <a asp-route-status="@ProjectViewModel.IN_PROGRESS" asp-route-orderby="@Model.OrderBy"
+                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CheckIfActive(Model.IsInProgressSelected)">
+                    In Progress
+                </a>
+                <a asp-route-status="@ProjectViewModel.COMPLETED" asp-route-orderby="@Model.OrderBy"
+                   asp class="btn btn-outline-primary d-flex align-items-center justify-content-center @CheckIfActive(Model.IsCompletedSelected)"
+                   style="border-bottom-right-radius:0;">
+                    Completed
+                </a>
+                <a asp-route-status="" asp-route-orderby="@Model.OrderBy"
+                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CheckIfActive(Model.IsAllSelected)"
+                   style="border-bottom-left-radius:0;">
+                    All
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mt-2 mt-md-0 order-1 order-lg-2" style="height: 3rem;">
+        <div class="dropdown d-grid h-100">
+            <button class="btn dropdown-toggle d-flex justify-content-center align-items-center @(String.IsNullOrEmpty(Model.OrderBy) ? "btn-outline-primary" : "btn-primary")"
+                    role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                Order By @Model.OrderBy
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuLink">
+                <li><a asp-route-orderby="" asp-route-status="@Model.SelectedStatus" 
+                    class="dropdown-item @CheckIfActive(Model.IsNoneOrderSelected)">
+                    None
+                </a></li>
+                <li><a asp-route-orderby="Priority" asp-route-status="@Model.SelectedStatus" 
+                    class="dropdown-item @CheckIfActive(Model.IsPriorityOrderSelected)">
+                    Priority
+                </a></li>
+                <li><a asp-route-orderby="Date" asp-route-status="@Model.SelectedStatus" 
+                    class="dropdown-item @CheckIfActive(Model.IsDateOrderSelected)">
+                    Date
+                </a></li>
+            </ul>
         </div>
     </div>
 </div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 pt-2">
+    @foreach (var issue in Model.Issues)
+    {
+        <div class="col">
+            <partial name="_IssueCard" model="issue" />
+        </div>
+    }
+</div>
+
+@{
+    string CheckIfActive(bool condition)
+    {
+        if (condition)
+            return "active";
+        return "";
+    }
+}

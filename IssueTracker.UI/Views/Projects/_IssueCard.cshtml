@@ -1,0 +1,70 @@
+﻿@using IssueTracker.Application.Common.Interfaces;
+@using IssueTracker.Domain.Entities;
+@using IssueTracker.Domain.Enums;
+@using IssueTracker.UI.Models.Issues;
+@using IssueTracker.UI.HtmlHelpers;
+
+@model Issue
+@inject ICurrentUserService currentUserService
+
+@{
+
+}
+<a asp-controller="Issues" asp-action="Details" asp-route-projectid="@Model.ProjectId" asp-route-id="@Model.Id"
+   class="text-decoration-none">
+    <div class="card @SetTextColor() @GetBorderColorBasedOnPriority() mb-3">
+        <div class="card-header fs-5">
+            <div>@FormatTextToMaxLength(Model.Title, 30)</div>
+        </div>
+        <div class="card-body d-none d-sm-block">
+            <p class="card-text">@FormatTextToMaxLength(Model.Description,100)</p>
+        </div>
+    </div>
+</a>
+
+@{
+    string FormatTextToMaxLength(string? text, int length)
+    {
+        string output = "";
+        if (text is not null)
+        {
+            var descriptionTooLong = text.Length > length;
+            if (descriptionTooLong)
+                output = text.Substring(0, length - 1) + "...";
+            else
+                output = text;
+        }
+        return output;
+    }
+
+    string GetBackgroundColorBasedOnPriority()
+    {
+        return "bg-" + GetColorBasedOnPriority();
+    }
+
+    string GetBorderColorBasedOnPriority()
+    {
+        return "border-" + GetColorBasedOnPriority();
+    }
+
+    string GetColorBasedOnPriority()
+    {
+        if (Model.Priority == PriorityLevel.None)
+            return "light";
+        if (Model.Priority == PriorityLevel.Low)
+            return "info";
+        if (Model.Priority == PriorityLevel.Medium)
+            return "warning";
+        if (Model.Priority == PriorityLevel.High)
+            return "danger";
+        return "secondary";
+    }
+
+    string SetTextColor()
+    {
+        if (Model.Status == WorkingStatus.Completed)
+            return "text-muted";
+
+        return "text-white";
+    }
+}
