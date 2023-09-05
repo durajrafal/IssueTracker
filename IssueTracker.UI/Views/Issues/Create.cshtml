@@ -10,7 +10,7 @@
 <div class="row my-2 justify-content-center">
 
     <form method="post" asp-controller="Issues" asp-action="Create">
-        @for (int i = 0; i < Model.ProjectMembersSelecList.Count - 1; i++)
+        @for (int i = 0; i < Model.ProjectMembersSelecList.Count; i++)
         {
             @Html.HiddenFor(model => Model.ProjectMembersSelecList[i].Text);
             @Html.HiddenFor(model => Model.ProjectMembersSelecList[i].Value);
@@ -35,7 +35,7 @@
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="selectPriority" class="form-label mt-4">Select priority</label>
-                    <select mu asp-for="Priority" asp-items="@Html.GetEnumSelectList<PriorityLevel>()" class="form-select" id="selectPriority">
+                    <select asp-for="Priority" asp-items="@Html.GetEnumSelectList<PriorityLevel>()" class="form-select" id="selectPriority">
                     </select>
                 </div>
                 <div class="form-group">
