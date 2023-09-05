@@ -26,7 +26,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             var project = await SetupTestProjectAsync(nameof(GetDetails_WhenCurrentUserIsMember_ShouldReturnViewWithModel));
 
             //Act
-            var response = await _controller.Details(project.Id, string.Empty) as ViewResult;
+            var response = await _controller.Details(project.Id, string.Empty, string.Empty) as ViewResult;
             var model = response?.Model as ProjectViewModel;
 
             //Assert
@@ -41,7 +41,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             var project = await SetupTestProjectAsync(nameof(GetDetails_WhenCurrentUserIsNotMember_ShouldThrowUnauthorizedAccessException),false);
 
             //Act
-            Func<Task> act = async () => await _controller.Details(project.Id, string.Empty);
+            Func<Task> act = async () => await _controller.Details(project.Id, string.Empty, string.Empty);
 
             //Assert
             await act.Should().ThrowAsync<UnauthorizedAccessException>();
