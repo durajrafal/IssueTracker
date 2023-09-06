@@ -4,7 +4,7 @@
 
 <form asp-action="UpdateUserRoleClaim" asp-area="Identity" asp-controller="Admin">
     <div class="form-group">
-        <label for="selectRole" class="form-label mt-4">Select Role:</label>
+        <label for="selectRole" class="form-label mt-4 text-break">@Model.User.FullName (@Model.User.Email) - Select Role:</label>
         @Html.DropDownListFor(m => m.SelectedRole, Model.Roles, new { @class="form-select",@id="selectRole"})
     </div>
     <div class="form-group">

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using IssueTracker.Domain.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
@@ -13,15 +13,17 @@ namespace IssueTracker.UI.Models.Admin
         public SelectList? Roles { get; init; }
         [Required]
         public string SelectedRole { get; set; }
+        public User? User { get; set; }
 
         public UpdateUserRoleClaimViewModel()
         {
             
         }
 
-        public UpdateUserRoleClaimViewModel(IEnumerable<Claim> claims, string userId)
+        public UpdateUserRoleClaimViewModel(Claim roleClaim, User user)
         {
-            SelectedRole = claims.FirstOrDefault(x => x.Type.EndsWith("role"))?.Value;
+            User = user;
+            SelectedRole = roleClaim.Value;
             Roles = new SelectList(new List<SelectListItem>
                 {
                     new SelectListItem{Text = "SelectRole", Value = ""},
@@ -29,7 +31,7 @@ namespace IssueTracker.UI.Models.Admin
                     new SelectListItem{Text = "Manager", Value = "Manager"},
                     new SelectListItem{Text = "Admin", Value = "Admin"},
                 }, "Value", "Text");
-            UserId = userId;
+            UserId = user.UserId;
         }
 
     }

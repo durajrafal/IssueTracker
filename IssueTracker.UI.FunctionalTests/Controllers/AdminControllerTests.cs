@@ -51,9 +51,10 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             {
                 TempData = SetupTempData(),
             };
-            var user = userManager.Users.First(x => x.FirstName == "Developer");
-            var claims = await userManager.GetClaimsAsync(user);
-            var vm = new UpdateUserRoleClaimViewModel(claims.ToList(), user.Id);
+            var identityUser = userManager.Users.First(x => x.FirstName == "Developer");
+            var user = await userService.GetUserByIdAsync(identityUser.Id);
+            var roleClaim = await userService.GetUserRoleClaimAsync(user!.UserId);
+            var vm = new UpdateUserRoleClaimViewModel(roleClaim!, user);
             vm.SelectedRole = newRoleClaimValue;
             userManager.Dispose();
 
@@ -62,7 +63,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
 
             //Arrange
             userManager = ScopeFactory.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var updatedClaim = await userManager.GetClaimsAsync(user);
+            var updatedClaim = await userManager.GetClaimsAsync(identityUser);
             Assert.Equal(vm.SelectedRole, updatedClaim.First(x => x.Type == ClaimTypes.Role).Value);
         }
 
@@ -77,9 +78,10 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             {
                 TempData = SetupTempData(),
             };
-            var user = userManager.Users.First(x => x.FirstName == "Developer");
-            var claims = await userManager.GetClaimsAsync(user);
-            var vm = new UpdateUserRoleClaimViewModel(claims.ToList(), user.Id);
+            var identityUser = userManager.Users.First(x => x.FirstName == "Developer");
+            var user = await userService.GetUserByIdAsync(identityUser.Id);
+            var roleClaim = await userService.GetUserRoleClaimAsync(user!.UserId);
+            var vm = new UpdateUserRoleClaimViewModel(roleClaim!, user);
             var originalRole = vm.SelectedRole;
             vm.SelectedRole = "";
 
@@ -87,7 +89,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             await controller.UpdateUserRoleClaim(vm);
 
             //Arrange
-            var updatedClaim = await userManager.GetClaimsAsync(user);
+            var updatedClaim = await userManager.GetClaimsAsync(identityUser);
             Assert.Equal(originalRole, updatedClaim.First(x => x.Type == ClaimTypes.Role).Value);
         }
     }

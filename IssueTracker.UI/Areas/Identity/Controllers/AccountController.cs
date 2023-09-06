@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Security.Claims;
 using System.Text;
 
 namespace IssueTracker.UI.Areas.Identity.Controllers
@@ -100,6 +101,8 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
                 var result = await _userManager.CreateAsync(user, register.Password);
                 if (result.Succeeded)
                 {
+                    var claim = new Claim(ClaimTypes.Role, "Developer");
+                    await _userManager.AddClaimAsync(user, claim);
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action("Confirm", "Email", new { token, email = user.Email }, Request.Scheme);
                     bool emailResponse = await emailService.SendConfirmationEmailAsync(user.Email, user.FullName, confirmationLink);
@@ -113,6 +116,7 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
                     else
                     {
                         await _userManager.DeleteAsync(user);
+                        await _userManager.RemoveClaimAsync(user, claim);
                         register.ErrorMessage = new HtmlString($"Failed to send an email to <strong>{register.Email}</strong>");
                         return View(register);
                     }

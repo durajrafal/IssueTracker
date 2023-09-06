@@ -34,8 +34,13 @@ namespace IssueTracker.UI.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserClaims(string id)
         {
-            var claims = await _userService.GetUserClaimsAsync(id);
-            var vm = new UpdateUserRoleClaimViewModel(claims, id);
+            var roleClaim = await _userService.GetUserRoleClaimAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
+
+            if (roleClaim is null || user is null)
+                return BadRequest();
+
+            var vm = new UpdateUserRoleClaimViewModel(roleClaim, user);
             return PartialView("../Admin/_UserClaims", vm);
         }
 
