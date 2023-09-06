@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Issues.Commands.CreateIssue;
+using IssueTracker.Application.Issues.Commands.DeleteIssue;
 using IssueTracker.Application.Issues.Commands.UpdateIssue;
 using IssueTracker.Application.Issues.Queries.GetIssueDetails;
 using IssueTracker.Application.Projects.Queries.GetProjectDetails;
@@ -119,6 +120,22 @@ namespace IssueTracker.UI.Controllers
                 return View(model);
             }
             return RedirectToAction("Details", new { id = model.Id, projectId = model.ProjectId});
+        }
+
+        [HttpDelete("~/api/projects/{projectId}/issues/{id}")]
+        public async Task<IResult> Delete(int id)
+        {
+            var command = new DeleteIssue(id);
+            try
+            {
+                await Mediator.Send(command);
+            }
+            catch (Exception e)
+            {
+                return GetTypedResultBasedOnExceptionType(e);
+            }
+
+            return TypedResults.NoContent();
         }
     }
 

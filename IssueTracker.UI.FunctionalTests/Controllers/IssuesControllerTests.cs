@@ -1,6 +1,7 @@
 ﻿using IssueTracker.Domain.Enums;
 using IssueTracker.UI.Controllers;
 using IssueTracker.UI.Models.Issues;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IssueTracker.UI.FunctionalTests.Controllers
@@ -157,6 +158,47 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             updatedIssue.Description.Should().Be(vm.Description);
             updatedIssue.Priority.Should().Be(vm.Priority);
             updatedIssue.Status.Should().Be(vm.Status);
+        }
+
+        [Fact]
+        public async Task DeleteDelete_WhenIdIsValid_ShouldReturnNoContentAndDeleteIssueFromDatabase()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync();
+            var issue = project.Issues.First();
+
+            //Act
+            var response = await _controller.Delete(issue.Id) as NoContent;
+
+            //Assert
+            response.Should().NotBeNull();
+            Database.Func(ctx => ctx.Issues.FirstOrDefault(x => x.Id == issue.Id)).Should().BeNull();
+        }
+
+        [Fact]
+        public async Task DeleteDelete_WhenIdIsInvalid_ShouldReturnNotFound()
+        {
+           //Act
+            var response = await _controller.Delete(0) as NotFound<string>;
+
+            //Assert
+            response.Should().NotBeNull();
+            response.Value.Should().Contain("Issue").And.Contain("0");
+        }
+
+        [Fact]
+        public async Task DeleteDelete_WhenCurrentUserIsNotMember_ShouldReturnForbidAndDoNotDeleteProjectFromDatabas()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync(addCurrentUser:false);
+            var issue = project.Issues.First();
+
+            //Act
+            var response = await _controller.Delete(issue.Id) as ForbidHttpResult;
+
+            //Assert
+            response.Should().NotBeNull();
+            Database.Func(ctx => ctx.Issues.FirstOrDefault(x => x.Id == issue.Id)).Should().NotBeNull();
         }
     }
 }
