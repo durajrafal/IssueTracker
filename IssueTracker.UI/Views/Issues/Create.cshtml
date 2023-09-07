@@ -28,8 +28,7 @@
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="descriptionTextArea" class="form-label mt-4">Description</label>
-                    <textarea asp-for="Description" class="form-control d-none d-lg-block" id="descriptionTextArea" rows="10"></textarea>
-                    <textarea asp-for="Description" class="form-control d-lg-none" id="descriptionTextArea" rows="3"></textarea>
+                    <textarea asp-for="Description" class="form-control" id="descriptionTextArea" rows="5"></textarea>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -40,8 +39,7 @@
                 </div>
                 <div class="form-group">
                     <label for="selectAssignedMembers" class="form-label mt-2">Assign memberss</label>
-                    <select asp-for="AssignedMembersId" asp-items="@Model.ProjectMembersSelecList" class="form-select d-none d-lg-block" id="selectAssignedMembers" size="8"></select>
-                    <select asp-for="AssignedMembersId" asp-items="@Model.ProjectMembersSelecList" class="form-select d-lg-none" id="selectAssignedMembers"></select>
+                    <select asp-for="AssignedMembersId" asp-items="@Model.ProjectMembersSelecList" class="form-select" id="selectAssignedMembers" size="4"></select>
                 </div>
             </div>
         </div>
