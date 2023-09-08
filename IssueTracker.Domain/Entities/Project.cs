@@ -1,13 +1,8 @@
-﻿using IssueTracker.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IssueTracker.Domain.Common;
 
 namespace IssueTracker.Domain.Entities
 {
-    public class Project
+    public class Project : AuditableEntity
     {
         public int Id { get; set; }
         public string Title { get; set; }

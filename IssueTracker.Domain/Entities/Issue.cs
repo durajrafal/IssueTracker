@@ -1,8 +1,9 @@
-﻿using IssueTracker.Domain.Enums;
+﻿using IssueTracker.Domain.Common;
+using IssueTracker.Domain.Enums;
 
 namespace IssueTracker.Domain.Entities
 {
-    public class Issue
+    public class Issue : AuditableEntity
     {
         public int Id { get; set; }
         public string Title { get; set; }
