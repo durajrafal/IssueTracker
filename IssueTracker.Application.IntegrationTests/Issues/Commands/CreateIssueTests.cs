@@ -97,6 +97,10 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
             addedIssue.Description.Should().Be(command.Description);
             addedIssue.Priority.Should().Be(command.Priority);
             addedIssue.Members.Should().HaveCount(2);
+            addedIssue.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            addedIssue.CreatedBy.Should().Be(GetCurrentUserId());
+            addedIssue.LastModified.Should().BeNull();
+            addedIssue.LastModifiedBy.Should().BeNull();
         }
 
         [Fact]

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IssueTracker.Application.Common.Exceptions;
+﻿using IssueTracker.Application.Common.Exceptions;
 using IssueTracker.Application.Issues.Queries.GetIssueDetails;
 
 namespace IssueTracker.Application.IntegrationTests.Issues.Queries
@@ -18,15 +13,21 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Queries
         public async Task Handle_WhenIdIsValid_ShouldReturnIssueDetailsIncludingMembersWithUsersAndProject()
         {
             //Arrange
+            var updatedTitle = "UpdatedTitle";
             var project = await SetupTestProjectAsync(nameof(Handle_WhenIdIsValid_ShouldReturnIssueDetailsIncludingMembersWithUsersAndProject));
             var issue = project.Issues.First();
+            await Database.ActionAsync(ctx =>
+            {
+                var entity = ctx.Issues.First(x => x.Id == issue.Id);
+                entity.Title = updatedTitle;
+            });
 
             //Act
             var query = new GetIssueDetails(issue.Id);
             var result = await Mediator.Send(query);
 
             //Assert
-            result.Title.Should().Be(issue.Title);
+            result.Title.Should().Be(updatedTitle);
             result.Description.Should().Be(issue.Description);
             result.Priority.Should().Be(issue.Priority);
             result.Status.Should().Be(issue.Status);
@@ -35,6 +36,12 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Queries
             result.Project.Should().NotBeNull();
             result.Project.Members.Should().HaveCount(project.Members.Count)
                 .And.AllSatisfy(x => x.User.Should().NotBeNull());
+            result.Created.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10));
+            result.CreatedByUser.Should().NotBeNull();
+            result.LastModified.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10))
+                .And.BeAfter(result.Created);
+            result.LastModifiedByUser.Should().NotBeNull();
+            result.LastModifiedByUser!.UserId.Should().Be(GetCurrentUserId());
         }
 
         [Fact]

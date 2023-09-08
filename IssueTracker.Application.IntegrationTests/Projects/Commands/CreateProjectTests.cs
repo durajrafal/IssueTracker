@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using FluentValidation;
+﻿using FluentValidation;
 using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Application.Projects.Commands.CreateProject;
 using IssueTracker.Domain.Constants;
@@ -23,7 +22,11 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             var addedProjectId = await Mediator.Send(command);
 
             var addedProject = Database.Func(ctx => ctx.Projects.First(x => x.Id == addedProjectId));
-            Assert.Equal(command.Title, addedProject.Title);
+            addedProject.Title.Should().Be(command.Title);
+            addedProject.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            addedProject.CreatedBy.Should().Be(GetCurrentUserId());
+            addedProject.LastModified.Should().BeNull();
+            addedProject.LastModifiedBy.Should().BeNull();
         }
 
         [Fact]

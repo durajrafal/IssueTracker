@@ -24,6 +24,29 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
         }
 
         [Fact]
+        public async Task Handle_WhenProjectIdIsValid_ShouldUpdateProjectInDatabase()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync();
+
+            //Act
+            var command = new UpdateProject
+            {
+                Id = project.Id,
+                Title = "Updated Title",
+                Members = project.Members
+            };
+            await Mediator.Send(command);
+
+            //Assert
+            var updatedProject = Database.Func(ctx => ctx.Projects.First(x => x.Id == project.Id));
+            updatedProject.Title.Should().Be(command.Title);
+            updatedProject.Created.Should().Be(project.Created);
+            updatedProject.LastModified.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            updatedProject.LastModifiedBy.Should().Be(GetCurrentUserId());
+        }
+
+        [Fact]
         public async Task Handle_WhenProjectIdIsValidAndTitleUnique_ShouldAddNewUser()
         {
             //Arrange

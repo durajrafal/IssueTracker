@@ -1,9 +1,5 @@
 ﻿using IssueTracker.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IssueTracker.Domain.ValueObjects;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
 {
@@ -13,5 +9,9 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
         public string Title { get; set; }
         public ICollection<Member> Members { get; set; }
         public ICollection<Issue> Issues { get; set; }
+        public DateTime Created { get; set; }
+        public User CreatedByUser { get; set; }
+        public DateTime? LastModified { get; set; }
+        public User? LastModifiedByUser { get; set; }
     }
 }

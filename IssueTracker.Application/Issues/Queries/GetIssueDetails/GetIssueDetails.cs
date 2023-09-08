@@ -43,7 +43,11 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
                 Priority = entity.Priority,
                 Status = entity.Status,
                 Members = entity.Members,
-                Project = entity.Project
+                Project = entity.Project,
+                Created = entity.Created,
+                CreatedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()!,
+                LastModified = entity.LastModified,
+                LastModifiedByUser = _userService.GetUserByIdAsync(entity.LastModifiedBy).GetAwaiter().GetResult()
             };
         }
     }

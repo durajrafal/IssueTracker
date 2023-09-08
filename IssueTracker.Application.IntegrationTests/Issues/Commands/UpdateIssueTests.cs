@@ -37,6 +37,9 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
             updatedIssue.Description.Should().Be(command.Description);
             updatedIssue.Priority.Should().Be(command.Priority);
             updatedIssue.Status.Should().Be(command.Status);
+            updatedIssue.Created.Should().Be(issue.Created);
+            updatedIssue.LastModified.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            updatedIssue.LastModifiedBy.Should().Be(GetCurrentUserId());
         }
 
         [Fact]
