@@ -1,5 +1,7 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Domain.Common;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Infrastructure.Persistance.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,9 +14,11 @@ namespace IssueTracker.Infrastructure.Persistance
 {
     public class AppDbContext : DbContext, IApplicationDbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
+        private readonly AuditableEntityInterceptor _auditableEntityInterceptor;
 
+        public AppDbContext(DbContextOptions<AppDbContext> options, AuditableEntityInterceptor auditableEntityInterceptor) : base(options)
+        {
+            _auditableEntityInterceptor = auditableEntityInterceptor;
         }
 
         public DbSet<Project> Projects => Set<Project>();
@@ -35,6 +39,11 @@ namespace IssueTracker.Infrastructure.Persistance
                 .HasMany(e => e.Members)
                 .WithMany(e => e.Issues)
                 .UsingEntity("IssuesMembers");
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(_auditableEntityInterceptor);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

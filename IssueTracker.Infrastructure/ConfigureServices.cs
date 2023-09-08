@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using IssueTracker.Infrastructure.Services;
+using IssueTracker.Infrastructure.Persistance.Interceptors;
 
 namespace IssueTracker.Infrastructure
 {
@@ -42,7 +43,7 @@ namespace IssueTracker.Infrastructure
             services.AddScoped<AppDbContextInitialiser>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUserService, UserService>();
-
+            services.AddScoped<AuditableEntityInterceptor>();
 
             return services;
         }
