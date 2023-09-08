@@ -1,4 +1,4 @@
-﻿using IssueTracker.Domain.Models;
+﻿using IssueTracker.Domain.ValueObjects;
 
 namespace IssueTracker.Domain.Entities
 {

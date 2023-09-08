@@ -1,5 +1,5 @@
 ﻿using IssueTracker.Domain.Entities;
-using IssueTracker.Domain.Models;
+using IssueTracker.Domain.ValueObjects;
 
 namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagment
 {

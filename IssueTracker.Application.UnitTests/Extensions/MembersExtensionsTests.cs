@@ -1,6 +1,6 @@
 ﻿using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Domain.Entities;
-using IssueTracker.Domain.Models;
+using IssueTracker.Domain.ValueObjects;
 
 namespace IssueTracker.Application.UnitTests.Extensions
 {

@@ -1,6 +1,6 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Domain.Constants;
-using IssueTracker.Domain.Models;
+using IssueTracker.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 

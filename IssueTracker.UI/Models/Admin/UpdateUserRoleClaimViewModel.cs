@@ -1,4 +1,4 @@
-﻿using IssueTracker.Domain.Models;
+﻿using IssueTracker.Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;

@@ -1,4 +1,4 @@
-﻿using IssueTracker.Domain.Models;
+﻿using IssueTracker.Domain.ValueObjects;
 using System.Security.Claims;
 
 namespace IssueTracker.Application.Common.Interfaces
