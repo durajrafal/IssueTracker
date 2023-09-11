@@ -44,10 +44,10 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             updatedProject.Title.Should().Be(command.Title);
             updatedProject.Created.Should().Be(project.Created);
             updatedProject.LastModified.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
-            updatedProject.LastModifiedBy.Should().Be(GetCurrentUserId());
+            updatedProject.LastModifiedById.Should().Be(GetCurrentUserId());
             updatedProject.AuditEvents.Should().NotBeNullOrEmpty();
             updatedProject.AuditEvents.Select(x => x.Timestamp).Should().AllSatisfy(x => x.Equals(updatedProject.LastModified));
-            updatedProject.AuditEvents.Select(x => x.ModifiedBy).Should().AllBe(GetCurrentUserId());
+            updatedProject.AuditEvents.Select(x => x.ModifiedById).Should().AllBe(GetCurrentUserId());
             var titleUpdateEvent = updatedProject.AuditEvents.First(x => x.PropertyName == "Title");
             titleUpdateEvent.OldValue.Should().Be(JsonSerializer.Serialize(project.Title));
             titleUpdateEvent.NewValue.Should().Be(JsonSerializer.Serialize(command.Title));

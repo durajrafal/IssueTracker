@@ -1,14 +1,8 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
-using IssueTracker.Domain.Common;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.ValueObjects;
 using IssueTracker.Infrastructure.Persistance.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Infrastructure.Persistance
 {
@@ -30,6 +24,7 @@ namespace IssueTracker.Infrastructure.Persistance
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Member>().Ignore(x => x.User);
+            modelBuilder.Entity<AuditEvent>().Ignore(x => x.ModifiedBy);
             modelBuilder.Entity<Project>()
                 .HasMany(e => e.Members)
                 .WithMany(e => e.Projects)

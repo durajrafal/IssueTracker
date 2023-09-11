@@ -26,7 +26,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             addedProject.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
             addedProject.CreatedBy.Should().Be(GetCurrentUserId());
             addedProject.LastModified.Should().BeNull();
-            addedProject.LastModifiedBy.Should().BeNull();
+            addedProject.LastModifiedById.Should().BeNull();
         }
 
         [Fact]

@@ -53,7 +53,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 Created = entity.Created,
                 CreatedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()!,
                 LastModified = entity.LastModified,
-                LastModifiedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()
+                LastModifiedBy = _userService.GetUserByIdAsync(entity.LastModifiedById).GetAwaiter().GetResult(),
             };
         }
     }

@@ -42,10 +42,10 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
             updatedIssue.Created.Should().Be(issue.Created);
             updatedIssue.LastModified.Should().NotBeNull()
                 .And.BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
-            updatedIssue.LastModifiedBy.Should().Be(GetCurrentUserId());
+            updatedIssue.LastModifiedById.Should().Be(GetCurrentUserId());
             updatedIssue.AuditEvents.Should().NotBeNullOrEmpty();
             updatedIssue.AuditEvents.Select(x => x.Timestamp).Should().AllSatisfy(x => x.Equals(updatedIssue.LastModified));
-            updatedIssue.AuditEvents.Select(x => x.ModifiedBy).Should().AllBe(GetCurrentUserId());
+            updatedIssue.AuditEvents.Select(x => x.ModifiedById).Should().AllBe(GetCurrentUserId());
             var titleUpdateEvent = updatedIssue.AuditEvents.First(x => x.PropertyName == "Title");
             titleUpdateEvent.OldValue.Should().Be(JsonSerializer.Serialize(issue.Title));
             titleUpdateEvent.NewValue.Should().Be(JsonSerializer.Serialize(command.Title));

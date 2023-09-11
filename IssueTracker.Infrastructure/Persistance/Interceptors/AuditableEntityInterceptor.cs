@@ -46,7 +46,7 @@ namespace IssueTracker.Infrastructure.Persistance.Interceptors
 
                 if (entry.State == EntityState.Modified)
                 {
-                    entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                    entry.Entity.LastModifiedById = _currentUserService.UserId;
                     entry.Entity.LastModified = dateTimeNow;
                     AddAuditEventsForModifiedProperties(entry, dateTimeNow);
                 }
@@ -62,7 +62,7 @@ namespace IssueTracker.Infrastructure.Persistance.Interceptors
                     PropertyName = property.Metadata.Name,
                     OldValue = JsonSerializer.Serialize(property.OriginalValue),
                     NewValue = JsonSerializer.Serialize(property.CurrentValue),
-                    ModifiedBy = _currentUserService.UserId,
+                    ModifiedById = _currentUserService.UserId,
                     Timestamp = timestamp
                 };
                 entry.Entity.AuditEvents.Add(auditEvent);

@@ -100,7 +100,7 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
             addedIssue.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
             addedIssue.CreatedBy.Should().Be(GetCurrentUserId());
             addedIssue.LastModified.Should().BeNull();
-            addedIssue.LastModifiedBy.Should().BeNull();
+            addedIssue.LastModifiedById.Should().BeNull();
         }
 
         [Fact]
