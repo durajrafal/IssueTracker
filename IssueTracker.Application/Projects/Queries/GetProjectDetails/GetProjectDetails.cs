@@ -33,6 +33,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 .Include(x => x.Members)
                 .Include(x => x.Issues)
                 .ThenInclude(y => y.Members)
+                .Include(x => x.AuditEvents)
                 .FirstOrDefaultAsync(x => x.Id == request.ProjectId).GetAwaiter().GetResult()
                 .ApplyPolicy(new ProjectCanBeAccessedOnlyByMember(), _currentUserService.UserId);
 
@@ -43,6 +44,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
             {
                 await issue.Members.SyncMembersWithUsers(_userService);
             }
+            await entity.AuditEvents.SeedWithUsersAsync(_userService);
 
             return new ProjectDto
             {
@@ -54,6 +56,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 CreatedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()!,
                 LastModified = entity.LastModified,
                 LastModifiedBy = _userService.GetUserByIdAsync(entity.LastModifiedById).GetAwaiter().GetResult(),
+                AuditEvents = entity.AuditEvents
             };
         }
     }

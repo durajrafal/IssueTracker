@@ -13,8 +13,35 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Queries
         public async Task Handle_WhenIdIsValid_ShouldReturnIssueDetailsIncludingMembersWithUsersAndProject()
         {
             //Arrange
-            var updatedTitle = "UpdatedTitle";
             var project = await SetupTestProjectAsync(nameof(Handle_WhenIdIsValid_ShouldReturnIssueDetailsIncludingMembersWithUsersAndProject));
+            var issue = project.Issues.First();
+
+            //Act
+            var query = new GetIssueDetails(issue.Id);
+            var result = await Mediator.Send(query);
+
+            //Assert
+            result.Title.Should().Be(issue.Title);
+            result.Description.Should().Be(issue.Description);
+            result.Priority.Should().Be(issue.Priority);
+            result.Status.Should().Be(issue.Status);
+            result.Members.Should().HaveCount(issue.Members.Count())
+                .And.AllSatisfy(x => x.User.Should().NotBeNull());
+            result.Project.Should().NotBeNull();
+            result.Project.Members.Should().HaveCount(project.Members.Count)
+                .And.AllSatisfy(x => x.User.Should().NotBeNull());
+            result.Created.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10));
+            result.CreatedByUser.Should().NotBeNull();
+            result.LastModified.Should().BeNull();
+            result.LastModifiedBy.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task Handle_WhenIssueWasUpdated_ShouldReturnLastModifiedAndAuditEvents()
+        {
+            //Arrange
+            var updatedTitle = "UpdatedTitle";
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenIssueWasUpdated_ShouldReturnLastModifiedAndAuditEvents));
             var issue = project.Issues.First();
             await Database.ActionAsync(ctx =>
             {
@@ -27,21 +54,16 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Queries
             var result = await Mediator.Send(query);
 
             //Assert
-            result.Title.Should().Be(updatedTitle);
-            result.Description.Should().Be(issue.Description);
-            result.Priority.Should().Be(issue.Priority);
-            result.Status.Should().Be(issue.Status);
-            result.Members.Should().HaveCount(issue.Members.Count())
-                .And.AllSatisfy(x => x.User.Should().NotBeNull());
-            result.Project.Should().NotBeNull();
-            result.Project.Members.Should().HaveCount(project.Members.Count)
-                .And.AllSatisfy(x => x.User.Should().NotBeNull());
-            result.Created.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10));
-            result.CreatedByUser.Should().NotBeNull();
             result.LastModified.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10))
                 .And.BeAfter(result.Created);
-            result.LastModifiedByUser.Should().NotBeNull();
-            result.LastModifiedByUser!.UserId.Should().Be(GetCurrentUserId());
+            result.LastModifiedBy.Should().NotBeNull();
+            result.LastModifiedBy!.UserId.Should().Be(GetCurrentUserId());
+            result.AuditEvents.Should().NotBeNullOrEmpty();
+            var titleUpdateEvent = result.AuditEvents.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
+            titleUpdateEvent.OldValue.Should().Be(issue.Title);
+            titleUpdateEvent.NewValue.Should().Be(updatedTitle);
+            titleUpdateEvent.ModifiedBy.Should().NotBeNull();
+            titleUpdateEvent.ModifiedBy.UserId.Should().Be(GetCurrentUserId());
         }
 
         [Fact]
