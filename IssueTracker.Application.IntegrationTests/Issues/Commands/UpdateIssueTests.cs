@@ -3,6 +3,7 @@ using IssueTracker.Application.Common.Exceptions;
 using IssueTracker.Application.Issues.Commands.UpdateIssue;
 using IssueTracker.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace IssueTracker.Application.IntegrationTests.Issues.Commands
 {
@@ -26,20 +27,28 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
                 Title = "Updated title",
                 Description = "Updated description",
                 Priority = PriorityLevel.Low,
-                Status = WorkingStatus.Completed,
+                Status = WorkingStatus.InProgress,
                 ProjectId = project.Id
             };
             await Mediator.Send(command);
 
             //Assert
-            var updatedIssue = await Database.Func(ctx => ctx.Issues.FirstAsync(x => x.Id == issue.Id));
+            var updatedIssue = await Database.Func(ctx => 
+                ctx.Issues.Include(x => x.AuditEvents).FirstAsync(x => x.Id == issue.Id));
             updatedIssue.Title.Should().Be(command.Title);
             updatedIssue.Description.Should().Be(command.Description);
             updatedIssue.Priority.Should().Be(command.Priority);
             updatedIssue.Status.Should().Be(command.Status);
             updatedIssue.Created.Should().Be(issue.Created);
-            updatedIssue.LastModified.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            updatedIssue.LastModified.Should().NotBeNull()
+                .And.BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
             updatedIssue.LastModifiedBy.Should().Be(GetCurrentUserId());
+            updatedIssue.AuditEvents.Should().NotBeNullOrEmpty();
+            updatedIssue.AuditEvents.Select(x => x.Timestamp).Should().AllSatisfy(x => x.Equals(updatedIssue.LastModified));
+            updatedIssue.AuditEvents.Select(x => x.ModifiedBy).Should().AllBe(GetCurrentUserId());
+            var titleUpdateEvent = updatedIssue.AuditEvents.First(x => x.PropertyName == "Title");
+            titleUpdateEvent.OldValue.Should().Be(JsonSerializer.Serialize(issue.Title));
+            titleUpdateEvent.NewValue.Should().Be(JsonSerializer.Serialize(command.Title));
         }
 
         [Fact]

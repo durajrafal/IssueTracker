@@ -1,7 +1,10 @@
 ﻿using IssueTracker.Application.Common.Interfaces;
 using IssueTracker.Domain.Common;
+using IssueTracker.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Text.Json;
 
 namespace IssueTracker.Infrastructure.Persistance.Interceptors
 {
@@ -32,19 +35,37 @@ namespace IssueTracker.Infrastructure.Persistance.Interceptors
         {
             if (context == null) return;
 
-            foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
+            foreach (var entry in context.ChangeTracker.Entries<IAuditableEntity>())
             {
+                var dateTimeNow = DateTime.UtcNow;
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedBy = _currentUserService.UserId;
-                    entry.Entity.Created = DateTime.UtcNow;
+                    entry.Entity.Created = dateTimeNow;
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.LastModifiedBy = _currentUserService.UserId;
-                    entry.Entity.LastModified = DateTime.UtcNow;
+                    entry.Entity.LastModified = dateTimeNow;
+                    AddAuditEventsForModifiedProperties(entry, dateTimeNow);
                 }
+            }
+        }
+
+        private void AddAuditEventsForModifiedProperties(EntityEntry<IAuditableEntity> entry, DateTime timestamp)
+        {
+            foreach (var property in entry.Properties.Where(x => x.IsModified))
+            {
+                var auditEvent = new AuditEvent
+                {
+                    PropertyName = property.Metadata.Name,
+                    OldValue = JsonSerializer.Serialize(property.OriginalValue),
+                    NewValue = JsonSerializer.Serialize(property.CurrentValue),
+                    ModifiedBy = _currentUserService.UserId,
+                    Timestamp = timestamp
+                };
+                entry.Entity.AuditEvents.Add(auditEvent);
             }
         }
     }

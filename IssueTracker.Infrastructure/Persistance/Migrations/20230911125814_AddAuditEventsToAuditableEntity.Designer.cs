@@ -4,6 +4,7 @@ using IssueTracker.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IssueTracker.Infrastructure.Migrations.AppDb
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230911125814_AddAuditEventsToAuditableEntity")]
+    partial class AddAuditEventsToAuditableEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +64,7 @@ namespace IssueTracker.Infrastructure.Migrations.AppDb
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("AuditEvent", (string)null);
+                    b.ToTable("AuditEvent");
                 });
 
             modelBuilder.Entity("IssueTracker.Domain.Entities.Issue", b =>
@@ -105,7 +108,7 @@ namespace IssueTracker.Infrastructure.Migrations.AppDb
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Issues", (string)null);
+                    b.ToTable("Issues");
                 });
 
             modelBuilder.Entity("IssueTracker.Domain.Entities.Member", b =>
@@ -122,7 +125,7 @@ namespace IssueTracker.Infrastructure.Migrations.AppDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members", (string)null);
+                    b.ToTable("Members");
                 });
 
             modelBuilder.Entity("IssueTracker.Domain.Entities.Project", b =>
@@ -152,7 +155,7 @@ namespace IssueTracker.Infrastructure.Migrations.AppDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("IssuesMembers", b =>
@@ -167,7 +170,7 @@ namespace IssueTracker.Infrastructure.Migrations.AppDb
 
                     b.HasIndex("MembersId");
 
-                    b.ToTable("IssuesMembers", (string)null);
+                    b.ToTable("IssuesMembers");
                 });
 
             modelBuilder.Entity("ProjectsMembers", b =>
@@ -182,7 +185,7 @@ namespace IssueTracker.Infrastructure.Migrations.AppDb
 
                     b.HasIndex("ProjectsId");
 
-                    b.ToTable("ProjectsMembers", (string)null);
+                    b.ToTable("ProjectsMembers");
                 });
 
             modelBuilder.Entity("IssueTracker.Domain.Common.AuditEvent", b =>

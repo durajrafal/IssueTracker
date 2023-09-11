@@ -5,6 +5,7 @@ using IssueTracker.Application.Projects.Commands.UpdateProject;
 using IssueTracker.Domain.Constants;
 using IssueTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace IssueTracker.Application.IntegrationTests.Projects.Commands
 {
@@ -39,11 +40,17 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             await Mediator.Send(command);
 
             //Assert
-            var updatedProject = Database.Func(ctx => ctx.Projects.First(x => x.Id == project.Id));
+            var updatedProject = Database.Func(ctx => ctx.Projects.Include(x => x.AuditEvents).First(x => x.Id == project.Id));
             updatedProject.Title.Should().Be(command.Title);
             updatedProject.Created.Should().Be(project.Created);
             updatedProject.LastModified.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
             updatedProject.LastModifiedBy.Should().Be(GetCurrentUserId());
+            updatedProject.AuditEvents.Should().NotBeNullOrEmpty();
+            updatedProject.AuditEvents.Select(x => x.Timestamp).Should().AllSatisfy(x => x.Equals(updatedProject.LastModified));
+            updatedProject.AuditEvents.Select(x => x.ModifiedBy).Should().AllBe(GetCurrentUserId());
+            var titleUpdateEvent = updatedProject.AuditEvents.First(x => x.PropertyName == "Title");
+            titleUpdateEvent.OldValue.Should().Be(JsonSerializer.Serialize(project.Title));
+            titleUpdateEvent.NewValue.Should().Be(JsonSerializer.Serialize(command.Title));
         }
 
         [Fact]
@@ -60,7 +67,7 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Commands
             { 
                 Id = project.Id, 
                 Title = project.Title,
-                Members = members 
+                Members = members
             };
             await Mediator.Send(command);
 
