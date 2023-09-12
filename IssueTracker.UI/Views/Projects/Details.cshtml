@@ -1,4 +1,5 @@
-﻿@using IssueTracker.UI.HtmlHelpers;
+﻿@using IssueTracker.UI.CommonHelpers;
+@using IssueTracker.UI.HtmlHelpers;
 @using IssueTracker.UI.Models.Projects;
 @model ProjectViewModel
 
@@ -18,20 +19,20 @@
         <div class="d-grid w-100">
             <div class="btn-group" role="group" aria-label="Filtering Buttons">
                 <a asp-route-status="@ProjectViewModel.PENDING" asp-route-orderby="@Model.OrderBy"
-                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CheckIfActive(Model.IsPendingSelected)">
+                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CssHelpers.AddClassConditionally(Model.IsPendingSelected, "active")">
                     Pending
                 </a>
                 <a asp-route-status="@ProjectViewModel.IN_PROGRESS" asp-route-orderby="@Model.OrderBy"
-                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CheckIfActive(Model.IsInProgressSelected)">
+                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CssHelpers.AddClassConditionally(Model.IsInProgressSelected, "active")">
                     In Progress
                 </a>
                 <a asp-route-status="@ProjectViewModel.COMPLETED" asp-route-orderby="@Model.OrderBy"
-                   asp class="btn btn-outline-primary d-flex align-items-center justify-content-center @CheckIfActive(Model.IsCompletedSelected)"
+                   asp class="btn btn-outline-primary d-flex align-items-center justify-content-center @CssHelpers.AddClassConditionally(Model.IsCompletedSelected, "active")"
                    style="border-bottom-right-radius:0;">
                     Completed
                 </a>
                 <a asp-route-status="" asp-route-orderby="@Model.OrderBy"
-                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CheckIfActive(Model.IsAllSelected)"
+                   class="btn btn-outline-primary d-flex align-items-center justify-content-center @CssHelpers.AddClassConditionally(Model.IsAllSelected, "active")"
                    style="border-bottom-left-radius:0;">
                     All
                 </a>
@@ -45,18 +46,42 @@
                 Order By @Model.OrderBy
             </button>
             <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuLink">
-                <li><a asp-route-orderby="" asp-route-status="@Model.SelectedStatus" 
-                    class="dropdown-item @CheckIfActive(Model.IsNoneOrderSelected)">
-                    None
-                </a></li>
-                <li><a asp-route-orderby="Priority" asp-route-status="@Model.SelectedStatus" 
-                    class="dropdown-item @CheckIfActive(Model.IsPriorityOrderSelected)">
-                    Priority
-                </a></li>
-                <li><a asp-route-orderby="Date" asp-route-status="@Model.SelectedStatus" 
-                    class="dropdown-item @CheckIfActive(Model.IsDateOrderSelected)">
-                    Date
-                </a></li>
+                <li>
+                    <a asp-route-orderby="" asp-route-status="@Model.SelectedStatus"
+                       class="dropdown-item @CssHelpers.AddClassConditionally(Model.IsNoneOrderSelected, "active")">
+                        None
+                    </a>
+                </li>
+                <li>
+                    <a asp-route-orderby="Priority" asp-route-status="@Model.SelectedStatus"
+                       class="dropdown-item @CssHelpers.AddClassConditionally(Model.IsPriorityOrderSelected, "active")">
+                        @ProjectViewModel.PRIORITY
+                    </a>
+                </li>
+                <li>
+                    <a asp-route-orderby="@ProjectViewModel.DATE_CREATED" asp-route-status="@Model.SelectedStatus"
+                       class="dropdown-item @CssHelpers.AddClassConditionally(Model.IsDateCreatedOrderSelected, "active")">
+                        @ProjectViewModel.DATE_CREATED
+                    </a>
+                </li>
+                <li>
+                    <a asp-route-orderby="@ProjectViewModel.DATE_CREATED_DESC" asp-route-status="@Model.SelectedStatus"
+                       class="dropdown-item @CssHelpers.AddClassConditionally(Model.IsDateCreatedDescOrderSelected, "active")">
+                        @ProjectViewModel.DATE_CREATED_DESC
+                    </a>
+                </li>
+                <li>
+                    <a asp-route-orderby="@ProjectViewModel.DATE_MODIFIED" asp-route-status="@Model.SelectedStatus"
+                       class="dropdown-item @CssHelpers.AddClassConditionally(Model.IsDateModifiedOrderSelected, "active")">
+                        @ProjectViewModel.DATE_MODIFIED
+                    </a>
+                </li>                
+                <li>
+                    <a asp-route-orderby="@ProjectViewModel.DATE_MODIFIED_DESC" asp-route-status="@Model.SelectedStatus"
+                       class="dropdown-item @CssHelpers.AddClassConditionally(Model.IsDateModifiedDescOrderSelected, "active")">
+                        @ProjectViewModel.DATE_MODIFIED_DESC
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -70,12 +95,3 @@
         </div>
     }
 </div>
-
-@{
-    string CheckIfActive(bool condition)
-    {
-        if (condition)
-            return "active";
-        return "";
-    }
-}

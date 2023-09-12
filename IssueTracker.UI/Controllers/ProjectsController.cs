@@ -44,9 +44,17 @@ namespace IssueTracker.UI.Controllers
                 case ProjectViewModel.PRIORITY:
                     vm.Issues = vm.Issues.OrderByDescending(x => x.Priority).ToList();
                     break;
-                case ProjectViewModel.DATE:
-                    //TODO - change it to date when it's added
-                    vm.Issues = vm.Issues.OrderByDescending(x => x.Id).ToList();
+                case ProjectViewModel.DATE_CREATED:
+                    vm.Issues = vm.Issues.OrderBy(x => x.Created).ToList();
+                    break;                
+                case ProjectViewModel.DATE_CREATED_DESC:
+                    vm.Issues = vm.Issues.OrderByDescending(x => x.Created).ToList();
+                    break;
+                case ProjectViewModel.DATE_MODIFIED:
+                    vm.Issues = vm.Issues.OrderBy(x => x.LastModified).ToList();
+                    break;
+                case ProjectViewModel.DATE_MODIFIED_DESC:
+                    vm.Issues = vm.Issues.OrderByDescending(x => x.LastModified).ToList();
                     break;
                 default:
                     break;
