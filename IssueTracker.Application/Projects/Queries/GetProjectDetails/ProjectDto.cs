@@ -8,6 +8,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
         public int Id { get; set; }
         public string Title { get; set; }
         public ICollection<Member> Members { get; set; }
+        //TODO - should I change it to IssueDto?
         public ICollection<Issue> Issues { get; set; }
         public AuditDto Audit { get; set; } = new AuditDto();
 

@@ -1,5 +1,6 @@
 ﻿using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Enums;
+using IssueTracker.UI.Models;
 using IssueTracker.UI.Models.Projects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,8 @@ namespace IssueTracker.UI.Controllers
             {
                 Id = result.Id,
                 Title = result.Title,
-                OrderBy = orderBy
+                OrderBy = orderBy,
+                Audit = AuditViewModel.Create(result.Audit)
             };
 
             if (Enum.TryParse(status, out statusParsed))

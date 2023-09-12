@@ -11,10 +11,10 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
         }
 
         [Fact]
-        public async Task Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers()
+        public async Task Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembersAndAudit()
         {
             //Arrange
-            var project = await SetupTestProjectAsync(nameof(Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembers));
+            var project = await SetupTestProjectAsync(nameof(Handle_WhenProjectIdIsValid_ShouldGetDetailsIncludingMembersAndIssuesWithMembersAndAudit));
 
             //Act
             var query = new GetProjectDetails { ProjectId = project.Id};
@@ -32,6 +32,8 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
             result.Audit.CreatedByUser.UserId.Should().Be(GetCurrentUserId());
             result.Audit.LastModified.Should().BeNull();
             result.Audit.LastModifiedBy.Should().BeNull();
+            result.Issues.Should().AllSatisfy(x => x.AuditEvents.Should().NotBeNull())
+                .And.AllSatisfy(x => x.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10)));
         }
 
         [Fact]

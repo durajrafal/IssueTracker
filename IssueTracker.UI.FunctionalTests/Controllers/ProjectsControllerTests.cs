@@ -32,6 +32,8 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             //Assert
             model.Id.Should().Be(project.Id);
             model.Title.Should().Be(project.Title);
+            model.Audit.Created.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10));
+            model.Audit.CreatedBy.Should().NotBeNull();
         }
 
         [Fact]

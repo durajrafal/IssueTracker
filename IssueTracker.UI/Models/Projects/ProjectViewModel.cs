@@ -10,6 +10,7 @@ namespace IssueTracker.UI.Models.Projects
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
         public string? SelectedStatus { get; set; }
         public string? OrderBy { get; set; }
+        public AuditViewModel Audit { get; set; }
         public bool IsPendingSelected { get => SelectedStatus == PENDING; }
         public bool IsInProgressSelected { get => SelectedStatus == IN_PROGRESS; }
         public bool IsCompletedSelected { get => SelectedStatus == COMPLETED; }
