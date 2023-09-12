@@ -2,7 +2,7 @@
 
 namespace IssueTracker.Application.Common.Models
 {
-    public class AuditableEntityDto
+    public class AuditDto
     {
         public DateTime Created { get; set; }
         public User CreatedByUser { get; set; }

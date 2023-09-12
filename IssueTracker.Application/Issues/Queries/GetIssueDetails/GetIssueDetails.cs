@@ -48,7 +48,7 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
                 Status = entity.Status,
                 Members = entity.Members,
                 Project = entity.Project,
-                Audit = new AuditableEntityDto()
+                Audit = new AuditDto()
                 {
                     Created = entity.Created,
                     CreatedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()!,

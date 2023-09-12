@@ -30,10 +30,10 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Queries
             result.Project.Should().NotBeNull();
             result.Project.Members.Should().HaveCount(project.Members.Count)
                 .And.AllSatisfy(x => x.User.Should().NotBeNull());
-            result.Created.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10));
-            result.CreatedByUser.Should().NotBeNull();
-            result.LastModified.Should().BeNull();
-            result.LastModifiedBy.Should().BeNull();
+            result.Audit.Created.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10));
+            result.Audit.CreatedByUser.Should().NotBeNull();
+            result.Audit.LastModified.Should().BeNull();
+            result.Audit.LastModifiedBy.Should().BeNull();
         }
 
         [Fact]
@@ -54,12 +54,12 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Queries
             var result = await Mediator.Send(query);
 
             //Assert
-            result.LastModified.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10))
-                .And.BeAfter(result.Created);
-            result.LastModifiedBy.Should().NotBeNull();
-            result.LastModifiedBy!.UserId.Should().Be(GetCurrentUserId());
-            result.AuditEvents.Items.Should().NotBeNullOrEmpty();
-            var titleUpdateEvent = result.AuditEvents.Items.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
+            result.Audit.LastModified.Should().BeCloseTo(project.Created, TimeSpan.FromSeconds(10))
+                .And.BeAfter(result.Audit.Created);
+            result.Audit.LastModifiedBy.Should().NotBeNull();
+            result.Audit.LastModifiedBy!.UserId.Should().Be(GetCurrentUserId());
+            result.Audit.AuditEvents.Items.Should().NotBeNullOrEmpty();
+            var titleUpdateEvent = result.Audit.AuditEvents.Items.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
             titleUpdateEvent.OldValue.Should().Be(issue.Title);
             titleUpdateEvent.NewValue.Should().Be(updatedTitle);
             titleUpdateEvent.ModifiedBy.Should().NotBeNull();

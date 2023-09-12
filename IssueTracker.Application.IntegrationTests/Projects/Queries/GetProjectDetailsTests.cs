@@ -27,11 +27,11 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
             Assert.Equal(project.Issues.Count, result.Issues.Count);
             Assert.True(result.Issues.All(x => x.Title != String.Empty));
             Assert.True(result.Issues.All(x => x.Members.Count > 0));
-            result.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
-            result.CreatedByUser.Should().NotBeNull();
-            result.CreatedByUser.UserId.Should().Be(GetCurrentUserId());
-            result.LastModified.Should().BeNull();
-            result.LastModifiedBy.Should().BeNull();
+            result.Audit.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            result.Audit.CreatedByUser.Should().NotBeNull();
+            result.Audit.CreatedByUser.UserId.Should().Be(GetCurrentUserId());
+            result.Audit.LastModified.Should().BeNull();
+            result.Audit.LastModifiedBy.Should().BeNull();
         }
 
         [Fact]
@@ -51,12 +51,12 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
             var result = await Mediator.Send(query);
 
             //Assert
-            result.LastModified.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10))
-                .And.BeAfter(result.Created);
-            result.LastModifiedBy.Should().NotBeNull();
-            result.LastModifiedBy!.UserId.Should().Be(GetCurrentUserId());
-            result.AuditEvents.Items.Should().NotBeNullOrEmpty();
-            var titleUpdateEvent = result.AuditEvents.Items.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
+            result.Audit.LastModified.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10))
+                .And.BeAfter(result.Audit.Created);
+            result.Audit.LastModifiedBy.Should().NotBeNull();
+            result.Audit.LastModifiedBy!.UserId.Should().Be(GetCurrentUserId());
+            result.Audit.AuditEvents.Items.Should().NotBeNullOrEmpty();
+            var titleUpdateEvent = result.Audit.AuditEvents.Items.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
             titleUpdateEvent.OldValue.Should().Be(project.Title);
             titleUpdateEvent.NewValue.Should().Be(updatedTitle);
             titleUpdateEvent.ModifiedById.Should().Be(GetCurrentUserId());

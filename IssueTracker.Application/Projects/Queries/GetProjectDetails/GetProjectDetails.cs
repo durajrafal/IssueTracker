@@ -56,12 +56,15 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 Title = entity.Title,
                 Members = await entity.Members.SyncMembersWithUsers(_userService),
                 Issues = entity.Issues,
-                Created = entity.Created,
-                CreatedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()!,
-                LastModified = entity.LastModified,
-                LastModifiedBy = _userService.GetUserByIdAsync(entity.LastModifiedById).GetAwaiter().GetResult(),
-                AuditEvents = PaginatedList<AuditEvent>.Create(entity.AuditEvents.AsQueryable(),
+                Audit = new AuditDto()
+                {
+                    Created = entity.Created,
+                    CreatedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()!,
+                    LastModified = entity.LastModified,
+                    LastModifiedBy = _userService.GetUserByIdAsync(entity.LastModifiedById).GetAwaiter().GetResult(),
+                    AuditEvents = PaginatedList<AuditEvent>.Create(entity.AuditEvents.AsQueryable(),
                     request.PageNumber, request.PageSize)
+                }
             };
         }
     }

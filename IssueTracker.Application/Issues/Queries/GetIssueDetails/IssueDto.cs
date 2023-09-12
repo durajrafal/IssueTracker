@@ -4,7 +4,7 @@ using IssueTracker.Domain.Enums;
 
 namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
 {
-    public class IssueDto : AuditableEntityDto
+    public class IssueDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -13,5 +13,6 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
         public WorkingStatus Status { get; set; }
         public ICollection<Member> Members { get; set; }
         public Project Project { get; set; }
+        public AuditDto Audit { get; set; } = new AuditDto();
     }
 }
