@@ -8,6 +8,6 @@ namespace IssueTracker.Application.Common.Models
         public User CreatedByUser { get; set; }
         public DateTime? LastModified { get; set; }
         public User? LastModifiedBy { get; set; }
-        public ICollection<AuditEvent> AuditEvents { get; set; }
+        public PaginatedList<AuditEvent> AuditEvents { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using IssueTracker.Application.Common.Exceptions;
 using IssueTracker.Application.Issues.Commands.UpdateIssue;
 using IssueTracker.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace IssueTracker.Application.IntegrationTests.Issues.Commands
 {
@@ -46,9 +45,9 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
             updatedIssue.AuditEvents.Should().NotBeNullOrEmpty();
             updatedIssue.AuditEvents.Select(x => x.Timestamp).Should().AllSatisfy(x => x.Equals(updatedIssue.LastModified));
             updatedIssue.AuditEvents.Select(x => x.ModifiedById).Should().AllBe(GetCurrentUserId());
-            var titleUpdateEvent = updatedIssue.AuditEvents.First(x => x.PropertyName == "Title");
-            titleUpdateEvent.OldValue.Should().Be(JsonSerializer.Serialize(issue.Title));
-            titleUpdateEvent.NewValue.Should().Be(JsonSerializer.Serialize(command.Title));
+            var titleUpdateEvent = updatedIssue.AuditEvents.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
+            titleUpdateEvent.OldValue.Should().Be(issue.Title);
+            titleUpdateEvent.NewValue.Should().Be(command.Title);
         }
 
         [Fact]

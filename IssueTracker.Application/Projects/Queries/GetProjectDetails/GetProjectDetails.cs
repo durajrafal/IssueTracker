@@ -2,7 +2,9 @@
 using IssueTracker.Application.Common.Exceptions;
 using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Application.Common.Models;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.ValueObjects;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +13,8 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
     public class GetProjectDetails : IRequest<ProjectDto>
     {
         public int ProjectId { get; set; }
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
     }
 
     public class GetProjectDetailsQueryHandler : IRequestHandler<GetProjectDetails, ProjectDto>
@@ -56,7 +60,8 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 CreatedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()!,
                 LastModified = entity.LastModified,
                 LastModifiedBy = _userService.GetUserByIdAsync(entity.LastModifiedById).GetAwaiter().GetResult(),
-                AuditEvents = entity.AuditEvents
+                AuditEvents = PaginatedList<AuditEvent>.Create(entity.AuditEvents.AsQueryable(),
+                    request.PageNumber, request.PageSize)
             };
         }
     }

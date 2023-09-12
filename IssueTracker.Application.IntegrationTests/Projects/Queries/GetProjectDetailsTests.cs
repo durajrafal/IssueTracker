@@ -55,7 +55,8 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
                 .And.BeAfter(result.Created);
             result.LastModifiedBy.Should().NotBeNull();
             result.LastModifiedBy!.UserId.Should().Be(GetCurrentUserId());
-            var titleUpdateEvent = result.AuditEvents.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
+            result.AuditEvents.Items.Should().NotBeNullOrEmpty();
+            var titleUpdateEvent = result.AuditEvents.Items.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
             titleUpdateEvent.OldValue.Should().Be(project.Title);
             titleUpdateEvent.NewValue.Should().Be(updatedTitle);
             titleUpdateEvent.ModifiedById.Should().Be(GetCurrentUserId());
