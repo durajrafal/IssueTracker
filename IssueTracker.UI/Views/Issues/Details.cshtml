@@ -1,12 +1,15 @@
 ﻿@using IssueTracker.UI.Models.Issues;
 @using IssueTracker.Domain.Enums;
 @using IssueTracker.UI.HtmlHelpers;
+@using IssueTracker.UI.CommonHelpers;
+
 @model IssueViewModel
 
 @{
     ViewData["Title"] = $"Issue #{Model.Id}";
-}
 
+    (int lowestPaginationPage, int highestPaginationPage) = PaginationHelpers.CalculatePaginationButtons(Model.Audit.AuditEvents);
+}
 
 <article class="card mt-2">
     <div class="card-header">
@@ -54,10 +57,66 @@
                 </div>
                 <div class="mt-2">
                     @Html.LabelOverLine("History", "bi-book")
+                    @if (Model.Audit.AuditEvents.TotalCount == 0)
+                    {
+                        <p class="text-light text-center">Nothing to show...</p>
+                    }
+                    else
+                    {
+
+                        <table class="table table-dark table-striped">
+                            <thead class="table-light text-secondary">
+                                <tr>
+                                    <th scope="col">Time</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Event</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Audit.AuditEvents.Items)
+                                {
+                                    <tr>
+                                        <td style="vertical-align:middle;" scope="row">@item.Timestamp.ToLocalTime()</td>
+                                        <td style="vertical-align:middle;" scope="row">@item.ModifiedBy.FullName</td>
+                                        <td class="text-break text-wrap" style="width:99%; vertical-align:middle;" scope="row">@item.GetSummaryText()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div>
+                            <ul class="pagination pagination-sm">
+                                <li class="page-item @(CssHelpers.AddClassConditionally(!Model.Audit.AuditEvents.HasPreviousPage, "disabled"))">
+                                    <a class="page-link" asp-route-page="@(Model.Audit.AuditEvents.PageNumber-1)">&laquo;</a>
+                                </li>
+                                @for (int i = lowestPaginationPage; i <= highestPaginationPage; i++)
+                                {
+                                    <li class="page-item @(CssHelpers.AddClassConditionally(Model.Audit.AuditEvents.PageNumber == i, "active"))">
+                                        <a class="page-link" asp-route-page="@i">@i</a>
+                                    </li>
+                                }
+                                <li class="page-item @(CssHelpers.AddClassConditionally(!Model.Audit.AuditEvents.HasNextPage, "disabled"))">
+                                    <a class="page-link" asp-route-page="@(Model.Audit.AuditEvents.PageNumber+1)">&raquo;</a>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+
                 </div>
             </div>
         </div>
     </div>
-    <div class="card-footer text-muted">
+    <div class="card-footer text-muted d-flex justify-content-end" style="font-size:.8rem;">
+        @if (Model.Audit.LastModified is not null && Model.Audit.LastModifiedBy is not null)
+        {
+            <span>
+                Last modified @Model.Audit.LastModified.Value.ToLocalTime() by @Model.Audit.LastModifiedBy.FullName
+            </span>
+        }
+        else
+        {
+            <span>
+                Created @Model.Audit.Created.ToLocalTime() by @Model.Audit.CreatedBy?.FullName
+            </span>
+        }
     </div>
 </article>

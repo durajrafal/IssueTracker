@@ -58,7 +58,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             var issue = project.Issues.First();
 
             //Act
-            var response = await _controller.Details(issue.Id) as ViewResult;
+            var response = await _controller.Details(issue.Id, null) as ViewResult;
             var responseModel = response!.Model as IssueViewModel;
 
             //Assert
@@ -72,6 +72,8 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
                 .And.AllSatisfy(x => x.User.Should().NotBeNull());
             responseModel.Members.Should().HaveCount(issue.Members.Count)
                 .And.AllSatisfy(x => x.User.Should().NotBeNull());
+            responseModel.Audit.AuditEvents.PageNumber.Should().Be(1);
+            responseModel.Audit.AuditEvents.PageSize.Should().Be(5);
         }
 
         [Fact]
@@ -83,7 +85,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             var issue = project.Issues.First();
 
             //Act
-            Func<Task> act = async () => await _controller.Details(issue.Id);
+            Func<Task> act = async () => await _controller.Details(issue.Id, null);
 
             //Assert
             await act.Should().ThrowAsync<UnauthorizedAccessException>();

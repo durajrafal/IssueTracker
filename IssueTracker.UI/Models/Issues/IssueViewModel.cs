@@ -12,5 +12,6 @@ namespace IssueTracker.UI.Models.Issues
         public WorkingStatus Status { get; set; }
         public ICollection<Member> Members { get; set; }
         public Project Project { get; set; }
+        public AuditViewModel Audit { get; set; }
     }
 }

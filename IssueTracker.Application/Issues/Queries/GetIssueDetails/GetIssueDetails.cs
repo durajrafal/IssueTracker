@@ -54,7 +54,7 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
                     CreatedByUser = _userService.GetUserByIdAsync(entity.CreatedBy).GetAwaiter().GetResult()!,
                     LastModified = entity.LastModified,
                     LastModifiedBy = _userService.GetUserByIdAsync(entity.LastModifiedById).GetAwaiter().GetResult(),
-                    AuditEvents = PaginatedList<AuditEvent>.Create(entity.AuditEvents.AsQueryable(),
+                    AuditEvents = PaginatedList<AuditEvent>.Create(entity.AuditEvents.OrderByDescending(x => x.Timestamp).AsQueryable(),
                     request.PageNumber, request.PageSize)
                 }
             };

@@ -5,6 +5,7 @@ using IssueTracker.Application.Issues.Commands.UpdateIssue;
 using IssueTracker.Application.Issues.Queries.GetIssueDetails;
 using IssueTracker.Application.Projects.Queries.GetProjectDetails;
 using IssueTracker.Domain.Entities;
+using IssueTracker.UI.Models;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,9 +56,14 @@ namespace IssueTracker.UI.Controllers
         }
 
         [HttpGet("{id}/[action]")]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, int? page)
         {
-            var query = new GetIssueDetails(id);
+            GetIssueDetails query;
+            if (page is not null)
+                query = new GetIssueDetails(id, page.Value);
+            else
+                query = new GetIssueDetails(id);
+
             var result = await Mediator.Send(query);
 
             var vm = new IssueViewModel()
@@ -68,7 +74,8 @@ namespace IssueTracker.UI.Controllers
                 Priority = result.Priority,
                 Status = result.Status,
                 Project = result.Project,
-                Members = result.Members
+                Members = result.Members,
+                Audit = AuditViewModel.Create(result.Audit)
             };
 
             return View(vm);
