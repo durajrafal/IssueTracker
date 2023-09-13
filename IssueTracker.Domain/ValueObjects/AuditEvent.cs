@@ -13,12 +13,6 @@ namespace IssueTracker.Domain.ValueObjects
         public User ModifiedBy { get; set; }
         public DateTime Timestamp { get; set; }
 
-        public AuditEvent DeserializeValuesProperties()
-        {
-            OldValue = GetOldValueDeserializedAs<string>();
-            NewValue = GetNewValueDeserializedAs<string>();
-            return this;
-        }
         public T GetOldValueDeserializedAs<T>()
         {
             return JsonSerializer.Deserialize<T>(OldValue)!;

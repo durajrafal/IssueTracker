@@ -59,7 +59,7 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Queries
             result.Audit.LastModifiedBy.Should().NotBeNull();
             result.Audit.LastModifiedBy!.UserId.Should().Be(GetCurrentUserId());
             result.Audit.AuditEvents.Items.Should().NotBeNullOrEmpty();
-            var titleUpdateEvent = result.Audit.AuditEvents.Items.First(x => x.PropertyName == "Title").DeserializeValuesProperties();
+            var titleUpdateEvent = result.Audit.AuditEvents.Items.First(x => x.PropertyName == "Title").DeserializeValuesPropertiesAsString();
             titleUpdateEvent.OldValue.Should().Be(issue.Title);
             titleUpdateEvent.NewValue.Should().Be(updatedTitle);
             titleUpdateEvent.ModifiedBy.Should().NotBeNull();
