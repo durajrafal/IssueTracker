@@ -36,7 +36,7 @@ namespace IssueTracker.Domain.ValueObjects
                     output = $"{PropertyName} was changed from [{Enum.Parse(typeof(PriorityLevel), OldValue)}] to [{Enum.Parse(typeof(PriorityLevel), NewValue)}].";
                     break;
                 default:
-                    output = $"{PropertyName} was changed from [{OldValue}] to [{NewValue}].";
+                    output = $"{PropertyName} was changed from [{GetOldValueDeserializedAs<string>()}] to [{GetNewValueDeserializedAs<string>()}].";
                     break;
             }
 
