@@ -28,7 +28,7 @@ export class MembersManagementTablesHandler {
     private readonly membersTable: HTMLTableElement;
     private readonly otherUsersTable: HTMLTableElement;
 
-    constructor(memberTableBodySelector: string, otherUserTableBodySelector: string, private userLists: MembersManagement) {
+    constructor(memberTableBodySelector: string, otherUserTableBodySelector: string, private userLists: MembersManagement, private canHaveNoMembers: boolean = false) {
         this.membersTable = document.querySelector(memberTableBodySelector);
         this.otherUsersTable = document.querySelector(otherUserTableBodySelector);
     }
@@ -75,7 +75,7 @@ export class MembersManagementTablesHandler {
             firstName: user.firstName,
             lastName: user.lastName,
         };
-        if (this.userLists.members.length > 1) {
+        if (this.userLists.members.length > 1 || this.canHaveNoMembers) {
             this.userLists.otherUsers.push(deletedUser);
             const index = this.userLists.members.findIndex(x => x.user === user);
             this.userLists.members.splice(index, 1);

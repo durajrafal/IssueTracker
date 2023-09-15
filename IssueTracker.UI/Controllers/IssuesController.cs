@@ -144,6 +144,34 @@ namespace IssueTracker.UI.Controllers
 
             return TypedResults.NoContent();
         }
+
+        [HttpGet("~/api/projects/{projectId}/issues/{id}/members")]
+        public async Task<IResult> Members(int id, int projectId)
+        {
+            // TODO - consider better option: us 2 already created queries or create new query just for this
+            var queryProject = new GetProjectDetails() { ProjectId = projectId };
+            var queryIssue = new GetIssueDetails(id);
+            ProjectDto project;
+            IssueDto issue;
+            try
+            {
+                project = await Mediator.Send(queryProject);
+                issue = await Mediator.Send(queryIssue);
+            }
+            catch (Exception e)
+            {
+                return GetTypedResultBasedOnExceptionType(e);
+            }
+
+            var model = new IssueMembersModel()
+            {
+                Id = issue.Id,
+                Members = issue.Members,
+                OtherUsers = project.Members.Except(issue.Members).Select(x => x.User)
+            };
+
+            return TypedResults.Ok(model);
+        }
     }
 
 }
