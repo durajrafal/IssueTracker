@@ -26,8 +26,10 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
         public async Task<IssueDto> Handle(GetIssueDetails request, CancellationToken cancellationToken)
         {
             var entity = _ctx.Issues
+                .AsNoTracking()
                 .Include(x => x.Members)
                 .Include(x => x.Project)
+                .ThenInclude(x => x.Members)
                 .Include(x => x.AuditEvents)
                 .FirstOrDefaultAsync(x => x.Id == request.Id).GetAwaiter().GetResult()
                 .ApplyPolicy(new IssueCanBeAccessedOnlyByProjectMember(_ctx), _userService.GetCurrentUserId());

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Common.Exceptions;
 using IssueTracker.Application.Issues.Commands.UpdateIssue;
+using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,17 +28,24 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
                 Description = "Updated description",
                 Priority = PriorityLevel.Low,
                 Status = WorkingStatus.InProgress,
-                ProjectId = project.Id
+                ProjectId = project.Id,
+                Members = issue.Members.Append(project.Issues.Last().Members.First())
+                            .Select(x => new Member { UserId = x.UserId }).ToList()
             };
             await Mediator.Send(command);
 
             //Assert
             var updatedIssue = await Database.Func(ctx => 
-                ctx.Issues.Include(x => x.AuditEvents).FirstAsync(x => x.Id == issue.Id));
+                ctx.Issues
+                .Include(x => x.AuditEvents)
+                .Include(x => x.Members)
+                .FirstAsync(x => x.Id == issue.Id)
+            );
             updatedIssue.Title.Should().Be(command.Title);
             updatedIssue.Description.Should().Be(command.Description);
             updatedIssue.Priority.Should().Be(command.Priority);
             updatedIssue.Status.Should().Be(command.Status);
+            updatedIssue.Members.Should().BeEquivalentTo(command.Members);
             updatedIssue.Created.Should().Be(issue.Created);
             updatedIssue.LastModified.Should().NotBeNull()
                 .And.BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));

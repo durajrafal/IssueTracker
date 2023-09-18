@@ -17,6 +17,7 @@ namespace IssueTracker.Application.Common.AccessPolicies
         public Issue? Apply(Issue entity, string userId)
         {
             var project = _ctx.Projects
+                .AsNoTracking()
                 .Include(x => x.Members)
                 .FirstOrDefault(x => x.Id == entity.ProjectId)
                 .ApplyPolicy(new ProjectCanBeAccessedOnlyByMember(), userId);

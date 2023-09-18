@@ -106,6 +106,9 @@ namespace IssueTracker.UI.Controllers
             if (id != model.Id)
                 return BadRequest();
 
+            var query = new GetIssueDetails(id);
+            var result = await Mediator.Send(query);
+
             var command = new UpdateIssue()
             {
                 Id = model.Id,
@@ -113,7 +116,8 @@ namespace IssueTracker.UI.Controllers
                 Description = model.Description,
                 Priority = model.Priority,
                 Status = model.Status,
-                ProjectId = model.ProjectId
+                ProjectId = model.ProjectId,
+                Members = result.Members
             };
 
             try

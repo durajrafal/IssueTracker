@@ -17,6 +17,7 @@ namespace IssueTracker.Application.Issues.Commands.UpdateIssue
         public PriorityLevel Priority { get; set; }
         public WorkingStatus Status { get; set; }
         public int ProjectId { get; set; }
+        public IEnumerable<Member> Members { get; set; }
     }
 
     public class UpdateIssueHandler : IRequestHandler<UpdateIssue, int>
@@ -33,6 +34,7 @@ namespace IssueTracker.Application.Issues.Commands.UpdateIssue
         public async Task<int> Handle(UpdateIssue request, CancellationToken cancellationToken)
         {
             var entity = _ctx.Issues
+                .Include(x => x.Members)
                 .FirstOrDefaultAsync(x => x.Id == request.Id).GetAwaiter().GetResult()
                 .ApplyPolicy(new IssueCanBeAccessedOnlyByProjectMember(_ctx),_currentUserService.UserId);
 
@@ -43,6 +45,7 @@ namespace IssueTracker.Application.Issues.Commands.UpdateIssue
             entity.Description = request.Description;
             entity.Priority = request.Priority;
             entity.Status = request.Status;
+            entity.UpdateMembers(request.Members.SyncExistingMembersId(_ctx.Members));
 
             return await _ctx.SaveChangesAsync(cancellationToken);
         }

@@ -19,6 +19,19 @@ namespace IssueTracker.Application.Common.Helpers
             }
         }
 
+        public static IEnumerable<Member> SyncExistingMembersId(this IEnumerable<Member> members, DbSet<Member> existingMembers)
+        {
+            members.Where(x => x.Id == 0).ToList()
+                .ForEach(x => {
+                    var existingMember = existingMembers.AsNoTracking().FirstOrDefault(y => y.UserId == x.UserId);
+                    if (existingMember is not null)
+                    {
+                        x.Id = existingMember.Id;
+                    }
+                });
+            return members;
+        }
+
         public static async Task<ICollection<Member>> SyncMembersWithUsers(this ICollection<Member> members, IUserService userService)
         {
             await PopulateMembersWithUsersAsync(members, userService);

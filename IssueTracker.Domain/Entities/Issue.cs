@@ -11,7 +11,7 @@ namespace IssueTracker.Domain.Entities
         public string? Description { get; set; }
         public PriorityLevel Priority { get; set; } = PriorityLevel.None;
         public WorkingStatus Status { get; set; } = WorkingStatus.Pending;
-        public ICollection<Member> Members { get; set; } = new List<Member>();
+        public ICollection<Member> Members { get; init; } = new List<Member>();
         public int ProjectId { get; set; }
         public Project Project { get; set; }
         public DateTime Created { get; set; }
@@ -19,5 +19,20 @@ namespace IssueTracker.Domain.Entities
         public DateTime? LastModified { get; set; }
         public string? LastModifiedById { get; set; }
         public ICollection<AuditEvent> AuditEvents { get; set; } = new List<AuditEvent>();
+
+        public void UpdateMembers(IEnumerable<Member> members)
+        {
+            var membersToAdd = members.Except(Members).ToList();
+            foreach (var member in membersToAdd)
+            {
+                Members.Add(member);
+            }
+
+            var membersToRemove = Members.Except(members).ToList();
+            foreach (var member in membersToRemove)
+            {
+                Members.Remove(member);
+            }
+        }
     }
 }
