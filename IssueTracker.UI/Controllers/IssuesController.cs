@@ -150,16 +150,12 @@ namespace IssueTracker.UI.Controllers
         }
 
         [HttpGet("~/api/projects/{projectId}/issues/{id}/members")]
-        public async Task<IResult> Members(int id, int projectId)
+        public async Task<IResult> Members(int id)
         {
-            // TODO - consider better option: us 2 already created queries or create new query just for this
-            var queryProject = new GetProjectDetails() { ProjectId = projectId };
             var queryIssue = new GetIssueDetails(id);
-            ProjectDto project;
             IssueDto issue;
             try
             {
-                project = await Mediator.Send(queryProject);
                 issue = await Mediator.Send(queryIssue);
             }
             catch (Exception e)
@@ -171,10 +167,41 @@ namespace IssueTracker.UI.Controllers
             {
                 Id = issue.Id,
                 Members = issue.Members,
-                OtherUsers = project.Members.Except(issue.Members).Select(x => x.User)
+                OtherUsers = issue.Project.Members.Except(issue.Members).Select(x => x.User)
             };
 
             return TypedResults.Ok(model);
+        }
+
+        [HttpPut("~/api/projects/{projectId}/issues/{id}/members")]
+        public async Task<IResult> Members(int id, [FromBody] IssueMembersModel model)
+        {
+            if (id != model.Id)
+                return TypedResults.BadRequest();
+
+            var query = new GetIssueDetails(id);
+            var result = await Mediator.Send(query);
+
+            var command = new UpdateIssue()
+            {
+                Id = result.Id,
+                Title = result.Title,
+                Description = result.Description,
+                Priority = result.Priority,
+                Status = result.Status,
+                ProjectId = result.Project.Id,
+                Members = model.Members
+            };
+            try
+            {
+                var response = await Mediator.Send(command);
+            }
+            catch (Exception e)
+            {
+                return GetTypedResultBasedOnExceptionType(e);
+            }
+
+            return TypedResults.Ok();
         }
     }
 

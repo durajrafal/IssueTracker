@@ -3,6 +3,7 @@ using IssueTracker.UI.Controllers;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IssueTracker.UI.FunctionalTests.Controllers
 {
@@ -201,6 +202,46 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             //Assert
             response.Should().NotBeNull();
             Database.Func(ctx => ctx.Issues.FirstOrDefault(x => x.Id == issue.Id)).Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task GetMembers_WhenIdIsValid_ShouldReturnContent()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync();
+            var issue = project.Issues.First();
+
+            //Act
+            var response = await _controller.Members(issue.Id) as Ok<IssueMembersModel>;
+
+            //Assert
+            response.Should().NotBeNull();
+            response!.Value!.Members.Should().BeEquivalentTo(issue.Members);
+            response!.Value!.OtherUsers.Should().HaveCount(project.Members.Count - issue.Members.Count);
+        }
+
+        [Fact]
+        public async Task PutMembers_WhenDataIsValid_ShouldReturnOkAndUpdateIssueMembersInDatabase()
+        {
+            //Arrange
+            var project = await SetupTestProjectAsync();
+            var issue = project.Issues.First();
+            var model = new IssueMembersModel()
+            {
+                Id = issue.Id,
+                Members = issue.Members.Append(project.Issues.Last().Members.First())
+                            .Select(x => new Domain.Entities.Member() { UserId = x.UserId})
+            };
+
+            //Act
+            var response = await _controller.Members(model.Id, model) as Ok;
+
+            //Assert
+            response.Should().NotBeNull();
+            var updatedIssue = Database.Func(ctx => ctx.Issues
+                .Include(x => x.Members)
+                .First(x => x.Id == model.Id));
+            updatedIssue.Members.Should().BeEquivalentTo(model.Members);
         }
     }
 }
