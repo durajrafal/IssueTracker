@@ -1,5 +1,7 @@
-﻿using IssueTracker.Domain.Enums;
+﻿using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.Enums;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace IssueTracker.Domain.ValueObjects
 {
@@ -27,13 +29,17 @@ namespace IssueTracker.Domain.ValueObjects
 
             switch (PropertyName)
             {
-                case "Status":
+                case nameof(Issue.Status):
                     var oldValueDeserialized = GetOldValueDeserializedAs<WorkingStatus>();
                     var newValueDeserialized = GetNewValueDeserializedAs<WorkingStatus>();
                     output = $"{PropertyName} was changed from [{oldValueDeserialized.ToUserFriendlyString()}] to [{newValueDeserialized.ToUserFriendlyString()}].";
                     break;
-                case "Priority":
+                case nameof(Issue.Priority):
                     output = $"{PropertyName} was changed from [{Enum.Parse(typeof(PriorityLevel), OldValue)}] to [{Enum.Parse(typeof(PriorityLevel), NewValue)}].";
+                    break;
+                case nameof(CollectionNames.Members):
+                    var members = GetNewValueDeserializedAs<IEnumerable<Member>>();
+                    output = $"{OldValue} members: [{string.Join(", ", members.Select(x => x.User.FullName))}]";
                     break;
                 default:
                     output = $"{PropertyName} was changed from [{GetOldValueDeserializedAs<string>()}] to [{GetNewValueDeserializedAs<string>()}].";
@@ -42,5 +48,31 @@ namespace IssueTracker.Domain.ValueObjects
 
             return output;
         }
+
+        public static AuditEvent CreateCollectionChangeEvent<T>(IEnumerable<T> itemsChanged, CollectionNames collectionName, CollectionOperation operation, string userId)
+        {
+            return new AuditEvent()
+            {
+                PropertyName = collectionName.ToString(),
+                OldValue = operation.ToString(),
+                NewValue = JsonSerializer.Serialize(itemsChanged, 
+                    new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.IgnoreCycles}),
+                ModifiedById = userId,
+                Timestamp = DateTime.UtcNow
+            };
+        }
+    }
+
+    public enum CollectionNames
+    {
+        Members,
+        Comments,
+        Issues
+    }
+
+    public enum CollectionOperation
+    {
+        Added,
+        Removed
     }
 }

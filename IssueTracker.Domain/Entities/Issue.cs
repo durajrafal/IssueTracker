@@ -20,15 +20,25 @@ namespace IssueTracker.Domain.Entities
         public string? LastModifiedById { get; set; }
         public ICollection<AuditEvent> AuditEvents { get; set; } = new List<AuditEvent>();
 
-        public void UpdateMembers(IEnumerable<Member> members)
+        public void UpdateMembers(IEnumerable<Member> members, string userId)
         {
             var membersToAdd = members.Except(Members).ToList();
+            if (membersToAdd.Count > 0)
+            {
+                AuditEvents.Add(AuditEvent.CreateCollectionChangeEvent(membersToAdd, 
+                    CollectionNames.Members, CollectionOperation.Added, userId));
+            }
             foreach (var member in membersToAdd)
             {
                 Members.Add(member);
             }
 
             var membersToRemove = Members.Except(members).ToList();
+            if (membersToRemove.Count > 0)
+            {
+                AuditEvents.Add(AuditEvent.CreateCollectionChangeEvent(membersToRemove, 
+                    CollectionNames.Members, CollectionOperation.Removed, userId));
+            }
             foreach (var member in membersToRemove)
             {
                 Members.Remove(member);
