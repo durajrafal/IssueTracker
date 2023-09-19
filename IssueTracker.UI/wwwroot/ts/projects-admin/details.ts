@@ -60,7 +60,7 @@ class ProjectAdminDetails {
 
     private displayData() {
         const populateViewWithData = () => {
-            this.memberManagement.populateUsersTables();
+            this.memberManagement.populateMembersTables();
         };
 
         const hideLoading = () => {

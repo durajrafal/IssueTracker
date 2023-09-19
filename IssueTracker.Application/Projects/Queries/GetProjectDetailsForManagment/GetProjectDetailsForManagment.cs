@@ -42,7 +42,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
                 Id = entity.Id,
                 Title = entity.Title,
                 Members = await entity.Members.SyncMembersWithUsers(_userService),
-                OtherUsers = otherUsers
+                OtherUsers = otherUsers.Select(x => new Member() { User = x, UserId = x.UserId })
             };
         }
     }

@@ -1,11 +1,8 @@
 import { renderAlert } from "../common/components.js";
 import { TableFilter } from "../common/filter-table.js";
-import { Member, MembersManagement, MembersManagementTablesHandler, User } from "../common/member-management.js";
+import { MembersManagement, MembersManagementTablesHandler } from "../common/member-management.js";
 
-class Issue implements MembersManagement {
-    id: number;
-    members: Member[];
-    otherUsers: User[];
+interface Issue extends MembersManagement {
 }
 
 class IssueMembersManagementDetails {
@@ -43,7 +40,7 @@ class IssueMembersManagementDetails {
             })
             .then(data => { this.issue = JSON.parse(data); })
             .then(() => { this.memberManagement = new MembersManagementTablesHandler('[data-members-table] > tbody', '[data-other-users-table] > tbody', this.issue, true); })
-            .then(() => { this.memberManagement.populateUsersTables(); })
+            .then(() => { this.memberManagement.populateMembersTables(); })
             .catch(err => this.displayError(err));
     }
 

@@ -39,6 +39,10 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
 
             await entity.Members.SyncMembersWithUsers(_userService);
             await entity.Project.Members.SyncMembersWithUsers(_userService);
+            foreach (var member in entity.Project.Members)
+            {
+                member.Projects = null;
+            }
             await entity.AuditEvents.SeedWithUsersAsync(_userService);
 
             return new IssueDto()

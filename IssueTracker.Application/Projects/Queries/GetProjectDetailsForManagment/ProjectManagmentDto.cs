@@ -8,6 +8,6 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetailsForManagmen
         public int Id { get; set; }
         public string Title { get; set; }
         public IEnumerable<Member> Members { get; set; }
-        public IEnumerable<User> OtherUsers { get; set; }
+        public IEnumerable<Member> OtherUsers { get; set; }
     }
 }

@@ -1,10 +1,11 @@
 export interface MembersManagement {
     id: number;
     members: Array<Member>;
-    otherUsers: Array<User>;
+    otherUsers: Array<Member>;
 }
 
 export interface Member {
+    id: number;
     userId: string;
     user: User;
 }
@@ -33,72 +34,62 @@ export class MembersManagementTablesHandler {
         this.otherUsersTable = document.querySelector(otherUserTableBodySelector);
     }
 
-    populateUsersTables() {
-        this.populateTableWithUsers(this.membersTable, this.userLists.members.map(m => m.user), this.appendDeleteMemberButton.bind(this));
-        this.populateTableWithUsers(this.otherUsersTable, this.userLists.otherUsers, this.appendAddMemberButton.bind(this));
+    populateMembersTables() {
+        this.populateTableWithMembers(this.membersTable, this.userLists.members, this.appendDeleteMemberButton.bind(this));
+        this.populateTableWithMembers(this.otherUsersTable, this.userLists.otherUsers, this.appendAddMemberButton.bind(this));
     }
 
-    private populateTableWithUsers(table: HTMLTableElement, users: Array<User>, appendButtonCallbackFunction: (user: User, row: HTMLTableRowElement) => void ) {
-        users.forEach(user => {
-            this.insertTableRowWithUser(table, user, appendButtonCallbackFunction);
+    private populateTableWithMembers(table: HTMLTableElement, members: Array<Member>, appendButtonCallbackFunction: (member: Member, row: HTMLTableRowElement) => void) {
+        members.forEach(member => {
+            this.insertTableRowWithMember(table, member, appendButtonCallbackFunction);
         });
     }
 
-    private insertTableRowWithUser(table: HTMLTableElement, user: User, appendButtonCallbackFunction: (user: User, row: HTMLTableRowElement) => void ){
+    private insertTableRowWithMember(table: HTMLTableElement, member: Member, appendButtonCallbackFunction: (member: Member, row: HTMLTableRowElement) => void ){
         const row = table.insertRow();
         row.style.verticalAlign = "middle";
-        row.insertCell().textContent = user.email;
-        row.insertCell().textContent = user.firstName;
-        row.insertCell().textContent = user.lastName;
-        appendButtonCallbackFunction(user, row);
+        row.insertCell().textContent = member.user.email;
+        row.insertCell().textContent = member.user.firstName;
+        row.insertCell().textContent = member.user.lastName;
+        appendButtonCallbackFunction(member, row);
     }
 
-    private appendDeleteMemberButton(user: User, row: HTMLTableRowElement) {
-        this.appendActionButton(this.deleteMemberButtonHtml, user, row, this.deleteMember.bind(this));
+    private appendDeleteMemberButton(member: Member, row: HTMLTableRowElement) {
+        this.appendActionButton(this.deleteMemberButtonHtml, member, row, this.deleteMember.bind(this));
     }
 
-    private appendAddMemberButton(user: User, row: HTMLTableRowElement) {
-        this.appendActionButton(this.addMemberButtonHtml, user, row, this.addMember.bind(this));
+    private appendAddMemberButton(member: Member, row: HTMLTableRowElement) {
+        this.appendActionButton(this.addMemberButtonHtml, member, row, this.addMember.bind(this));
     }
 
-    private appendActionButton(buttonHtml: string, user: User, row: HTMLTableRowElement, buttonCallbackFunction: (user: User, row: HTMLTableRowElement) => void) {
+    private appendActionButton(buttonHtml: string, member: Member, row: HTMLTableRowElement, buttonCallbackFunction: (member: Member, row: HTMLTableRowElement) => void) {
         row.insertCell().innerHTML = buttonHtml;
         const lastChild = (<HTMLTableCellElement>row.lastChild);
         lastChild.classList.add('text-center');
-        lastChild.querySelector('button').addEventListener('click', () => buttonCallbackFunction(user, row));
+        lastChild.querySelector('button').addEventListener('click', () => buttonCallbackFunction(member, row));
     }
 
-    private deleteMember(user: User, row: HTMLTableRowElement) {
-        const deletedUser = {
-            userId: user.userId,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-        };
+    private deleteMember(member: Member, row: HTMLTableRowElement) {
         if (this.userLists.members.length > 1 || this.canHaveNoMembers) {
-            this.userLists.otherUsers.push(deletedUser);
-            const index = this.userLists.members.findIndex(x => x.user === user);
+            this.userLists.otherUsers.push(member);
+            const index = this.userLists.members.findIndex(x => x === member);
             this.userLists.members.splice(index, 1);
 
             this.membersTable.deleteRow(row.rowIndex - 1);
             row.deleteCell(row.cells.length - 1);
-            this.appendAddMemberButton(user, row);
+            this.appendAddMemberButton(member, row);
             this.otherUsersTable.appendChild(row);
         }
     }
 
-    private addMember(user: User, row: HTMLTableRowElement) {
-        const newMember = {
-            userId: user.userId,
-            user: user
-        };
-        this.userLists.members.push(newMember);
-        const index = this.userLists.otherUsers.indexOf(user);
+    private addMember(member: Member, row: HTMLTableRowElement) {
+        this.userLists.members.push(member);
+        const index = this.userLists.otherUsers.indexOf(member);
         this.userLists.otherUsers.splice(index, 1);
 
         this.otherUsersTable.deleteRow(row.rowIndex - 1);
         row.deleteCell(row.cells.length - 1);
-        this.appendDeleteMemberButton(user, row)
+        this.appendDeleteMemberButton(member, row)
         this.membersTable.appendChild(row);
     }
 }

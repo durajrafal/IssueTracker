@@ -167,7 +167,7 @@ namespace IssueTracker.UI.Controllers
             {
                 Id = issue.Id,
                 Members = issue.Members,
-                OtherUsers = issue.Project.Members.Except(issue.Members).Select(x => x.User)
+                OtherUsers = issue.Project.Members.Except(issue.Members).ToList()
             };
 
             return TypedResults.Ok(model);

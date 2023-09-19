@@ -23,12 +23,12 @@ namespace IssueTracker.Application.Issues.Commands.UpdateIssue
     public class UpdateIssueHandler : IRequestHandler<UpdateIssue, int>
     {
         private readonly IApplicationDbContext _ctx;
-        private readonly ICurrentUserService _currentUserService;
+        private readonly IUserService _userService;
 
-        public UpdateIssueHandler(IApplicationDbContext ctx, ICurrentUserService currentUserService)
+        public UpdateIssueHandler(IApplicationDbContext ctx, IUserService userService)
         {
             _ctx = ctx;
-            _currentUserService = currentUserService;
+            _userService = userService;
         }
 
         public async Task<int> Handle(UpdateIssue request, CancellationToken cancellationToken)
@@ -36,16 +36,17 @@ namespace IssueTracker.Application.Issues.Commands.UpdateIssue
             var entity = _ctx.Issues
                 .Include(x => x.Members)
                 .FirstOrDefaultAsync(x => x.Id == request.Id).GetAwaiter().GetResult()
-                .ApplyPolicy(new IssueCanBeAccessedOnlyByProjectMember(_ctx),_currentUserService.UserId);
+                .ApplyPolicy(new IssueCanBeAccessedOnlyByProjectMember(_ctx),_userService.GetCurrentUserId());
 
             if (entity == null)
                 throw new NotFoundException(nameof(Issue), request.Id.ToString());
+            await entity.Members.SyncMembersWithUsers(_userService);
 
             entity.Title = request.Title;
             entity.Description = request.Description;
             entity.Priority = request.Priority;
             entity.Status = request.Status;
-            entity.UpdateMembers(request.Members.SyncExistingMembersId(_ctx.Members));
+            entity.UpdateMembers(request.Members, _userService.GetCurrentUserId());
 
             return await _ctx.SaveChangesAsync(cancellationToken);
         }

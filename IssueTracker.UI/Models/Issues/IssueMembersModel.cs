@@ -7,6 +7,6 @@ namespace IssueTracker.UI.Models.Issues
     {
         public int Id { get; set; }
         public IEnumerable<Member> Members { get; set; }
-        public IEnumerable<User> OtherUsers { get; set; }
+        public IEnumerable<Member> OtherUsers { get; set; }
     }
 }
