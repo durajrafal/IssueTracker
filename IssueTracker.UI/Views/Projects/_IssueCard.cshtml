@@ -1,17 +1,13 @@
 ﻿@using IssueTracker.Application.Common.Interfaces;
+@using IssueTracker.Application.Common.Models;
 @using IssueTracker.Domain.Entities;
 @using IssueTracker.Domain.Enums;
 @using IssueTracker.UI.Models.Issues;
 @using IssueTracker.UI.HtmlHelpers;
 
-@model Issue
-@inject ICurrentUserService currentUserService
-@inject IUserService userService
+@model IssueDto
 
-@{
-
-}
-<a asp-controller="Issues" asp-action="Details" asp-route-projectid="@Model.ProjectId" asp-route-id="@Model.Id"
+<a asp-controller="Issues" asp-action="Details" asp-route-projectid="@Model.Project.Id" asp-route-id="@Model.Id"
    class="text-decoration-none">
     <div class="card @SetTextColor() @GetBorderColorBasedOnPriority() mb-3">
         <div class="card-header fs-5">
@@ -21,7 +17,7 @@
             <p class="card-text">@FormatTextToMaxLength(Model.Description,100)</p>
         </div>
         <div class="card-footer text-muted d-flex justify-content-end" style="font-size:.8rem;">
-            <span>Created @Model.Created.Date.ToShortDateString() by @userService.GetUserByIdAsync(Model.CreatedBy).GetAwaiter().GetResult()?.FullName</span>
+            <span>Created @Model.Audit.Created.Date.ToShortDateString() by @Model.Audit.CreatedByUser.FullName</span>
         </div>
     </div>
 </a>

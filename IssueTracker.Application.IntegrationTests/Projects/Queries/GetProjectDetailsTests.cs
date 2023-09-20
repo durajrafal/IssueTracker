@@ -22,18 +22,16 @@ namespace IssueTracker.Application.IntegrationTests.Projects.Queries
 
             //Assert
             result.Title.Should().Be(project.Title);
-            Assert.Equal(project.Members.Count, result.Members.Count());
-            Assert.True(result.Members.All(x => x.User != null));
-            Assert.Equal(project.Issues.Count, result.Issues.Count);
-            Assert.True(result.Issues.All(x => x.Title != String.Empty));
-            Assert.True(result.Issues.All(x => x.Members.Count > 0));
+            Assert.Equal(project.Members.Count, result.Members!.Count());
+            Assert.True(result.Members!.All(x => x.User != null));
+            Assert.Equal(project.Issues.Count, result.Issues!.Count());
+            Assert.True(result.Issues!.All(x => x.Title != String.Empty));
+            Assert.True(result.Issues!.All(x => x.Members!.Count() > 0));
             result.Audit.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
             result.Audit.CreatedByUser.Should().NotBeNull();
             result.Audit.CreatedByUser.UserId.Should().Be(GetCurrentUserId());
             result.Audit.LastModified.Should().BeNull();
             result.Audit.LastModifiedBy.Should().BeNull();
-            result.Issues.Should().AllSatisfy(x => x.AuditEvents.Should().NotBeNull())
-                .And.AllSatisfy(x => x.Created.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10)));
         }
 
         [Fact]

@@ -29,7 +29,7 @@ namespace IssueTracker.UI.Controllers
             if (Enum.TryParse(status, out statusParsed))
             {
                 vm.SelectedStatus = statusParsed.ToString();
-                vm.Issues = result.Issues.Where(x => x.Status == statusParsed).ToList();
+                vm.Issues = result.Issues?.Where(x => x.Status == statusParsed).ToList();
             }
             else
             {
@@ -42,19 +42,19 @@ namespace IssueTracker.UI.Controllers
             switch (orderBy)
             {
                 case ProjectViewModel.PRIORITY:
-                    vm.Issues = vm.Issues.OrderByDescending(x => x.Priority).ToList();
+                    vm.Issues = vm.Issues?.OrderByDescending(x => x.Priority).ToList();
                     break;
                 case ProjectViewModel.DATE_CREATED:
-                    vm.Issues = vm.Issues.OrderBy(x => x.Created).ToList();
+                    vm.Issues = vm.Issues?.OrderBy(x => x.Audit.Created).ToList();
                     break;                
                 case ProjectViewModel.DATE_CREATED_DESC:
-                    vm.Issues = vm.Issues.OrderByDescending(x => x.Created).ToList();
+                    vm.Issues = vm.Issues?.OrderByDescending(x => x.Audit.Created).ToList();
                     break;
                 case ProjectViewModel.DATE_MODIFIED:
-                    vm.Issues = vm.Issues.OrderBy(x => x.LastModified).ToList();
+                    vm.Issues = vm.Issues?.OrderBy(x => x.Audit.LastModified).ToList();
                     break;
                 case ProjectViewModel.DATE_MODIFIED_DESC:
-                    vm.Issues = vm.Issues.OrderByDescending(x => x.LastModified).ToList();
+                    vm.Issues = vm.Issues?.OrderByDescending(x => x.Audit.LastModified).ToList();
                     break;
                 default:
                     break;

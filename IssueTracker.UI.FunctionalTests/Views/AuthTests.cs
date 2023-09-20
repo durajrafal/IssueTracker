@@ -28,7 +28,6 @@ namespace IssueTracker.UI.FunctionalTests.Auth
 
             //Assert 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
         }
 
         [Theory]
@@ -82,7 +81,7 @@ namespace IssueTracker.UI.FunctionalTests.Auth
             {
                 var project = ProjectHelpers.CreateTestProject(nameof(AuthTests), GetCurrentUserId());
                 project.Id = 1;
-                await project.AddToDatabaseAsync(Database);
+                await project.AddToDatabaseAsync(Database).SeedDatabaseWithMembersUsersAsync(Database);
             }
             if (uri.StartsWith("Identity"))
             {

@@ -55,7 +55,7 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
                 Id = entity.Id,
                 Title = entity.Title,
                 Members = entity.Members.Select(x => MemberDto.Create(x)),
-                Issues = entity.Issues,
+                Issues = entity.Issues.Select(x => IssueDto.Create(x, _userService)),
                 Audit = new AuditDto()
                 {
                     Created = entity.Created,

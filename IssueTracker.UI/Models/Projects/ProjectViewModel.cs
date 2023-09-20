@@ -1,4 +1,4 @@
-﻿using IssueTracker.Domain.Entities;
+﻿using IssueTracker.Application.Common.Models;
 using IssueTracker.Domain.Enums;
 
 namespace IssueTracker.UI.Models.Projects
@@ -7,7 +7,7 @@ namespace IssueTracker.UI.Models.Projects
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public ICollection<Issue> Issues { get; set; } = new List<Issue>();
+        public IEnumerable<IssueDto>? Issues { get; set; }
         public string? SelectedStatus { get; set; }
         public string? OrderBy { get; set; }
         public AuditViewModel Audit { get; set; }

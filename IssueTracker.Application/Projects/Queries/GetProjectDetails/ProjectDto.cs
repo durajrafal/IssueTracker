@@ -6,9 +6,8 @@ namespace IssueTracker.Application.Common.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public IEnumerable<MemberDto> Members { get; set; }
-        //TODO - should I change it to IssueDto?
-        public ICollection<Issue> Issues { get; set; }
+        public IEnumerable<MemberDto>? Members { get; set; }
+        public IEnumerable<IssueDto>? Issues { get; set; }
         public AuditDto Audit { get; set; } = new AuditDto();
 
         public static ProjectDto Create(Project project)
@@ -17,7 +16,7 @@ namespace IssueTracker.Application.Common.Models
             {
                 Id = project.Id,
                 Title = project.Title,
-                Members = project.Members.Select(x => MemberDto.Create(x)),
+                Members = project.Members?.Select(x => MemberDto.Create(x)),
             };
         }
     }
