@@ -29,13 +29,13 @@ Creating issues (tickets) with descriptions, comments, attachments. Issues have 
 * ✅ Project access only for members
 * ✅ CRUD actions for Issue entity
 * ✅ Auditing changes for entites
+* ✅ Assigning members to Issues
 * 🔜 User notification
-* 🔜 Assigning members to Issues
 * 🔜 Working with Issues (commenting, attachments, task lists etc.)
 * 🔜 Projects dashboard
 
 > ### Note
-> My main focus when I started this project was backend. However I decided to implement also frontend to make it more enjoyable to explore. I chose razor views as a simple default solution. In some places I wanted to have more interactive functionality so I used Typescript and created API endpoints to fulfill this. That's why I ended up with some mix-up of both kind of endpoints. I'm aware that better and cleaner solution would be to create a REST API and have separate frontend project. I made this sacrifice so I could focus mostly on backend before learning any of frontend frameworks, while still having some decent GUI.
+> My main focus when I started this project was backend. However I decided to implement also frontend to make it more enjoyable to explore. I chose razor views as a simple default solution. In some places I wanted to have more interactive functionality so I used Typescript and created API endpoints to fulfill this. That's why I ended up with some mix-up of both kind of endpoints. I'm aware that better and cleaner solution would be to create a REST API and have separate frontend project. I've made this sacrifice so I could focus mostly on backend before learning any of frontend frameworks, while still having some decent GUI.
 
 ## How to run locally
 Please clone this repository and open in Visual Studio 2022.
