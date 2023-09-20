@@ -51,7 +51,7 @@
                     <div class="ps-2">
                         @foreach (var member in Model.Members)
                         {
-                            <div>@member.User.FullName</div>
+                            <div class="text-break">@member.User.FullName (@member.User.Email)</div>
                         }
                         <button class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#membersModal"
                                 data-open-modal data-issueId="@Model.Id" data-projectId="@Model.Project.Id">
@@ -69,7 +69,7 @@
                     {
 
                         <table class="table table-dark table-striped">
-                            <thead class="table-light text-secondary">
+                            <thead class="table-secondary text-light">
                                 <tr>
                                     <th scope="col">Time</th>
                                     <th scope="col">User</th>
