@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using IssueTracker.Application.Common.Exceptions;
+using IssueTracker.Application.Common.Models;
 using IssueTracker.Application.Issues.Commands.UpdateIssue;
-using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +30,7 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
                 Status = WorkingStatus.InProgress,
                 ProjectId = project.Id,
                 Members = issue.Members.Append(project.Issues.Last().Members.First())
-                            .Select(x => new Member { UserId = x.UserId }).ToList()
+                            .Select(x => new MemberDto { UserId = x.UserId }).ToList()
             };
             await Mediator.Send(command);
 
@@ -45,7 +45,7 @@ namespace IssueTracker.Application.IntegrationTests.Issues.Commands
             updatedIssue.Description.Should().Be(command.Description);
             updatedIssue.Priority.Should().Be(command.Priority);
             updatedIssue.Status.Should().Be(command.Status);
-            updatedIssue.Members.Should().BeEquivalentTo(command.Members);
+            updatedIssue.Members.Should().BeEquivalentTo(command.Members.Select(x => x.GetEntity()));
             updatedIssue.Created.Should().Be(issue.Created);
             updatedIssue.LastModified.Should().NotBeNull()
                 .And.BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));

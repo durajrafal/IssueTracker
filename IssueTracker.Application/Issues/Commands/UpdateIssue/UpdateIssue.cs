@@ -2,6 +2,7 @@
 using IssueTracker.Application.Common.Exceptions;
 using IssueTracker.Application.Common.Helpers;
 using IssueTracker.Application.Common.Interfaces;
+using IssueTracker.Application.Common.Models;
 using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Enums;
 using MediatR;
@@ -17,7 +18,7 @@ namespace IssueTracker.Application.Issues.Commands.UpdateIssue
         public PriorityLevel Priority { get; set; }
         public WorkingStatus Status { get; set; }
         public int ProjectId { get; set; }
-        public IEnumerable<Member> Members { get; set; }
+        public IEnumerable<MemberDto> Members { get; set; }
     }
 
     public class UpdateIssueHandler : IRequestHandler<UpdateIssue, int>
@@ -46,7 +47,7 @@ namespace IssueTracker.Application.Issues.Commands.UpdateIssue
             entity.Description = request.Description;
             entity.Priority = request.Priority;
             entity.Status = request.Status;
-            entity.UpdateMembers(request.Members, _userService.GetCurrentUserId());
+            entity.UpdateMembers(request.Members.Select(x => x.GetEntity()), _userService.GetCurrentUserId());
 
             return await _ctx.SaveChangesAsync(cancellationToken);
         }

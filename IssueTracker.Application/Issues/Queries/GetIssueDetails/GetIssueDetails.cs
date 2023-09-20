@@ -39,10 +39,6 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
 
             await entity.Members.SyncMembersWithUsers(_userService);
             await entity.Project.Members.SyncMembersWithUsers(_userService);
-            foreach (var member in entity.Project.Members)
-            {
-                member.Projects = null;
-            }
             await entity.AuditEvents.SeedWithUsersAsync(_userService);
 
             return new IssueDto()
@@ -52,8 +48,8 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
                 Description = entity.Description,
                 Priority = entity.Priority,
                 Status = entity.Status,
-                Members = entity.Members,
-                Project = entity.Project,
+                Members = entity.Members.Select(x => MemberDto.Create(x)),
+                Project = ProjectDto.Create(entity.Project),
                 Audit = new AuditDto()
                 {
                     Created = entity.Created,

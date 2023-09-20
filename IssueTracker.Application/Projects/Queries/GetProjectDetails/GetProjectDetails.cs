@@ -44,17 +44,17 @@ namespace IssueTracker.Application.Projects.Queries.GetProjectDetails
             if (entity is null)
                 throw new NotFoundException(nameof(Project), request.ProjectId.ToString());
 
+            await entity.Members.SyncMembersWithUsers(_userService);
             foreach (var issue in entity.Issues)
             {
                 await issue.Members.SyncMembersWithUsers(_userService);
             }
             await entity.AuditEvents.SeedWithUsersAsync(_userService);
-
             return new ProjectDto
             {
                 Id = entity.Id,
                 Title = entity.Title,
-                Members = await entity.Members.SyncMembersWithUsers(_userService),
+                Members = entity.Members.Select(x => MemberDto.Create(x)),
                 Issues = entity.Issues,
                 Audit = new AuditDto()
                 {

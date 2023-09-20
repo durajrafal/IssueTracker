@@ -1,4 +1,5 @@
-﻿using IssueTracker.Domain.Enums;
+﻿using IssueTracker.Application.Common.Models;
+using IssueTracker.Domain.Enums;
 using IssueTracker.UI.Controllers;
 using IssueTracker.UI.Models.Issues;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -216,7 +217,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
 
             //Assert
             response.Should().NotBeNull();
-            response!.Value!.Members.Should().BeEquivalentTo(issue.Members);
+            response!.Value!.Members.Should().BeEquivalentTo(issue.Members.Select(x => MemberDto.Create(x)));
             response!.Value!.OtherUsers.Should().HaveCount(project.Members.Count - issue.Members.Count);
         }
 
@@ -230,7 +231,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             {
                 Id = issue.Id,
                 Members = issue.Members.Append(project.Issues.Last().Members.First())
-                            .Select(x => new Domain.Entities.Member() { UserId = x.UserId})
+                            .Select(x => new MemberDto() { UserId = x.UserId})
             };
 
             //Act
@@ -241,7 +242,7 @@ namespace IssueTracker.UI.FunctionalTests.Controllers
             var updatedIssue = Database.Func(ctx => ctx.Issues
                 .Include(x => x.Members)
                 .First(x => x.Id == model.Id));
-            updatedIssue.Members.Should().BeEquivalentTo(model.Members);
+            updatedIssue.Members.Should().BeEquivalentTo(model.Members.Select(x => x.GetEntity()));
         }
     }
 }

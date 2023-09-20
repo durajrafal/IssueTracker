@@ -1,8 +1,6 @@
-﻿using IssueTracker.Application.Common.Models;
-using IssueTracker.Domain.Entities;
-using IssueTracker.Domain.Enums;
+﻿using IssueTracker.Domain.Enums;
 
-namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
+namespace IssueTracker.Application.Common.Models
 {
     public class IssueDto
     {
@@ -11,8 +9,8 @@ namespace IssueTracker.Application.Issues.Queries.GetIssueDetails
         public string? Description { get; set; }
         public PriorityLevel Priority { get; set; }
         public WorkingStatus Status { get; set; }
-        public ICollection<Member> Members { get; set; }
-        public Project Project { get; set; }
+        public IEnumerable<MemberDto> Members { get; set; }
+        public ProjectDto Project { get; set; }
         public AuditDto Audit { get; set; } = new AuditDto();
     }
 }

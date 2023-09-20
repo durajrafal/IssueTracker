@@ -1,4 +1,4 @@
-﻿using IssueTracker.Domain.Entities;
+﻿using IssueTracker.Application.Common.Models;
 using IssueTracker.Domain.Enums;
 
 namespace IssueTracker.UI.Models.Issues
@@ -10,8 +10,8 @@ namespace IssueTracker.UI.Models.Issues
         public string? Description { get; set; }
         public PriorityLevel Priority { get; set; }
         public WorkingStatus Status { get; set; }
-        public ICollection<Member> Members { get; set; }
-        public Project Project { get; set; }
+        public IEnumerable<MemberDto> Members { get; set; }
+        public ProjectDto Project { get; set; }
         public AuditViewModel Audit { get; set; }
     }
 }

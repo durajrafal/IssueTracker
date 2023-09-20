@@ -1,4 +1,4 @@
-﻿using IssueTracker.Domain.Entities;
+﻿using IssueTracker.Application.Common.Models;
 using IssueTracker.Domain.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -18,7 +18,7 @@ namespace IssueTracker.UI.Models.Issues
             
         }
 
-        public CreateIssueViewModel(ICollection<Member> members)
+        public CreateIssueViewModel(IEnumerable<MemberDto> members)
         {
             ProjectMembersSelecList = new List<SelectListItem>();
             members.ToList().ForEach(x =>

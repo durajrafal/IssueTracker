@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using IssueTracker.Application.Common.Models;
 using IssueTracker.Application.Issues.Commands.CreateIssue;
 using IssueTracker.Application.Issues.Commands.DeleteIssue;
 using IssueTracker.Application.Issues.Commands.UpdateIssue;
